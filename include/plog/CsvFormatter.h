@@ -22,7 +22,14 @@ namespace plog
             ss << entry.m_tid << ";";
             ss << entry.m_object << ";";
             ss << entry.m_func << "@" << entry.m_line << ";";
-            ss << entry.m_stream.str() << "\n";
+
+            std::istringstream split(entry.m_stream.str());
+            for (std::string token; std::getline(split, token, '"');)
+            {
+                ss << "\"" << token << "\"";
+            }
+
+            ss << "\n";
             
             return ss.str();
         }
