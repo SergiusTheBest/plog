@@ -8,7 +8,7 @@ namespace plog
     public:
         FileAppender(const char* fileName, Level maxSeverity) : Appender(maxSeverity)
         {
-            m_file = _fsopen(fileName, L"a", _SH_DENYWR);
+            m_file = _fsopen(fileName, "a", _SH_DENYWR);
             writeHeader();
         }
 
