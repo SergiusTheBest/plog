@@ -30,7 +30,7 @@ namespace plog
 
             for (; *data; ++data)
             {
-                m_stream << std::use_facet<std::ctype<wchar_t>>(m_stream.getloc()).narrow(*data, '?');
+                m_stream << std::use_facet<std::ctype<wchar_t> >(m_stream.getloc()).narrow(*data, '?');
             }
 
             return *this;

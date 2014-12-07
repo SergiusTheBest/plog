@@ -9,8 +9,14 @@
 #define PLOG_GET_THIS() 0
 #endif
 
+#ifdef _MSC_BUILD
+#define PLOG_GET_FUNC() __FUNCTION__
+#else
+#define PLOG_GET_FUNC() __PRETTY_FUNCTION__
+#endif
+
 #define LOG(severity) \
-    if (plog::Logger::getInstance().checkSeverity(severity)) plog::Logger::getInstance() += plog::Entry(severity, __FUNCTION__, __LINE__, PLOG_GET_THIS())
+    if (plog::Logger::getInstance().checkSeverity(severity)) plog::Logger::getInstance() += plog::Entry(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_THIS())
 
 #define LOG_DEBUG   LOG(plog::debug)
 #define LOG_INFO    LOG(plog::info)

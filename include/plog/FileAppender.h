@@ -1,4 +1,5 @@
 #pragma once
+#include <stdio.h>
 
 namespace plog
 {
@@ -8,15 +9,17 @@ namespace plog
     public:
         FileAppender(const char* fileName, Level maxSeverity) : Appender(maxSeverity)
         {
-            m_file = _fsopen(fileName, "a", _SH_DENYWR);
+            m_file = util::fopen(fileName, "a");
             writeHeader();
         }
 
+#ifdef _WIN32
         FileAppender(const wchar_t* fileName, Level maxSeverity) : Appender(maxSeverity)
         {
-            m_file = _wfsopen(fileName, L"a", _SH_DENYWR);
+            m_file = util::wfopen(fileName, L"a");
             writeHeader();
         }
+#endif
 
         ~FileAppender()
         {
