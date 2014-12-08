@@ -7,7 +7,7 @@ namespace plog
     class ConsoleAppender : public Appender
     {
     public:
-        ConsoleAppender(Level severity) : Appender(severity)
+        ConsoleAppender(Level maxSeverity) : Appender(maxSeverity)
         {
             ::setlocale(LC_ALL, "");
         }
