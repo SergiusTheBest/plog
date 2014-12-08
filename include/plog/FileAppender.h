@@ -30,6 +30,7 @@ namespace plog
         {
             std::string str = Formatter::format(entry);
             fwrite(str.c_str(), str.size(), 1, m_file);
+            fflush(m_file);
         }
 
     private:
@@ -37,6 +38,7 @@ namespace plog
         {
             std::string str = Formatter::header();
             fwrite(str.c_str(), str.size(), 1, m_file);
+            fflush(m_file);
         }
 
     private:
