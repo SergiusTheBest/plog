@@ -1,4 +1,4 @@
 plog
 ====
 
-Pure, powerful and portable log for C++
+Portable and simple log for C++
