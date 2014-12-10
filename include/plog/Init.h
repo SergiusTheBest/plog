@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include <plog/Logger.h>
 #include <plog/CsvFormatter.h>
 #include <plog/TxtFormatter.h>
@@ -13,8 +14,8 @@ namespace plog
             const char kCsvExt[] = ".csv";
             const size_t kCsvExtLength = sizeof(kCsvExt) - 1;
 
-            size_t len = ::strlen(fileName);
-            return len >= kCsvExtLength && 0 == ::strcmp(&fileName[len - kCsvExtLength], kCsvExt);
+            size_t len = std::strlen(fileName);
+            return len >= kCsvExtLength && 0 == std::strcmp(&fileName[len - kCsvExtLength], kCsvExt);
         }
     }
     

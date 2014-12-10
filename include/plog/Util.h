@@ -1,13 +1,14 @@
 #pragma once
 #include <time.h>
-#include <io.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 
 #ifdef _WIN32
+#include <io.h>
 extern "C" __declspec(dllimport) unsigned long __stdcall GetCurrentThreadId();
 extern "C" __declspec(dllimport) int __stdcall WideCharToMultiByte(unsigned int CodePage, unsigned int dwFlags, const wchar_t* lpWideCharStr, int cchWideChar, char* lpMultiByteStr, int cbMultiByte, const char* lpDefaultChar, int* lpUsedDefaultChar);
-#elif
+#else
+#include <sys/io.h>
 #include <unistd.h>
 #include <sys/syscall.h>
 #endif
@@ -58,7 +59,7 @@ namespace plog
 #ifdef _WIN32
                 ::_sopen_s(&m_fd, fileName, O_CREAT | O_APPEND | O_TEXT | O_WRONLY, _SH_DENYWR, S_IREAD | S_IWRITE);
 #else
-                ::open(&m_fd, fileName, O_CREAT | O_APPEND | O_TEXT | O_WRONLY, S_IREAD | S_IWRITE);
+                m_fd = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY, S_IREAD | S_IWRITE);
 #endif
             }
 
@@ -94,6 +95,7 @@ namespace plog
 
         inline std::string toString(const wchar_t* wstr)
         {
+#ifdef _WIN32
             //std::mbstate_t state = std::mbstate_t();
             //int len = 1 + std::wcsrtombs(0, &wstr, 0, &state);
             int len = ::WideCharToMultiByte(0, 0, wstr, wcslen(wstr), 0, 0, 0, 0);
@@ -103,6 +105,10 @@ namespace plog
             //std::wcsrtombs(&str[0], &wstr, str.size(), &state);
 
             return str;
+#else
+            // TODO: implement
+            return std::string();
+#endif
         }
 
         //TODO: add file open func
