@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #ifdef _WIN32
-extern "C" __declspec(dllimport) unsigned int __stdcall GetCurrentThreadId();
+extern "C" __declspec(dllimport) unsigned long __stdcall GetCurrentThreadId();
 #elif defined(__unix__)
 #include <unistd.h>
 #include <sys/syscall.h>
