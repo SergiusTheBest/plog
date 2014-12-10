@@ -60,4 +60,18 @@ namespace plog
     {
         init(util::toString(fileName).c_str(), maxSeverity);
     }
+
+    inline void init(const char* fileName, Level maxSeverity, size_t maxFileSize, size_t maxFiles)
+    {
+        init(fileName, maxSeverity);
+        
+        // TODO: implement rolling file appender
+        maxFileSize = maxFileSize;
+        maxFiles = maxFiles;
+    }
+
+    inline void init(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, size_t maxFiles)
+    {
+        init(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
+    }    
 }
