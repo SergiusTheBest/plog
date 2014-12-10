@@ -13,10 +13,6 @@ namespace plog
             m_file.write(str.c_str(), str.size());
         }
 
-        ~FileAppender()
-        {
-        }
-
         virtual void write(const Entry& entry)
         {
             std::string str = Formatter::format(entry);
