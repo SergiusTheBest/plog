@@ -12,6 +12,8 @@ namespace plog
         debug = 5,
         trace = 5, // For backward compatibility (trace level is retired)
     };
+        
+    typedef Level log_level; // For backward compatibility
 
     inline const char* getLevelName(Level level)
     {

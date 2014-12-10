@@ -13,8 +13,14 @@ namespace plog
 
         logger.addAppender(&fileAppender);
     }
+    
+    template<class CharType>
+    inline void init(const CharType* fileName, Level maxSeverity)
+    {
+        init_csv(fileName, maxSeverity);
+    }
 
-    // For backward compatibility    
+    // For backward compatibility
     inline void free(bool = true)
     {
     }
