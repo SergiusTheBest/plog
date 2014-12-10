@@ -24,7 +24,7 @@ namespace plog
         case error:
             return "ERROR";
         case warning:
-            return "WARNING";
+            return "WARN";
         case info:
             return "INFO";
         case debug:
