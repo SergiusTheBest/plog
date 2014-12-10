@@ -1,5 +1,5 @@
 #pragma once
-#include <stdio.h>
+#include <plog/Util.h>
 
 namespace plog
 {
@@ -7,41 +7,23 @@ namespace plog
     class FileAppender : public Appender
     {
     public:
-        FileAppender(const char* fileName, Level maxSeverity) : Appender(maxSeverity)
+        FileAppender(const char* fileName, Level maxSeverity) : Appender(maxSeverity), m_file(fileName)
         {
-            m_file = util::fopen(fileName, "a");
-            writeHeader();
+            std::string str = Formatter::header();
+            m_file.write(str.c_str(), str.size());
         }
-
-#ifdef _WIN32
-        FileAppender(const wchar_t* fileName, Level maxSeverity) : Appender(maxSeverity)
-        {
-            m_file = util::wfopen(fileName, L"a");
-            writeHeader();
-        }
-#endif
 
         ~FileAppender()
         {
-            fclose(m_file);
         }
 
         virtual void write(const Entry& entry)
         {
             std::string str = Formatter::format(entry);
-            fwrite(str.c_str(), str.size(), 1, m_file);
-            fflush(m_file);
+            m_file.write(str.c_str(), str.size());
         }
 
     private:
-        void writeHeader()
-        {
-            std::string str = Formatter::header();
-            fwrite(str.c_str(), str.size(), 1, m_file);
-            fflush(m_file);
-        }
-
-    private:
-        FILE* m_file;
+        util::File m_file;
     };
 }

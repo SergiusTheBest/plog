@@ -5,17 +5,25 @@
 
 namespace plog
 {
-    template<class CharType>
-    inline void init_csv(const CharType* fileName, Level maxSeverity)
+    inline void init_csv(const char* fileName, Level maxSeverity)
     {
         static FileAppender<CsvFormatter> fileAppender(fileName, maxSeverity);
         static Logger logger;
 
         logger.addAppender(&fileAppender);
     }
+
+    inline void init_csv(const wchar_t* fileName, Level maxSeverity)
+    {
+        init_csv(util::toString(fileName).c_str(), maxSeverity);
+    }
     
-    template<class CharType>
-    inline void init(const CharType* fileName, Level maxSeverity)
+    inline void init(const char* fileName, Level maxSeverity)
+    {
+        init_csv(fileName, maxSeverity);
+    }
+
+    inline void init(const wchar_t* fileName, Level maxSeverity)
     {
         init_csv(fileName, maxSeverity);
     }
