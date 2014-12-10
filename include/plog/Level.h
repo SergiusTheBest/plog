@@ -9,12 +9,9 @@ namespace plog
         error = 2,
         warning = 3,
         info = 4,
-        debug = 5,
-        trace = 5, // For backward compatibility (trace level is retired)
+        debug = 5
     };
         
-    typedef Level log_level; // For backward compatibility
-
     inline const char* getLevelName(Level level)
     {
         switch (level)

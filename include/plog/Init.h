@@ -18,7 +18,7 @@ namespace plog
         }
     }
     
-    inline void init_csv(const char* fileName, Level maxSeverity)
+    inline void initCsv(const char* fileName, Level maxSeverity)
     {
         static FileAppender<CsvFormatter> fileAppender(fileName, maxSeverity);
         static Logger logger;
@@ -26,12 +26,12 @@ namespace plog
         logger.addAppender(&fileAppender);
     }
 
-    inline void init_csv(const wchar_t* fileName, Level maxSeverity)
+    inline void initCsv(const wchar_t* fileName, Level maxSeverity)
     {
-        init_csv(util::toString(fileName).c_str(), maxSeverity);
+        initCsv(util::toString(fileName).c_str(), maxSeverity);
     }
 
-    inline void init_txt(const char* fileName, Level maxSeverity)
+    inline void initTxt(const char* fileName, Level maxSeverity)
     {
         static FileAppender<TxtFormatter> fileAppender(fileName, maxSeverity);
         static Logger logger;
@@ -39,30 +39,25 @@ namespace plog
         logger.addAppender(&fileAppender);
     }
 
-    inline void init_txt(const wchar_t* fileName, Level maxSeverity)
+    inline void initTxt(const wchar_t* fileName, Level maxSeverity)
     {
-        init_txt(util::toString(fileName).c_str(), maxSeverity);
+        initTxt(util::toString(fileName).c_str(), maxSeverity);
     }
     
     inline void init(const char* fileName, Level maxSeverity)
     {
         if (isCsv(fileName))
         {
-            init_csv(fileName, maxSeverity);
+            initCsv(fileName, maxSeverity);
         }
         else
         {
-            init_txt(fileName, maxSeverity);
+            initTxt(fileName, maxSeverity);
         }
     }
 
     inline void init(const wchar_t* fileName, Level maxSeverity)
     {
         init(util::toString(fileName).c_str(), maxSeverity);
-    }
-
-    // For backward compatibility
-    inline void free(bool = true)
-    {
     }
 }
