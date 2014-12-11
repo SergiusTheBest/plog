@@ -93,6 +93,49 @@ namespace plog
             int m_fd;
         };
 
+        // TODO: implement
+        class Mutex
+        {
+        public:
+            Mutex()
+            {
+            }
+
+            ~Mutex()
+            {
+            }
+
+            friend class MutexLock;
+
+        private:
+            void lock()
+            {
+            }
+
+            void unlock()
+            {
+            }
+
+        private:
+        };
+
+        class MutexLock
+        {
+        public:
+            MutexLock(Mutex& mutex) : m_mutex(mutex)
+            {
+                m_mutex.lock();
+            }
+
+            ~MutexLock()
+            {
+                m_mutex.unlock();
+            }
+
+        private:
+            Mutex& m_mutex;
+        };
+
         inline std::string toString(const wchar_t* wstr)
         {
 #ifdef _WIN32
