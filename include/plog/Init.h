@@ -4,6 +4,7 @@
 #include <plog/CsvFormatter.h>
 #include <plog/TxtFormatter.h>
 #include <plog/FileAppender.h>
+#include <plog/RollingFileAppender.h>
 
 namespace plog
 {
