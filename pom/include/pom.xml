@@ -5,13 +5,21 @@
 
   <groupId>org.github.SergiusTheBest.plog</groupId>
   <artifactId>plog-include</artifactId>
-  <version>0.5.0</version>
+  <version>0.5.1</version>
   <packaging>pom</packaging>
-  <description>PLOG - Simple Logging Library</description>
+  <description>Portable and simple log for C++</description>
 
   <parent>
     <groupId>com.apriorit.assembly</groupId>
     <artifactId>superpom</artifactId>
     <version>1.0.0</version>
   </parent>
+  
+  <licenses>
+    <license>
+      <name>Mozilla Public License 2.0</name>
+      <url>https://www.mozilla.org/MPL/2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 </project>
