@@ -19,13 +19,28 @@ namespace plog
             return len >= kCsvExtLength && 0 == std::strcmp(&fileName[len - kCsvExtLength], kCsvExt);
         }
     }
-    
-    inline void initCsv(const char* fileName, Level maxSeverity)
+
+    template<class Formatter>
+    inline void init(const char* fileName, Level maxSeverity)
     {
-        static FileAppender<CsvFormatter> fileAppender(fileName, maxSeverity);
+        static FileAppender<Formatter> fileAppender(fileName, maxSeverity);
         static Logger logger;
 
         logger.addAppender(&fileAppender);
+    }
+
+    template<class Formatter>
+    inline void init(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
+    {
+        static RollingFileAppender<Formatter> rollingFileAppender(fileName, maxSeverity, maxFileSize, maxFiles);
+        static Logger logger;
+
+        logger.addAppender(&rollingFileAppender);
+    }
+    
+    inline void initCsv(const char* fileName, Level maxSeverity)
+    {
+        init<CsvFormatter>(fileName, maxSeverity);
     }
 
     inline void initCsv(const wchar_t* fileName, Level maxSeverity)
@@ -33,17 +48,34 @@ namespace plog
         initCsv(util::toString(fileName).c_str(), maxSeverity);
     }
 
+    inline void initCsv(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
+    {
+        init<CsvFormatter>(fileName, maxSeverity, maxFileSize, maxFiles);
+    }
+
+    inline void initCsv(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
+    {
+        init<CsvFormatter>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
+    }
+
     inline void initTxt(const char* fileName, Level maxSeverity)
     {
-        static FileAppender<TxtFormatter> fileAppender(fileName, maxSeverity);
-        static Logger logger;
-
-        logger.addAppender(&fileAppender);
+        init<TxtFormatter>(fileName, maxSeverity);
     }
 
     inline void initTxt(const wchar_t* fileName, Level maxSeverity)
     {
-        initTxt(util::toString(fileName).c_str(), maxSeverity);
+        init<TxtFormatter>(util::toString(fileName).c_str(), maxSeverity);
+    }
+
+    inline void initTxt(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
+    {
+        init<TxtFormatter>(fileName, maxSeverity, maxFileSize, maxFiles);
+    }
+
+    inline void initTxt(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
+    {
+        init<TxtFormatter>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
     }
     
     inline void init(const char* fileName, Level maxSeverity)
@@ -63,16 +95,19 @@ namespace plog
         init(util::toString(fileName).c_str(), maxSeverity);
     }
 
-    inline void init(const char* fileName, Level maxSeverity, size_t maxFileSize, size_t maxFiles)
+    inline void init(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
     {
-        init(fileName, maxSeverity);
-        
-        // TODO: implement rolling file appender
-        maxFileSize = maxFileSize;
-        maxFiles = maxFiles;
+        if (isCsv(fileName))
+        {
+            initCsv(fileName, maxSeverity, maxFileSize, maxFiles);
+        }
+        else
+        {
+            initTxt(fileName, maxSeverity, maxFileSize, maxFiles);
+        }
     }
 
-    inline void init(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, size_t maxFiles)
+    inline void init(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
     {
         init(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
     }    

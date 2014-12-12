@@ -72,6 +72,14 @@ namespace plog
 #endif
             }
 
+            off_t getSize()
+            {
+                struct stat st = {};
+                fstat(m_fd, &st);
+                
+                return st.st_size;
+            }
+
             void close()
             {
                 if (-1 != m_fd)
@@ -83,6 +91,20 @@ namespace plog
 #endif
                     m_fd = -1;
                 }
+            }
+
+            static void unlink(const char* fileName)
+            {
+#ifdef _WIN32
+                ::_unlink(fileName);
+#else
+                ::unlink(fileName);
+#endif
+            }
+
+            static void rename(const char* oldFilename, const char* newFilename)
+            {
+                ::rename(oldFilename, newFilename);
             }
 
         private:
@@ -152,6 +174,22 @@ namespace plog
             // TODO: implement
             return std::string();
 #endif
+        }
+
+        inline void splitFileName(const char* fileName, std::string& fileNameNoExt, std::string& fileExt)
+        {
+            const char* dot = std::strrchr(fileName, '.');
+            
+            if (dot)
+            {
+                fileNameNoExt.assign(fileName, dot);
+                fileExt.assign(dot + 1);
+            }
+            else
+            {
+                fileNameNoExt.assign(fileName);
+                fileExt.clear();
+            }
         }
 
         //TODO: add file open func
