@@ -45,6 +45,39 @@ LOG_WARNING << "warning";
 LOG_DEBUG << "debug";
 ```
 
+#Sample log output
+##Txt formatter
+```
+2014-11-11 00:29:06.245 FATAL [4460] [main@22] fatal
+2014-11-11 00:29:06.261 ERROR [4460] [main@23] error
+2014-11-11 00:29:06.261 INFO  [4460] [main@24] info
+2014-11-11 00:29:06.261 WARN  [4460] [main@25] warning
+2014-11-11 00:29:06.261 DEBUG [4460] [main@26] debug
+2014-11-11 00:29:06.261 INFO  [4460] [main@29] This
+is
+a
+multiline!
+2014-11-11 00:29:06.261 INFO  [4460] [main@32] This is a message with "quotes"!
+2014-11-11 00:29:06.261 DEBUG [4460] [Object::Object@8] 
+2014-11-11 00:29:06.261 DEBUG [4460] [Object::~Object@13] 
+```
+##Csv formatter
+```
+Date;Time;Severity;TID;This;Function;Message
+2014/11/14;15:22:25.033;FATAL;4188;00000000;main@22;"fatal"
+2014/11/14;15:22:25.033;ERROR;4188;00000000;main@23;"error"
+2014/11/14;15:22:25.033;INFO;4188;00000000;main@24;"info"
+2014/11/14;15:22:25.033;WARN;4188;00000000;main@25;"warning"
+2014/11/14;15:22:25.048;DEBUG;4188;00000000;main@26;"debug"
+2014/11/14;15:22:25.048;INFO;4188;00000000;main@29;"This
+is
+a
+multiline!"
+2014/11/14;15:22:25.048;INFO;4188;00000000;main@32;"This is a message with ""quotes""!"
+2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::Object@8;
+2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::~Object@13;
+```
+
 #Competing C++ log libraries
 * [Boost::Log](http://www.boost.org/doc/libs/release/libs/log/)
 * [EasyLogging++](https://github.com/easylogging/easyloggingpp)
