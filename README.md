@@ -22,6 +22,14 @@ Portable and simple log for C++
 
 ##Initialization
 
+There are a number of predefined initialization functions:
+```cpp
+void init(const char* fileName, Level maxSeverity);
+void init(const wchar_t* fileName, Level maxSeverity);
+void init(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles);
+void init(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles);
+```
+Sample usage:
 ```cpp
 plog::init("log.csv", plog::debug, 1000 * 1000, 5);
 ```
