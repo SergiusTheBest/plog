@@ -5,12 +5,12 @@
 
 #ifdef _WIN32
 #include <io.h>
-extern "C" __declspec(dllimport) unsigned long __stdcall GetCurrentThreadId();
-extern "C" __declspec(dllimport) int __stdcall WideCharToMultiByte(unsigned int CodePage, unsigned int dwFlags, const wchar_t* lpWideCharStr, int cchWideChar, char* lpMultiByteStr, int cbMultiByte, const char* lpDefaultChar, int* lpUsedDefaultChar);
+#include <Windows.h>
 #else
 #include <sys/io.h>
 #include <unistd.h>
 #include <sys/syscall.h>
+#include <pthread.h>
 #endif
 
 namespace plog
@@ -115,16 +115,25 @@ namespace plog
             int m_fd;
         };
 
-        // TODO: implement
         class Mutex
         {
         public:
             Mutex()
             {
+#ifdef _WIN32
+                ::InitializeCriticalSection(&m_sync);
+#else
+                ::pthread_mutex_init(&m_sync, 0);
+#endif
             }
 
             ~Mutex()
             {
+#ifdef _WIN32
+                ::DeleteCriticalSection(&m_sync);
+#else
+                ::pthread_mutex_destroy(&m_sync);
+#endif
             }
 
             friend class MutexLock;
@@ -132,13 +141,32 @@ namespace plog
         private:
             void lock()
             {
+#ifdef _WIN32
+                ::EnterCriticalSection(&m_sync);
+#else
+                ::pthread_mutex_lock(&m_sync);
+#endif
             }
 
             void unlock()
             {
+#ifdef _WIN32
+                ::LeaveCriticalSection(&m_sync);
+#else
+                ::pthread_mutex_unlock(&m_sync);
+#endif
             }
 
         private:
+            Mutex(const Mutex&);
+            Mutex& operator=(const Mutex&);
+
+        private:
+#ifdef _WIN32
+            CRITICAL_SECTION m_sync;
+#else
+            pthread_mutex_t m_sync;
+#endif
         };
 
         class MutexLock
