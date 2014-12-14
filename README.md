@@ -12,6 +12,7 @@ Portable and simple log for C++
 * No 3rd-party dependencies
 * Skip execution if log is disabled
 * Txt and Csv formatters
+* File, RollingFile and Console appenders
 * Automatically log `this` pointer (supported only on Visual Studio)
 
 #Usage
