@@ -35,9 +35,13 @@ plog::init("log.csv", plog::debug, 1000 * 1000, 5);
 ```
 
 ##Logging
-
+There are 5 logging levels:
 ```cpp
+LOG_FATAL << "fatal";
 LOG_ERROR << "error";
+LOG_INFO << "info";
+LOG_WARNING << "warning";
+LOG_DEBUG << "debug";
 ```
 
 #Competing C++ log libraries
