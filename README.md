@@ -19,7 +19,7 @@ Portable and simple log for C++
 
 ##Include
 1. Add `plog/inlcude` to the project include paths
-2. Add `#include <plog/Log.h>` into your cpp/h files (if you have procompiled headers it is a good place to add this include there)
+2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
 ##Initialization
 
