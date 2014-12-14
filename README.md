@@ -4,7 +4,7 @@ Portable and simple log for C++
 #Inroduction
 
 ##Features
-* Very small
+* Very small (less than 1000 LOC)
 * Easy to use
 * Headers only
 * Cross-platform
