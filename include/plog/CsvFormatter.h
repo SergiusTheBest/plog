@@ -25,8 +25,11 @@ namespace plog
             ss << entry.m_func << "@" << entry.m_line << ";";
 
             std::istringstream split(entry.m_stream.str());
-            for (std::string token; std::getline(split, token, '"');)
+            std::string token;
+
+            while (!split.eof())
             {
+                std::getline(split, token, '"');
                 ss << "\"" << token << "\"";
             }
 
