@@ -1,7 +1,7 @@
 #plog
 Portable and simple log for C++
 
-#Inroduction
+#Introduction
 
 ##Features
 * Very small (less than 1000 LOC)
