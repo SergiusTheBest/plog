@@ -1,4 +1,5 @@
 #pragma once
+#include <cassert>
 #include <cstring>
 #include <time.h>
 #include <fcntl.h>
@@ -222,9 +223,33 @@ namespace plog
             }
         }
 
-        //TODO: add file open func
-        //HANDLE h = ::CreateFile(fileName, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_DELETE, 0, OPEN_ALWAYS, 0, 0);
-        //int fd = _open_osfhandle(reinterpret_cast<intptr_t>(h), _O_APPEND);
-        //m_file = _fdopen(fd, "a");
+        template<class T> 
+        class Singleton
+        {
+        public:
+            Singleton()
+            {
+                assert(!m_instance);
+                m_instance = static_cast<T*>(this);
+            }
+
+            ~Singleton()
+            {
+                assert(m_instance);
+                m_instance = 0;
+            }
+
+            static T& getInstance()
+            {
+                assert(m_instance);
+                return *m_instance;
+            }
+
+        private:
+            static T* m_instance;
+        };
+
+        template<class T> 
+        T* Singleton<T>::m_instance;
     }
 }

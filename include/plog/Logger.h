@@ -1,33 +1,13 @@
 #pragma once
-#include <cassert>
 #include <vector>
 #include <plog/Appender.h>
+#include <plog/Util.h>
 
 namespace plog
 {
-    static class Logger* g_instance;
-
-    class Logger
+    class Logger : public util::Singleton<Logger>
     {
     public:
-        Logger()
-        {
-            assert(!g_instance);
-            g_instance = this;
-        }
-
-        ~Logger()
-        {
-            assert(g_instance);
-            g_instance = 0;
-        }
-
-        static Logger& getInstance()
-        {
-            assert(g_instance);
-            return *g_instance;
-        }
-
         void addAppender(Appender* appender)
         {
             m_appenders.push_back(appender);
@@ -59,5 +39,5 @@ namespace plog
 
     private:
         std::vector<Appender*> m_appenders;
-    };    
+    };
 }
