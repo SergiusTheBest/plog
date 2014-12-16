@@ -9,9 +9,9 @@ namespace plog
     public:
         RollingFileAppender(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles) 
             : Appender(maxSeverity)
-            , m_maxFileSize((std::max)(maxFileSize, size_t(1000)))
-            , m_lastFileNumber((std::max)(maxFiles - 1, 0))
             , m_fileSize()
+            , m_maxFileSize((std::max)(maxFileSize, size_t(1000)))
+            , m_lastFileNumber((std::max)(maxFiles - 1, 0))            
         {
             util::splitFileName(fileName, m_fileNameNoExt, m_fileExt);
             openLogFile();

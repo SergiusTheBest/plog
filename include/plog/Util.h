@@ -186,6 +186,10 @@ namespace plog
             }
 
         private:
+            MutexLock(const MutexLock&);
+            MutexLock& operator=(const MutexLock&);
+
+        private:
             Mutex& m_mutex;
         };
 

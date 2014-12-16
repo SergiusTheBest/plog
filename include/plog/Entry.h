@@ -10,7 +10,7 @@ namespace plog
     {
     public:
         Entry(Level severity, const char* func, size_t line, const void* object) 
-            : m_severity(severity), m_object(object), m_func(func), m_line(line), m_tid(util::gettid())
+            : m_severity(severity), m_tid(util::gettid()), m_object(object), m_func(func), m_line(line)
         {
             ftime(&m_time);
             m_stream.imbue(std::locale(""));

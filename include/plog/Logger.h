@@ -8,9 +8,10 @@ namespace plog
     class Logger : public util::Singleton<Logger>
     {
     public:
-        void addAppender(Appender* appender)
+        Logger& addAppender(Appender* appender)
         {
             m_appenders.push_back(appender);
+            return *this;
         }
 
         bool checkSeverity(Level severity) const
