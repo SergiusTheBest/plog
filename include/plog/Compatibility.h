@@ -5,6 +5,7 @@
 namespace plog
 {
     const Level trace = debug;
+    const Level minimum_log_level = none;
     const Level maximum_log_level = debug;
     
     typedef Level log_level;
