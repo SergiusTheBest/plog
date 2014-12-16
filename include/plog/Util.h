@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include <time.h>
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -7,6 +8,7 @@
 #include <io.h>
 #include <Windows.h>
 #else
+#include <stdio.h>
 #include <sys/io.h>
 #include <unistd.h>
 #include <sys/syscall.h>
