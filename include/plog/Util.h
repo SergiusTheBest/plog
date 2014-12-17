@@ -40,7 +40,53 @@ namespace plog
 #endif
         }
 
-        class File
+        inline std::string toString(const wchar_t* wstr)
+        {
+#ifdef _WIN32
+            //std::mbstate_t state = std::mbstate_t();
+            //int len = 1 + std::wcsrtombs(0, &wstr, 0, &state);
+            int len = ::WideCharToMultiByte(0, 0, wstr, wcslen(wstr), 0, 0, 0, 0);
+
+            std::string str(len, 0);
+            ::WideCharToMultiByte(0, 0, wstr, wcslen(wstr), &str[0], str.size(), 0, 0);
+            //std::wcsrtombs(&str[0], &wstr, str.size(), &state);
+
+            return str;
+#else
+            // TODO: implement
+            return std::string();
+#endif
+        }
+
+        inline void splitFileName(const char* fileName, std::string& fileNameNoExt, std::string& fileExt)
+        {
+            const char* dot = std::strrchr(fileName, '.');
+
+            if (dot)
+            {
+                fileNameNoExt.assign(fileName, dot);
+                fileExt.assign(dot + 1);
+            }
+            else
+            {
+                fileNameNoExt.assign(fileName);
+                fileExt.clear();
+            }
+        }
+
+        class NonCopyable
+        {
+        protected:
+            NonCopyable()
+            {
+            }
+
+        private:
+            NonCopyable(const NonCopyable&);
+            NonCopyable& operator=(const NonCopyable&);
+        };
+
+        class File : NonCopyable
         {
         public:
             File() : m_fd(-1)
@@ -111,14 +157,10 @@ namespace plog
             }
 
         private:
-            File(const File&);
-            File& operator=(const File&);
-
-        private:
             int m_fd;
         };
 
-        class Mutex
+        class Mutex : NonCopyable
         {
         public:
             Mutex()
@@ -161,10 +203,6 @@ namespace plog
             }
 
         private:
-            Mutex(const Mutex&);
-            Mutex& operator=(const Mutex&);
-
-        private:
 #ifdef _WIN32
             CRITICAL_SECTION m_sync;
 #else
@@ -172,7 +210,7 @@ namespace plog
 #endif
         };
 
-        class MutexLock
+        class MutexLock : NonCopyable
         {
         public:
             MutexLock(Mutex& mutex) : m_mutex(mutex)
@@ -186,49 +224,11 @@ namespace plog
             }
 
         private:
-            MutexLock(const MutexLock&);
-            MutexLock& operator=(const MutexLock&);
-
-        private:
             Mutex& m_mutex;
         };
 
-        inline std::string toString(const wchar_t* wstr)
-        {
-#ifdef _WIN32
-            //std::mbstate_t state = std::mbstate_t();
-            //int len = 1 + std::wcsrtombs(0, &wstr, 0, &state);
-            int len = ::WideCharToMultiByte(0, 0, wstr, wcslen(wstr), 0, 0, 0, 0);
-                
-            std::string str(len, 0);
-            ::WideCharToMultiByte(0, 0, wstr, wcslen(wstr), &str[0], str.size(), 0, 0);
-            //std::wcsrtombs(&str[0], &wstr, str.size(), &state);
-
-            return str;
-#else
-            // TODO: implement
-            return std::string();
-#endif
-        }
-
-        inline void splitFileName(const char* fileName, std::string& fileNameNoExt, std::string& fileExt)
-        {
-            const char* dot = std::strrchr(fileName, '.');
-            
-            if (dot)
-            {
-                fileNameNoExt.assign(fileName, dot);
-                fileExt.assign(dot + 1);
-            }
-            else
-            {
-                fileNameNoExt.assign(fileName);
-                fileExt.clear();
-            }
-        }
-
         template<class T> 
-        class Singleton
+        class Singleton : NonCopyable
         {
         public:
             Singleton()
