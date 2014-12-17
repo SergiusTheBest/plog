@@ -5,7 +5,7 @@
 
   <groupId>org.github.SergiusTheBest.plog</groupId>
   <artifactId>plog-include</artifactId>
-  <version>0.5.2</version>
+  <version>0.5.3</version>
   <packaging>pom</packaging>
   <description>Portable and simple log for C++</description>
 
@@ -22,4 +22,8 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  
+  <scm>
+    <connection>scm:git:https://github.com/SergiusTheBest/plog.git</connection>
+  </scm>
 </project>
