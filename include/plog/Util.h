@@ -112,12 +112,12 @@ namespace plog
 #endif
             }
 
-            void write(const void* buf, size_t count)
+            int write(const void* buf, size_t count)
             {
 #ifdef _WIN32
-                ::_write(m_fd, buf, count);
+                return ::_write(m_fd, buf, count);
 #else
-                ::write(m_fd, buf, count);
+                return ::write(m_fd, buf, count);
 #endif
             }
 
