@@ -1,6 +1,8 @@
 #plog
 Portable and simple log for C++
 
+Build status (on Travis CI) [![Build Status](https://travis-ci.org/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.org/SergiusTheBest/plog)
+
 #Introduction
 
 ##Features
