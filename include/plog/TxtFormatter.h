@@ -6,20 +6,20 @@ namespace plog
     class TxtFormatter
     {
     public:
-        static std::string header()
+        static std::wstring header()
         {
-            return std::string();
+            return std::wstring();
         }
 
-        static std::string format(const Entry& entry)
+        static std::wstring format(const Entry& entry)
         {
             tm t;
             util::localtime_s(&t, &entry.m_time.time);
 
-            std::stringstream ss;
-            ss << t.tm_year + 1900 << "-" << std::setfill('0') << std::setw(2) << t.tm_mon << "-" << std::setfill('0') << std::setw(2) << t.tm_mday << " ";
-            ss << std::setfill('0') << std::setw(2) << t.tm_hour << ":" << std::setfill('0') << std::setw(2) << t.tm_min << ":" << std::setfill('0') << std::setw(2) << t.tm_sec << "." << std::setfill('0') << std::setw(3) << entry.m_time.millitm << " ";
-            ss << std::setfill(' ') << std::setw(5) << std::left << getLevelName(entry.m_severity) << " ";
+            std::wstringstream ss;
+            ss << t.tm_year + 1900 << "-" << std::setfill(L'0') << std::setw(2) << t.tm_mon << "-" << std::setfill(L'0') << std::setw(2) << t.tm_mday << " ";
+            ss << std::setfill(L'0') << std::setw(2) << t.tm_hour << ":" << std::setfill(L'0') << std::setw(2) << t.tm_min << ":" << std::setfill(L'0') << std::setw(2) << t.tm_sec << "." << std::setfill(L'0') << std::setw(3) << entry.m_time.millitm << " ";
+            ss << std::setfill(L' ') << std::setw(5) << std::left << getLevelName(entry.m_severity) << " ";
             ss << "[" << entry.m_tid << "] ";
             ss << "[" << entry.m_func << "@" << entry.m_line << "] ";
             ss << entry.m_stream.str() << "\n";

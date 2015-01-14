@@ -12,7 +12,7 @@ namespace plog
             : Appender(maxSeverity)
             , m_fileSize()
             , m_maxFileSize((std::max)(maxFileSize, size_t(1000)))
-            , m_lastFileNumber((std::max)(maxFiles - 1, 0))            
+            , m_lastFileNumber((std::max)(maxFiles - 1, 0))
         {
             util::splitFileName(fileName, m_fileNameNoExt, m_fileExt);
             openLogFile();
@@ -20,7 +20,7 @@ namespace plog
 
         virtual void write(const Entry& entry)
         {
-            std::string str = Formatter::format(entry);
+            std::string str = util::toUTF8(Formatter::format(entry));
 
             {
                 util::MutexLock lock(m_mutex);
@@ -63,7 +63,7 @@ namespace plog
             std::string fileName = buildFileName();
             m_file.open(fileName.c_str());
 
-            std::string str = Formatter::header();
+            std::string str = util::toUTF8(Formatter::header());
             m_file.write(str.c_str(), str.size());
 
             m_fileSize = m_file.getSize();

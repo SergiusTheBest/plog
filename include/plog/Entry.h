@@ -13,7 +13,6 @@ namespace plog
             : m_severity(severity), m_tid(util::gettid()), m_object(object), m_func(func), m_line(line)
         {
             ftime(&m_time);
-            m_stream.imbue(std::locale(""));
         }
 
         Entry& operator<<(const char* data)
@@ -27,18 +26,9 @@ namespace plog
         Entry& operator<<(const wchar_t* data)
         {
             data = data ? data : L"(null)";
-
-            for (; *data; ++data)
-            {
-                m_stream << std::use_facet<std::ctype<wchar_t> >(m_stream.getloc()).narrow(*data, '?');
-            }
+            m_stream << data;
 
             return *this;
-        }
-
-        Entry& operator<<(const std::wstring& data)
-        {
-            return *this << data.c_str();
         }
 
         template<typename T>
@@ -56,7 +46,6 @@ namespace plog
         const void*         m_object;
         const char*         m_func;
         size_t              m_line;
-        std::stringstream   m_stream;
-        std::locale         m_locale;
+        std::wstringstream  m_stream;
     };
 }

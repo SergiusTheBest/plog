@@ -14,7 +14,7 @@ namespace plog
 
         virtual void write(const Entry& entry)
         {
-            std::cout << Formatter::format(entry);
+            std::wcout << Formatter::format(entry);
         }
     };
 }

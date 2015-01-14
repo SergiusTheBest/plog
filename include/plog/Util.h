@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <pthread.h>
+#include <iconv.h>
 #endif
 
 namespace plog
@@ -42,19 +43,44 @@ namespace plog
 
         inline std::string toString(const wchar_t* wstr)
         {
+            std::string str(::wcslen(wstr) * sizeof(wchar_t), 0);
+
 #ifdef _WIN32
-            //std::mbstate_t state = std::mbstate_t();
-            //int len = 1 + std::wcsrtombs(0, &wstr, 0, &state);
-            int len = ::WideCharToMultiByte(0, 0, wstr, wcslen(wstr), 0, 0, 0, 0);
+            int len = ::WideCharToMultiByte(CP_ACP, 0, wstr, ::wcslen(wstr), &str[0], str.size(), 0, 0);
+#else
+            std::mbstate_t ps = std::mbstate_t();
+            size_t len = std::wcsrtombs(&str[0], &wstr, str.size(), &ps);
+            
+            if (len < 0)
+            {
+                len = 0;
+            }
+#endif
+            str.resize(len);
+            return str;
+        }
 
-            std::string str(len, 0);
-            ::WideCharToMultiByte(0, 0, wstr, wcslen(wstr), &str[0], str.size(), 0, 0);
-            //std::wcsrtombs(&str[0], &wstr, str.size(), &state);
+        inline std::string toUTF8(const std::wstring& wstr)
+        {
+            std::string str(wstr.size() * sizeof(wchar_t), 0);
 
+#ifdef _WIN32
+            int len = ::WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.size(), &str[0], str.size(), 0, 0);     
+
+            str.resize(len);
             return str;
 #else
-            // TODO: implement
-            return std::string();
+            /*
+            char* in = reinterpret_cast<char*>(const_cast<wchar_t*>(&wstr[0]));
+            char* out = &str[0];
+            size_t inBytes = wstr.size() * sizeof(wchar_t);
+            size_t outBytes = str.size();
+
+            iconv_t cd = ::iconv_open("UTF-8", "WCHAR_T");
+            size_t len = ::iconv(cd, &in, &inBytes, &out, &outBytes);
+            ::iconv_close(cd);*/
+
+            return toString(wstr.c_str());
 #endif
         }
 
