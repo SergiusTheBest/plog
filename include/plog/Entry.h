@@ -17,17 +17,31 @@ namespace plog
 
         Entry& operator<<(const char* data)
         {
-            data = data ? data : "(null)";
-            m_stream << data;
+            m_stream << (data ? data : "(null)");
+            return *this;
+        }
 
+        Entry& operator<<(char* data)
+        {
+            *this << const_cast<const char*>(data);
             return *this;
         }
 
         Entry& operator<<(const wchar_t* data)
         {
-            data = data ? data : L"(null)";
-            m_stream << data;
+            m_stream << (data ? data : L"(null)");
+            return *this;
+        }
 
+        Entry& operator<<(wchar_t* data)
+        {
+            *this << const_cast<const wchar_t*>(data);
+            return *this;
+        }
+
+        Entry& operator<<(const std::string& data)
+        {
+            m_stream << data.c_str();
             return *this;
         }
 
@@ -35,7 +49,6 @@ namespace plog
         Entry& operator<<(const T& data)
         {
             m_stream << data;
-
             return *this;
         }
 
