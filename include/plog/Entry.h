@@ -15,9 +15,23 @@ namespace plog
             ftime(&m_time);
         }
 
+        Entry& operator<<(char data)
+        {
+            char str[] = { data, 0 };
+            *this << str;
+            return *this;
+        }
+
         Entry& operator<<(const char* data)
         {
-            m_stream << (data ? data : "(null)");
+            data = data ? data : "(null)";
+
+#ifdef _WIN32
+            m_stream << util::toUnicode(data);
+#else            
+            m_stream << data;
+#endif
+
             return *this;
         }
 
@@ -27,9 +41,29 @@ namespace plog
             return *this;
         }
 
+        Entry& operator<<(const std::string& data)
+        {
+            *this << data.c_str();
+            return *this;
+        }
+
+        Entry& operator<<(wchar_t data)
+        {
+            wchar_t str[] = { data, 0 };
+            *this << str;
+            return *this;
+        }
+
         Entry& operator<<(const wchar_t* data)
         {
-            m_stream << (data ? data : L"(null)");
+            data = data ? data : L"(null)";
+
+#ifdef _WIN32
+            m_stream << data;
+#else
+            m_stream << util::toString(data);
+#endif
+
             return *this;
         }
 
@@ -39,9 +73,9 @@ namespace plog
             return *this;
         }
 
-        Entry& operator<<(const std::string& data)
+        Entry& operator<<(const std::wstring& data)
         {
-            m_stream << data.c_str();
+            *this << data.c_str();
             return *this;
         }
 
@@ -59,6 +93,6 @@ namespace plog
         const void*         m_object;
         const char*         m_func;
         size_t              m_line;
-        std::wstringstream  m_stream;
+        util::nstringstream m_stream;
     };
 }

@@ -14,7 +14,11 @@ namespace plog
 
         virtual void write(const Entry& entry)
         {
+#ifdef _WIN32
             std::wcout << Formatter::format(entry);
+#else
+            std::cout << Formatter::format(entry);
+#endif
         }
     };
 }

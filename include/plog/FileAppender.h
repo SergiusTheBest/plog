@@ -9,14 +9,14 @@ namespace plog
     public:
         FileAppender(const char* fileName, Level maxSeverity) : Appender(maxSeverity), m_file(fileName)
         {
-            std::string str = util::toUTF8(Formatter::header());
-            m_file.write(str.c_str(), str.size());
+            util::nstring str = Formatter::header();
+            m_file.writeAsUTF8(str);
         }
 
         virtual void write(const Entry& entry)
         {
-            std::string str = util::toUTF8(Formatter::format(entry));
-            m_file.write(str.c_str(), str.size());
+            util::nstring str = Formatter::format(entry);
+            m_file.writeAsUTF8(str);
         }
 
     private:

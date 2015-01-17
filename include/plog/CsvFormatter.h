@@ -1,35 +1,36 @@
 #pragma once
 #include <iomanip>
+#include <plog/Util.h>
 
 namespace plog
 {
     class CsvFormatter
     {
     public:
-        static std::wstring header()
+        static util::nstring header()
         {
-            return L"Date;Time;Severity;TID;This;Function;Message\n";
+            return PLOG_NSTR("Date;Time;Severity;TID;This;Function;Message\n");
         }
 
-        static std::wstring format(const Entry& entry)
+        static util::nstring format(const Entry& entry)
         {
             tm t;
             util::localtime_s(&t, &entry.m_time.time);
 
-            std::wstringstream ss;
-            ss << t.tm_year + 1900 << "/" << std::setfill(L'0') << std::setw(2) << t.tm_mon << "/" << std::setfill(L'0') << std::setw(2) << t.tm_mday << ";";
-            ss << std::setfill(L'0') << std::setw(2) << t.tm_hour << ":" << std::setfill(L'0') << std::setw(2) << t.tm_min << ":" << std::setfill(L'0') << std::setw(2) << t.tm_sec << "." << std::setfill(L'0') << std::setw(3) << entry.m_time.millitm << ";";
+            util::nstringstream ss;
+            ss << t.tm_year + 1900 << "/" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mon << "/" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mday << ";";
+            ss << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_hour << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_min << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_sec << "." << std::setfill(PLOG_NSTR('0')) << std::setw(3) << entry.m_time.millitm << ";";
             ss << getLevelName(entry.m_severity) << ";";
             ss << entry.m_tid << ";";
             ss << entry.m_object << ";";
             ss << entry.m_func << "@" << entry.m_line << ";";
 
-            std::wistringstream split(entry.m_stream.str());
-            std::wstring token;
+            util::nstringstream split(entry.m_stream.str());
+            util::nstring token;
 
             while (!split.eof())
             {
-                std::getline(split, token, L'"');
+                std::getline(split, token, PLOG_NSTR('"'));
                 ss << "\"" << token << "\"";
             }
 

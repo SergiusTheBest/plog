@@ -20,23 +20,26 @@ namespace plog
 
         virtual void write(const Entry& entry)
         {
-            std::string str = util::toUTF8(Formatter::format(entry));
+            util::nstring str = Formatter::format(entry);
 
             {
                 util::MutexLock lock(m_mutex);
 
-                if (m_fileSize + str.size() > m_maxFileSize)
+                if (m_fileSize > m_maxFileSize)
                 {
                     rollLogFiles();
                 }
+            }
 
-                m_fileSize += str.size();
+            int bytesWritten = m_file.writeAsUTF8(str);
+
+            if (bytesWritten > 0)
+            {
+                m_fileSize += bytesWritten;
 #ifdef _WIN32
                 ++m_fileSize;
 #endif
             }
-
-            m_file.write(str.c_str(), str.size());
         }
 
     private:
@@ -63,8 +66,8 @@ namespace plog
             std::string fileName = buildFileName();
             m_file.open(fileName.c_str());
 
-            std::string str = util::toUTF8(Formatter::header());
-            m_file.write(str.c_str(), str.size());
+            util::nstring str = Formatter::header();
+            m_file.writeAsUTF8(str);
 
             m_fileSize = m_file.getSize();
         }

@@ -17,10 +17,25 @@
 #include <iconv.h>
 #endif
 
+#ifdef _WIN32
+#define _PLOG_NSTR(x)   L##x
+#define PLOG_NSTR(x)    _PLOG_NSTR(x)
+#else
+#define PLOG_NSTR(x)    x
+#endif
+
 namespace plog
 {
     namespace util
     {
+#ifdef _WIN32
+        typedef std::wstring nstring;
+        typedef std::wstringstream nstringstream;
+#else
+        typedef std::string nstring;
+        typedef std::stringstream nstringstream;
+#endif
+
         inline void localtime_s(struct tm* t, const time_t* time)
         {
 #ifdef _WIN32
@@ -43,43 +58,49 @@ namespace plog
 
         inline std::string toString(const wchar_t* wstr)
         {
-            std::string str(::wcslen(wstr) * sizeof(wchar_t), 0);
+            size_t wlen = ::wcslen(wstr);
+            std::string str(wlen * sizeof(wchar_t), 0);
 
 #ifdef _WIN32
-            int len = ::WideCharToMultiByte(CP_ACP, 0, wstr, ::wcslen(wstr), &str[0], str.size(), 0, 0);
+            int len = ::WideCharToMultiByte(CP_ACP, 0, wstr, wlen, &str[0], str.size(), 0, 0);
 #else
-            std::mbstate_t ps = std::mbstate_t();
-            size_t len = std::wcsrtombs(&str[0], &wstr, str.size(), &ps);
-            
-            if (len < 0)
-            {
-                len = 0;
-            }
+            const char* in = reinterpret_cast<const char*>(&wstr[0]);
+            char* out = &str[0];
+            size_t inBytes = wlen * sizeof(wchar_t);
+            size_t outBytes = str.size();
+
+            iconv_t cd = ::iconv_open("UTF-8", "WCHAR_T");
+            ::iconv(cd, const_cast<char**>(&in), &inBytes, &out, &outBytes);
+            ::iconv_close(cd); 
+            size_t len = str.size() - outBytes;
 #endif
             str.resize(len);
             return str;
         }
 
+#ifdef _WIN32
+        inline std::wstring toUnicode(const char* str)
+        {
+            size_t len = ::strlen(str);
+            std::wstring wstr(len, 0);
+
+            int wlen = ::MultiByteToWideChar(CP_ACP, 0, str, len, &wstr[0], wstr.size());
+
+            wstr.resize(wlen);
+            return wstr;
+        }
+#endif
+
         inline std::string toUTF8(const std::wstring& wstr)
         {
+#ifdef _WIN32
             std::string str(wstr.size() * sizeof(wchar_t), 0);
 
-#ifdef _WIN32
-            int len = ::WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.size(), &str[0], str.size(), 0, 0);     
+            int len = ::WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.size(), &str[0], str.size(), 0, 0);
 
             str.resize(len);
             return str;
 #else
-            /*
-            char* in = reinterpret_cast<char*>(const_cast<wchar_t*>(&wstr[0]));
-            char* out = &str[0];
-            size_t inBytes = wstr.size() * sizeof(wchar_t);
-            size_t outBytes = str.size();
-
-            iconv_t cd = ::iconv_open("UTF-8", "WCHAR_T");
-            size_t len = ::iconv(cd, &in, &inBytes, &out, &outBytes);
-            ::iconv_close(cd);*/
-
             return toString(wstr.c_str());
 #endif
         }
@@ -136,6 +157,11 @@ namespace plog
 #else
                 m_fd = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY, S_IREAD | S_IWRITE);
 #endif
+                if (0 == getSize())
+                {
+                    const unsigned char kBOM[] = { 0xEF, 0xBB, 0xBF };
+                    write(kBOM, sizeof(kBOM));
+                }
             }
 
             int write(const void* buf, size_t count)
@@ -144,6 +170,16 @@ namespace plog
                 return ::_write(m_fd, buf, count);
 #else
                 return ::write(m_fd, buf, count);
+#endif
+            }
+
+            int writeAsUTF8(const util::nstring& str)
+            {
+#ifdef _WIN32
+                std::string utf8str = toUTF8(str);
+                return write(utf8str.c_str(), utf8str.size());
+#else
+                return write(str.c_str(), str.size());
 #endif
             }
 
