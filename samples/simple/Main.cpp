@@ -3,7 +3,7 @@
 
 int main()
 {
-    plog::init("intro-log.txt", plog::debug, 1000, 3);
+    plog::init("simple-log.txt", plog::debug, 2000, 3);
 
     // Log levels
     LOG_FATAL << "fatal";

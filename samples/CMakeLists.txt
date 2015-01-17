@@ -17,8 +17,8 @@ add_library(plog STATIC ${PLOG_HEADERS})
 set_target_properties(plog PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(plog PROPERTIES FOLDER Include)
 
-add_executable(Intro intro/Main.cpp intro/MyClass.h intro/MyClass.cpp) 
-set_target_properties(Intro PROPERTIES FOLDER Samples)
+add_executable(Simple simple/Main.cpp simple/MyClass.h simple/MyClass.cpp) 
+set_target_properties(Simple PROPERTIES FOLDER Samples)
 
 add_executable(Multi multi/Main.cpp) 
 set_target_properties(Multi PROPERTIES FOLDER Samples)
