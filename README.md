@@ -14,6 +14,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 * Txt and Csv formatters
 * File, RollingFile and Console appenders
 * Automatically log `this` pointer (supported only on Visual Studio)
+* Unicode aware, files are stored as UTF8
 
 #Usage
 
@@ -25,10 +26,8 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 
 There are a number of predefined initialization functions:
 ```cpp
-void init(const char* fileName, Level maxSeverity);
-void init(const wchar_t* fileName, Level maxSeverity);
-void init(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles);
-void init(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles);
+void init(const char/wchar_t* fileName, Level maxSeverity);
+void init(const char/wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles);
 ```
 Sample usage:
 ```cpp
