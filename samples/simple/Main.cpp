@@ -26,7 +26,6 @@ int main()
     LOG_DEBUG << L"Wide - вайд";
     LOG_DEBUG << std::string("test тест");
     LOG_DEBUG << std::wstring(L"test тест");
-    LOG_DEBUG << 'ы';
     LOG_DEBUG << L'ы';
 
     // Multiline
