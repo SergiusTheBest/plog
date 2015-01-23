@@ -1,27 +1,27 @@
 #pragma once
 #include <cassert>
 #include <cstring>
+#include <cstdio>
 #include <time.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 
 #ifdef _WIN32
-#include <io.h>
-#include <Windows.h>
+#   include <Windows.h>
 #else
-#include <stdio.h>
-#include <sys/io.h>
-#include <unistd.h>
-#include <sys/syscall.h>
-#include <pthread.h>
-#include <iconv.h>
+#   include <unistd.h>
+#   include <sys/syscall.h>
+#   include <pthread.h>
+#   ifndef __ANDROID__
+#       include <iconv.h>
+#   endif
 #endif
 
 #ifdef _WIN32
-#define _PLOG_NSTR(x)   L##x
-#define PLOG_NSTR(x)    _PLOG_NSTR(x)
+#   define _PLOG_NSTR(x)   L##x
+#   define PLOG_NSTR(x)    _PLOG_NSTR(x)
 #else
-#define PLOG_NSTR(x)    x
+#   define PLOG_NSTR(x)    x
 #endif
 
 namespace plog
@@ -63,6 +63,8 @@ namespace plog
 
 #ifdef _WIN32
             int len = ::WideCharToMultiByte(CP_ACP, 0, wstr, wlen, &str[0], str.size(), 0, 0);
+#elif defined(__ANDROID__)
+            return std::string("<<not supported>>");
 #else
             const char* in = reinterpret_cast<const char*>(&wstr[0]);
             char* out = &str[0];
@@ -96,9 +98,12 @@ namespace plog
 #ifdef _WIN32
             std::string str(wstr.size() * sizeof(wchar_t), 0);
 
-            int len = ::WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.size(), &str[0], str.size(), 0, 0);
+            if (!str.empty())
+            {
+                int len = ::WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.size(), &str[0], str.size(), 0, 0);
+                str.resize(len);
+            }
 
-            str.resize(len);
             return str;
 #else
             return toString(wstr.c_str());
@@ -136,11 +141,11 @@ namespace plog
         class File : NonCopyable
         {
         public:
-            File() : m_fd(-1)
+            File() : m_file()
             {
             }
 
-            File(const char* fileName) : m_fd(-1)
+            File(const char* fileName) : m_file()
             {
                 open(fileName);
             }
@@ -153,9 +158,9 @@ namespace plog
             void open(const char* fileName)
             {
 #ifdef _WIN32
-                ::_sopen_s(&m_fd, fileName, O_CREAT | O_APPEND | O_TEXT | O_WRONLY, _SH_DENYWR, S_IREAD | S_IWRITE);
+                m_file = ::_fsopen(fileName, "ab", _SH_DENYWR);
 #else
-                m_fd = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY, S_IREAD | S_IWRITE);
+                m_file = std::fopen(fileName, "a");
 #endif
                 if (0 == getSize())
                 {
@@ -164,43 +169,35 @@ namespace plog
                 }
             }
 
-            int write(const void* buf, size_t count)
+            size_t write(const void* buf, size_t count)
             {
-#ifdef _WIN32
-                return ::_write(m_fd, buf, count);
-#else
-                return ::write(m_fd, buf, count);
-#endif
+                size_t written = std::fwrite(buf, 1, count, m_file);
+                std::fflush(m_file);
+
+                return written;
             }
 
             int writeAsUTF8(const util::nstring& str)
             {
 #ifdef _WIN32
                 std::string utf8str = toUTF8(str);
-                return write(utf8str.c_str(), utf8str.size());
 #else
-                return write(str.c_str(), str.size());
+                const std::string& utf8str = str;
 #endif
+                return write(utf8str.c_str(), utf8str.size());
             }
 
             off_t getSize()
             {
-                struct stat st = {};
-                fstat(m_fd, &st);
-                
-                return st.st_size;
+                return std::ftell(m_file);
             }
 
             void close()
             {
-                if (-1 != m_fd)
+                if (m_file)
                 {
-#ifdef _WIN32
-                    ::_close(m_fd);
-#else
-                    ::close(m_fd);
-#endif
-                    m_fd = -1;
+                    std::fclose(m_file);
+                    m_file = NULL;
                 }
             }
 
@@ -219,7 +216,7 @@ namespace plog
             }
 
         private:
-            int m_fd;
+            FILE* m_file;
         };
 
         class Mutex : NonCopyable
