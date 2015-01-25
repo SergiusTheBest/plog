@@ -14,22 +14,14 @@ namespace plog
     {
     }
 
-    inline void init_csv(const char* fileName, Level maxSeverity)
+    template<class CharType>
+    inline void init_csv(const CharType* fileName, Level maxSeverity)
     {
         initCsv(fileName, maxSeverity);
     }
 
-    inline void init_csv(const wchar_t* fileName, Level maxSeverity)
-    {
-        initCsv(fileName, maxSeverity);
-    }
-
-    inline void init_txt(const char* fileName, Level maxSeverity)
-    {
-        initTxt(fileName, maxSeverity);
-    }
-
-    inline void init_txt(const wchar_t* fileName, Level maxSeverity)
+    template<class CharType>
+    inline void init_txt(const CharType* fileName, Level maxSeverity)
     {
         initTxt(fileName, maxSeverity);
     }

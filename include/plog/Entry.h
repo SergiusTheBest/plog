@@ -47,6 +47,7 @@ namespace plog
             return *this;
         }
 
+#ifndef __ANDROID__
         Entry& operator<<(wchar_t data)
         {
             wchar_t str[] = { data, 0 };
@@ -61,7 +62,7 @@ namespace plog
 #ifdef _WIN32
             m_stream << data;
 #else
-            m_stream << util::toString(data);
+            *this << util::toString(data);
 #endif
 
             return *this;
@@ -78,6 +79,7 @@ namespace plog
             *this << data.c_str();
             return *this;
         }
+#endif
 
         template<typename T>
         Entry& operator<<(const T& data)

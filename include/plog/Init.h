@@ -43,19 +43,9 @@ namespace plog
         init<CsvFormatter>(fileName, maxSeverity);
     }
 
-    inline void initCsv(const wchar_t* fileName, Level maxSeverity)
-    {
-        initCsv(util::toString(fileName).c_str(), maxSeverity);
-    }
-
     inline void initCsv(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
     {
         init<CsvFormatter>(fileName, maxSeverity, maxFileSize, maxFiles);
-    }
-
-    inline void initCsv(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
-    {
-        init<CsvFormatter>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
     }
 
     inline void initTxt(const char* fileName, Level maxSeverity)
@@ -63,19 +53,9 @@ namespace plog
         init<TxtFormatter>(fileName, maxSeverity);
     }
 
-    inline void initTxt(const wchar_t* fileName, Level maxSeverity)
-    {
-        init<TxtFormatter>(util::toString(fileName).c_str(), maxSeverity);
-    }
-
     inline void initTxt(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
     {
         init<TxtFormatter>(fileName, maxSeverity, maxFileSize, maxFiles);
-    }
-
-    inline void initTxt(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
-    {
-        init<TxtFormatter>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
     }
     
     inline void init(const char* fileName, Level maxSeverity)
@@ -90,11 +70,6 @@ namespace plog
         }
     }
 
-    inline void init(const wchar_t* fileName, Level maxSeverity)
-    {
-        init(util::toString(fileName).c_str(), maxSeverity);
-    }
-
     inline void init(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
     {
         if (isCsv(fileName))
@@ -107,8 +82,35 @@ namespace plog
         }
     }
 
+#ifdef _WIN32
+    inline void initCsv(const wchar_t* fileName, Level maxSeverity)
+    {
+        initCsv(util::toString(fileName).c_str(), maxSeverity);
+    }
+
+    inline void initCsv(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
+    {
+        init<CsvFormatter>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
+    }
+
+    inline void initTxt(const wchar_t* fileName, Level maxSeverity)
+    {
+        init<TxtFormatter>(util::toString(fileName).c_str(), maxSeverity);
+    }
+
+    inline void initTxt(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
+    {
+        init<TxtFormatter>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
+    }
+
+    inline void init(const wchar_t* fileName, Level maxSeverity)
+    {
+        init(util::toString(fileName).c_str(), maxSeverity);
+    }
+
     inline void init(const wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles)
     {
         init(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
-    }    
+    }
+#endif
 }

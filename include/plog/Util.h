@@ -56,6 +56,7 @@ namespace plog
 #endif
         }
 
+#ifndef __ANDROID__
         inline std::string toString(const wchar_t* wstr)
         {
             size_t wlen = ::wcslen(wstr);
@@ -63,8 +64,6 @@ namespace plog
 
 #ifdef _WIN32
             int len = ::WideCharToMultiByte(CP_ACP, 0, wstr, wlen, &str[0], str.size(), 0, 0);
-#elif defined(__ANDROID__)
-            return std::string("<<not supported>>");
 #else
             const char* in = reinterpret_cast<const char*>(&wstr[0]);
             char* out = &str[0];
@@ -79,6 +78,7 @@ namespace plog
             str.resize(len);
             return str;
         }
+#endif
 
 #ifdef _WIN32
         inline std::wstring toUnicode(const char* str)
@@ -91,11 +91,9 @@ namespace plog
             wstr.resize(wlen);
             return wstr;
         }
-#endif
 
         inline std::string toUTF8(const std::wstring& wstr)
         {
-#ifdef _WIN32
             std::string str(wstr.size() * sizeof(wchar_t), 0);
 
             if (!str.empty())
@@ -105,10 +103,8 @@ namespace plog
             }
 
             return str;
-#else
-            return toString(wstr.c_str());
-#endif
         }
+#endif
 
         inline void splitFileName(const char* fileName, std::string& fileNameNoExt, std::string& fileExt)
         {
