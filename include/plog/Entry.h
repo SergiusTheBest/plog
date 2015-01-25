@@ -1,6 +1,5 @@
 #pragma once
 #include <sstream>
-#include <sys/timeb.h>
 #include <plog/Util.h>
 #include <plog/Level.h>
 
@@ -12,7 +11,7 @@ namespace plog
         Entry(Level severity, const char* func, size_t line, const void* object) 
             : m_severity(severity), m_tid(util::gettid()), m_object(object), m_func(func), m_line(line)
         {
-            ftime(&m_time);
+            util::ftime(&m_time);
         }
 
         Entry& operator<<(char data)
@@ -89,7 +88,7 @@ namespace plog
         }
 
     public:
-        timeb               m_time;
+        util::Time          m_time;
         Level               m_severity;
         unsigned int        m_tid;
         const void*         m_object;

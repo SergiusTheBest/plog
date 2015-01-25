@@ -2,15 +2,17 @@
 #include <cassert>
 #include <cstring>
 #include <cstdio>
-#include <time.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 
 #ifdef _WIN32
 #   include <Windows.h>
+#   include <time.h>
+#   include <sys/timeb.h>
 #else
 #   include <unistd.h>
 #   include <sys/syscall.h>
+#   include <sys/time.h>
 #   include <pthread.h>
 #   ifndef __ANDROID__
 #       include <iconv.h>
@@ -44,6 +46,30 @@ namespace plog
             ::localtime_r(time, t);
 #endif
         }
+
+#ifdef _WIN32
+        typedef timeb Time;
+
+        inline void ftime(Time* t)
+        {
+            ::ftime(t);
+        }
+#else
+        struct Time
+        {
+            time_t time;
+            unsigned short millitm;
+        };
+
+        inline void ftime(Time* t)
+        {
+            timeval tv;
+            ::gettimeofday(&tv, NULL);
+
+            t->time = tv.tv_sec;
+            t->millitm = static_cast<unsigned short>(tv.tv_usec / 1000);
+        }
+#endif
 
         inline unsigned int gettid()
         {
