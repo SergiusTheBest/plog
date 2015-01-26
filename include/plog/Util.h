@@ -193,8 +193,13 @@ namespace plog
 
             size_t write(const void* buf, size_t count)
             {
-                size_t written = std::fwrite(buf, 1, count, m_file);
-                std::fflush(m_file);
+                size_t written = 0;
+
+                if (m_file)
+                {
+                    written = std::fwrite(buf, 1, count, m_file);
+                    std::fflush(m_file);
+                }
 
                 return written;
             }
@@ -211,7 +216,7 @@ namespace plog
 
             off_t getSize()
             {
-                return std::ftell(m_file);
+                return m_file ? std::ftell(m_file) : 0;
             }
 
             void close()
