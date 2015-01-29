@@ -1,10 +1,10 @@
 #pragma once
 #include <cstring>
 #include <plog/Logger.h>
-#include <plog/CsvFormatter.h>
-#include <plog/TxtFormatter.h>
-#include <plog/FileAppender.h>
-#include <plog/RollingFileAppender.h>
+#include <plog/Formatters/CsvFormatter.h>
+#include <plog/Formatters/TxtFormatter.h>
+#include <plog/Appenders/FileAppender.h>
+#include <plog/Appenders/RollingFileAppender.h>
 
 namespace plog
 {

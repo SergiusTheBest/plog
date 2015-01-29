@@ -1,5 +1,5 @@
 ﻿#include <plog/Log.h>
-#include <plog/ConsoleAppender.h>
+#include <plog/Appenders/ConsoleAppender.h>
 
 int main()
 {

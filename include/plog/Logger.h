@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <plog/Appender.h>
+#include <plog/Appenders/Appender.h>
 #include <plog/Util.h>
 
 namespace plog
