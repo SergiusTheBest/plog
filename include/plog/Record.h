@@ -5,23 +5,23 @@
 
 namespace plog
 {
-    class Entry
+    class Record
     {
     public:
-        Entry(Level severity, const char* func, size_t line, const void* object) 
+        Record(Level severity, const char* func, size_t line, const void* object)
             : m_severity(severity), m_tid(util::gettid()), m_object(object), m_line(line), m_func(func)
         {
             util::ftime(&m_time);
         }
 
-        Entry& operator<<(char data)
+        Record& operator<<(char data)
         {
             char str[] = { data, 0 };
             *this << str;
             return *this;
         }
 
-        Entry& operator<<(const char* data)
+        Record& operator<<(const char* data)
         {
             data = data ? data : "(null)";
 
@@ -34,27 +34,27 @@ namespace plog
             return *this;
         }
 
-        Entry& operator<<(char* data)
+        Record& operator<<(char* data)
         {
             *this << const_cast<const char*>(data);
             return *this;
         }
 
-        Entry& operator<<(const std::string& data)
+        Record& operator<<(const std::string& data)
         {
             *this << data.c_str();
             return *this;
         }
 
 #ifndef __ANDROID__
-        Entry& operator<<(wchar_t data)
+        Record& operator<<(wchar_t data)
         {
             wchar_t str[] = { data, 0 };
             *this << str;
             return *this;
         }
 
-        Entry& operator<<(const wchar_t* data)
+        Record& operator<<(const wchar_t* data)
         {
             data = data ? data : L"(null)";
 
@@ -67,13 +67,13 @@ namespace plog
             return *this;
         }
 
-        Entry& operator<<(wchar_t* data)
+        Record& operator<<(wchar_t* data)
         {
             *this << const_cast<const wchar_t*>(data);
             return *this;
         }
 
-        Entry& operator<<(const std::wstring& data)
+        Record& operator<<(const std::wstring& data)
         {
             *this << data.c_str();
             return *this;
@@ -81,7 +81,7 @@ namespace plog
 #endif
 
         template<typename T>
-        Entry& operator<<(const T& data)
+        Record& operator<<(const T& data)
         {
             m_stream << data;
             return *this;

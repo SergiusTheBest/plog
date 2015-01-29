@@ -27,13 +27,13 @@ namespace plog
             return false;
         }
 
-        void operator+=(const Entry& entry)
+        void operator+=(const Record& record)
         {
             for (std::vector<Appender*>::iterator it = m_appenders.begin(); it != m_appenders.end(); ++it)
             {
-                if ((*it)->getMaxSeverity() >= entry.m_severity)
+                if ((*it)->getMaxSeverity() >= record.m_severity)
                 {
-                    (*it)->write(entry);
+                    (*it)->write(record);
                 }
             }
         }

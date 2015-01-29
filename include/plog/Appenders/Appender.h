@@ -13,7 +13,7 @@ namespace plog
         {
         }
 
-        virtual void write(const Entry& entry) = 0;
+        virtual void write(const Record& record) = 0;
 
         Level getMaxSeverity() const
         {

@@ -1,5 +1,5 @@
 #pragma once
-#include <plog/Entry.h>
+#include <plog/Record.h>
 #include <plog/Logger.h>
 #include <plog/Init.h>
 #include <plog/Compatibility.h>
@@ -13,7 +13,7 @@
 #endif
 
 #define LOG(severity) \
-    if (plog::Logger::getInstance().checkSeverity(severity)) plog::Logger::getInstance() += plog::Entry(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_THIS())
+    if (plog::Logger::getInstance().checkSeverity(severity)) plog::Logger::getInstance() += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_THIS())
 
 #define LOG_DEBUG   LOG(plog::debug)
 #define LOG_INFO    LOG(plog::info)

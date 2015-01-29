@@ -12,12 +12,12 @@ namespace plog
             ::setlocale(LC_ALL, "");
         }
 
-        virtual void write(const Entry& entry)
+        virtual void write(const Record& record)
         {
 #ifdef _WIN32
-            std::wcout << Formatter::format(entry);
+            std::wcout << Formatter::format(record);
 #else
-            std::cout << Formatter::format(entry);
+            std::cout << Formatter::format(record);
 #endif
         }
     };

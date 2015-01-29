@@ -13,9 +13,9 @@ namespace plog
             m_file.writeAsUTF8(str);
         }
 
-        virtual void write(const Entry& entry)
+        virtual void write(const Record& record)
         {
-            util::nstring str = Formatter::format(entry);
+            util::nstring str = Formatter::format(record);
             m_file.writeAsUTF8(str);
         }
 

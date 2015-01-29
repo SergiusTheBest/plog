@@ -18,9 +18,9 @@ namespace plog
             openLogFile();
         }
 
-        virtual void write(const Entry& entry)
+        virtual void write(const Record& record)
         {
-            util::nstring str = Formatter::format(entry);
+            util::nstring str = Formatter::format(record);
 
             {
                 util::MutexLock lock(m_mutex);
