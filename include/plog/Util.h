@@ -132,6 +132,27 @@ namespace plog
         }
 #endif
 
+        inline std::string processFuncName(const char* func)
+        {
+#ifdef _WIN32
+            return std::string(func);
+#else
+            const char* funcBegin = func;
+            const char* funcEnd = ::strchr(funcBegin, '(');
+
+            for (const char* i = funcEnd - 1; i >= funcBegin; --i)
+            {
+                if (*i == ' ')
+                {
+                    funcBegin = i + 1;
+                    break;
+                }
+            }
+
+            return std::string(funcBegin, funcEnd);
+#endif
+        }
+
         inline void splitFileName(const char* fileName, std::string& fileNameNoExt, std::string& fileExt)
         {
             const char* dot = std::strrchr(fileName, '.');

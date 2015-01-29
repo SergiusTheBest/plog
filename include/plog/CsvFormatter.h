@@ -24,7 +24,7 @@ namespace plog
             ss << getLevelName(entry.m_severity) << ";";
             ss << entry.m_tid << ";";
             ss << entry.m_object << ";";
-            ss << entry.m_func << "@" << entry.m_line << ";";
+            ss << entry.func().c_str() << "@" << entry.m_line << ";";
 
             util::nstringstream split(entry.m_stream.str());
             util::nstring token;

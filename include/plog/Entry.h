@@ -9,7 +9,7 @@ namespace plog
     {
     public:
         Entry(Level severity, const char* func, size_t line, const void* object) 
-            : m_severity(severity), m_tid(util::gettid()), m_object(object), m_func(func), m_line(line)
+            : m_severity(severity), m_tid(util::gettid()), m_object(object), m_line(line), m_func(func)
         {
             util::ftime(&m_time);
         }
@@ -87,13 +87,20 @@ namespace plog
             return *this;
         }
 
+        std::string func() const
+        {
+            return util::processFuncName(m_func);
+        }
+
     public:
         util::Time          m_time;
-        Level               m_severity;
-        unsigned int        m_tid;
-        const void*         m_object;
-        const char*         m_func;
-        size_t              m_line;
+        const Level         m_severity;
+        const unsigned int  m_tid;
+        const void* const   m_object;
+        const size_t        m_line;
         util::nstringstream m_stream;
+
+    private:
+        const char* const   m_func;
     };
 }
