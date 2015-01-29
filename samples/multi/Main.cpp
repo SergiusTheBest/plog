@@ -5,8 +5,7 @@ int main()
 {
     static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("multi-log.csv", plog::debug, 8000, 3);
     static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender(plog::debug);
-    static plog::Logger logger;
-    logger.addAppender(&fileAppender).addAppender(&consoleAppender);
+    plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
 
     // Log levels
     LOG_FATAL << "fatal";
