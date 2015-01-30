@@ -21,4 +21,10 @@
 #define LOG_ERROR   LOG(plog::error)
 #define LOG_FATAL   LOG(plog::fatal)
 
+#define LOGD        LOG_DEBUG
+#define LOGI        LOG_INFO
+#define LOGW        LOG_WARNING
+#define LOGE        LOG_ERROR
+#define LOGF        LOG_FATAL
+
 #define LOG_IF(severity, condition) if (condition) LOG(severity)
