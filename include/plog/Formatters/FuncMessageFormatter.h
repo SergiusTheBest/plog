@@ -4,7 +4,7 @@
 
 namespace plog
 {
-    class WhereWhatFormatter
+    class FuncMessageFormatter
     {
     public:
         static util::nstring header()
