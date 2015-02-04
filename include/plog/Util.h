@@ -134,7 +134,7 @@ namespace plog
 
         inline std::string processFuncName(const char* func)
         {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__OBJC__)
             return std::string(func);
 #else
             const char* funcBegin = func;
