@@ -26,7 +26,15 @@ namespace plog
             ss << record.m_object << ";";
             ss << record.func().c_str() << "@" << record.m_line << ";";
 
-            util::nstringstream split(record.m_stream.str());
+            util::nstring message = record.m_stream.str();
+
+            if (message.size() > kMaxMessageSize)
+            {
+                message.resize(kMaxMessageSize);
+                message.append(PLOG_NSTR("..."));
+            }
+
+            util::nstringstream split(message);
             util::nstring token;
 
             while (!split.eof())
@@ -39,5 +47,7 @@ namespace plog
 
             return ss.str();
         }
+
+        static const size_t kMaxMessageSize = 32000;
     };
 }
