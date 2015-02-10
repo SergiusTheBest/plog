@@ -9,6 +9,7 @@ namespace plog
     const Level maximum_log_level = debug;
     
     typedef Level log_level;
+    typedef Record message;
 
     inline void free(bool = true)
     {
