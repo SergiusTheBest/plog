@@ -50,7 +50,7 @@ plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
 ```
 
 ##Step 3: Logging
-Logging is performed as a stream output. Use the following macroses:
+Logging is performed as a stream output. Use the following macros:
 ```cpp
 LOG_FATAL << "fatal";
 LOG_ERROR << "error";
