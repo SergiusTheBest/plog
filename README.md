@@ -7,10 +7,10 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 * Very small (less than 1000 LOC)
 * Easy to use
 * Headers only
-* Cross-platform
+* Cross-platform: Windows, Linux, Mac OSX, Android
 * Thread and type safe
 * No 3rd-party dependencies
-* Skip execution if log is disabled
+* Small execution overhead if log is disabled
 * Txt and Csv formatters
 * File, RollingFile and Console appenders
 * Automatically log `this` pointer (supported only on Visual Studio)
@@ -18,23 +18,30 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 
 #Usage
 
-##Include
+##Step 1: Include
 1. Add `plog/inlcude` to the project include paths
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
-##Initialization
+##Step 2: Initialization
 
-There are a number of predefined initialization functions:
+###Simple scenario
+Simple scenario means writing a txt or csv log to a file with or without rolling behavior. For these cases use the following initialization functions:
 ```cpp
-void init(const char/wchar_t* fileName, Level maxSeverity);
-void init(const char/wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles);
-```
-Sample usage:
-```cpp
-plog::init("log.csv", plog::debug, 1000 * 1000, 5);
-```
+Logger& init(const char/wchar_t* fileName, Level maxSeverity); // single log file
 
-##Logging
+Logger& init(const char/wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles); // rolling log files
+```
+If a file extension is `.csv` then csv format is used. Otherwise txt format is used. Rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters.
+
+Sample:
+```cpp
+plog::init("c:\\logs\\log.csv", plog::warning, 1000000, 5); 
+```
+Write all log messages with up to warning level to a file in csv format. Maximum log file size is set to 1000000 bytes and 5 log files are kept.
+
+###Complex scenario
+
+##Step 3: Logging
 There are 5 logging levels:
 ```cpp
 LOG_FATAL << "fatal";
