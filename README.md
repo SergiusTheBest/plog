@@ -42,7 +42,7 @@ Write all log messages with up to warning level to a file in csv format. Maximum
 ###Complex scenario
 
 ##Step 3: Logging
-There are 5 logging levels:
+Logging is performed as a stream output. Use the following macroses:
 ```cpp
 LOG_FATAL << "fatal";
 LOG_ERROR << "error";
@@ -50,6 +50,15 @@ LOG_INFO << "info";
 LOG_WARNING << "warning";
 LOG_DEBUG << "debug";
 ```
+or their shorthands:
+```cpp
+LOGF << "fatal";
+LOGE << "error";
+LOGI << "info";
+LOGW << "warning";
+LOGD << "debug";
+```
+Note that there are 5 logging levels.
 
 #Sample log output
 ##Txt formatter
