@@ -27,9 +27,11 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 ###Simple scenario
 Simple scenario means writing a txt or csv log to a file with or without rolling behavior. For these cases use the following initialization functions:
 ```cpp
-Logger& init(const char/wchar_t* fileName, Level maxSeverity); // single log file
+// single log file
+Logger& init(const char/wchar_t* fileName, Level maxSeverity); 
 
-Logger& init(const char/wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles); // rolling log files
+// rolling log files
+Logger& init(const char/wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles);
 ```
 If a file extension is `.csv` then csv format is used. Otherwise txt format is used. Rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters.
 
@@ -40,6 +42,12 @@ plog::init("c:\\logs\\log.csv", plog::warning, 1000000, 5);
 Write all log messages with up to warning level to a file in csv format. Maximum log file size is set to 1000000 bytes and 5 log files are kept.
 
 ###Complex scenario
+Sample:
+```cpp
+static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("multi-log.csv", plog::debug, 8000, 3);
+static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender(plog::debug);
+plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
+```
 
 ##Step 3: Logging
 Logging is performed as a stream output. Use the following macroses:
