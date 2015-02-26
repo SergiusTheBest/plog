@@ -5,14 +5,14 @@
 
   <groupId>org.github.SergiusTheBest.plog</groupId>
   <artifactId>plog-include</artifactId>
-  <version>0.5.4</version>
+  <version>0.5.5</version>
   <packaging>pom</packaging>
   <description>Portable and simple log for C++</description>
 
   <parent>
     <groupId>com.apriorit.assembly</groupId>
     <artifactId>superpom</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
   </parent>
   
   <licenses>
