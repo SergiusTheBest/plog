@@ -88,20 +88,24 @@ namespace plog
             size_t wlen = ::wcslen(wstr);
             std::string str(wlen * sizeof(wchar_t), 0);
 
+            if (!str.empty())
+            {
 #ifdef _WIN32
-            int len = ::WideCharToMultiByte(CP_ACP, 0, wstr, wlen, &str[0], str.size(), 0, 0);
+                int len = ::WideCharToMultiByte(CP_ACP, 0, wstr, wlen, &str[0], str.size(), 0, 0);
 #else
-            const char* in = reinterpret_cast<const char*>(&wstr[0]);
-            char* out = &str[0];
-            size_t inBytes = wlen * sizeof(wchar_t);
-            size_t outBytes = str.size();
+                const char* in = reinterpret_cast<const char*>(&wstr[0]);
+                char* out = &str[0];
+                size_t inBytes = wlen * sizeof(wchar_t);
+                size_t outBytes = str.size();
 
-            iconv_t cd = ::iconv_open("UTF-8", "WCHAR_T");
-            ::iconv(cd, const_cast<char**>(&in), &inBytes, &out, &outBytes);
-            ::iconv_close(cd); 
-            size_t len = str.size() - outBytes;
+                iconv_t cd = ::iconv_open("UTF-8", "WCHAR_T");
+                ::iconv(cd, const_cast<char**>(&in), &inBytes, &out, &outBytes);
+                ::iconv_close(cd); 
+                size_t len = str.size() - outBytes;
 #endif
-            str.resize(len);
+                str.resize(len);
+            }
+
             return str;
         }
 #endif
@@ -112,9 +116,12 @@ namespace plog
             size_t len = ::strlen(str);
             std::wstring wstr(len, 0);
 
-            int wlen = ::MultiByteToWideChar(CP_ACP, 0, str, len, &wstr[0], wstr.size());
+            if (!wstr.empty())
+            {
+                int wlen = ::MultiByteToWideChar(CP_ACP, 0, str, len, &wstr[0], wstr.size());
+                wstr.resize(wlen);
+            }
 
-            wstr.resize(wlen);
             return wstr;
         }
 
