@@ -11,10 +11,13 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 * Thread and type safe
 * No 3rd-party dependencies
 * Small execution overhead if log is disabled
-* Txt and Csv formatters
+* TXT and CSV formatters
 * File, RollingFile and Console appenders
-* Automatically log `this` pointer (supported only on Visual Studio)
+* Automatically log 'this' pointer (supported only on Visual Studio)
 * Unicode aware, files are stored as UTF8
+
+##Rationale
+I was looking for a C++ log library and couldn't find the one that suits my requirements: some libraries are too fat and bloated, others do not have features I need (CSV format and 'this' pointer capturing). So this library was born.
 
 #Usage
 
