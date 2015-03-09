@@ -4,11 +4,11 @@
 
 namespace plog
 {
-    const Level trace = debug;
-    const Level minimum_log_level = none;
-    const Level maximum_log_level = debug;
+    const Severity trace = debug;
+    const Severity minimum_log_level = none;
+    const Severity maximum_log_level = debug;
     
-    typedef Level log_level;
+    typedef Severity log_level;
     typedef Record message;
 
     inline void free(bool = true)
@@ -16,13 +16,13 @@ namespace plog
     }
 
     template<class CharType>
-    inline void init_csv(const CharType* fileName, Level maxSeverity)
+    inline void init_csv(const CharType* fileName, Severity maxSeverity)
     {
         initCsv(fileName, maxSeverity);
     }
 
     template<class CharType>
-    inline void init_txt(const CharType* fileName, Level maxSeverity)
+    inline void init_txt(const CharType* fileName, Severity maxSeverity)
     {
         initTxt(fileName, maxSeverity);
     }

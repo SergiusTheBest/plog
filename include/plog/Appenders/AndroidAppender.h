@@ -7,7 +7,7 @@ namespace plog
     class AndroidAppender : public Appender
     {
     public:
-        AndroidAppender(const char* tag, Level maxSeverity) : Appender(maxSeverity), m_tag(tag)
+        AndroidAppender(const char* tag, Severity maxSeverity) : Appender(maxSeverity), m_tag(tag)
         {
         }
 
@@ -19,7 +19,7 @@ namespace plog
         }
 
     private:
-        static android_LogPriority toPriority(Level severity)
+        static android_LogPriority toPriority(Severity severity)
         {
             switch (severity)
             {

@@ -14,7 +14,7 @@ namespace plog
             return *this;
         }
 
-        bool checkSeverity(Level severity) const
+        bool checkSeverity(Severity severity) const
         {
             for (std::vector<Appender*>::const_iterator it = m_appenders.begin(); it != m_appenders.end(); ++it)
             {

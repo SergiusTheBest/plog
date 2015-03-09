@@ -1,14 +1,14 @@
 #pragma once
 #include <sstream>
 #include <plog/Util.h>
-#include <plog/Level.h>
+#include <plog/Severity.h>
 
 namespace plog
 {
     class Record
     {
     public:
-        Record(Level severity, const char* func, size_t line, const void* object)
+        Record(Severity severity, const char* func, size_t line, const void* object)
             : m_severity(severity), m_tid(util::gettid()), m_object(object), m_line(line), m_func(func)
         {
             util::ftime(&m_time);
@@ -94,7 +94,7 @@ namespace plog
 
     public:
         util::Time          m_time;
-        const Level         m_severity;
+        const Severity      m_severity;
         const unsigned int  m_tid;
         const void* const   m_object;
         const size_t        m_line;

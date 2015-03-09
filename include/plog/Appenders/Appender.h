@@ -5,7 +5,7 @@ namespace plog
     class Appender
     {
     public:
-        Appender(Level maxSeverity) : m_maxSeverity(maxSeverity)
+        Appender(Severity maxSeverity) : m_maxSeverity(maxSeverity)
         {
         }
 
@@ -15,17 +15,17 @@ namespace plog
 
         virtual void write(const Record& record) = 0;
 
-        Level getMaxSeverity() const
+        Severity getMaxSeverity() const
         {
             return m_maxSeverity;
         }
 
-        void setMaxSeverity(Level severity)
+        void setMaxSeverity(Severity severity)
         {
             m_maxSeverity = severity;
         }
 
     private:
-        Level m_maxSeverity;
+        Severity m_maxSeverity;
     };
 }

@@ -20,7 +20,7 @@ namespace plog
             util::nstringstream ss;
             ss << t.tm_year + 1900 << "-" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mon << "-" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mday << " ";
             ss << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_hour << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_min << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_sec << "." << std::setfill(PLOG_NSTR('0')) << std::setw(3) << record.m_time.millitm << " ";
-            ss << std::setfill(PLOG_NSTR(' ')) << std::setw(5) << std::left << getLevelName(record.m_severity) << " ";
+            ss << std::setfill(PLOG_NSTR(' ')) << std::setw(5) << std::left << getSeverityName(record.m_severity) << " ";
             ss << "[" << record.m_tid << "] ";
             ss << "[" << record.func().c_str() << "@" << record.m_line << "] ";
             ss << record.m_stream.str() << "\n";

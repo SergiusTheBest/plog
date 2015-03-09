@@ -2,7 +2,7 @@
 
 namespace plog
 {
-    enum Level
+    enum Severity
     {
         none = 0,
         fatal = 1,
@@ -12,9 +12,9 @@ namespace plog
         debug = 5
     };
         
-    inline const char* getLevelName(Level level)
+    inline const char* getSeverityName(Severity severity)
     {
-        switch (level)
+        switch (severity)
         {
         case fatal:
             return "FATAL";

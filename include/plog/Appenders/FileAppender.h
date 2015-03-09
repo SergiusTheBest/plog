@@ -7,7 +7,7 @@ namespace plog
     class FileAppender : public Appender
     {
     public:
-        FileAppender(const char* fileName, Level maxSeverity) : Appender(maxSeverity), m_file(fileName)
+        FileAppender(const char* fileName, Severity maxSeverity) : Appender(maxSeverity), m_file(fileName)
         {
             util::nstring str = Formatter::header();
             m_file.writeAsUTF8(str);

@@ -8,7 +8,7 @@ namespace plog
     class RollingFileAppender : public Appender
     {
     public:
-        RollingFileAppender(const char* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles) 
+        RollingFileAppender(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles) 
             : Appender(maxSeverity)
             , m_fileSize()
             , m_maxFileSize((std::max)(maxFileSize, size_t(1000)))
