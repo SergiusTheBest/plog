@@ -69,7 +69,7 @@ plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
 ```
 
 ##Step 3: Logging
-Logging is performed as a stream output. 
+Logging is performed as a stream output thus it is type-safe and extendendable.
 
 ###Main logging macros 
 These macros perform logging.
