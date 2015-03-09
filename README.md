@@ -3,21 +3,37 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 
 #Introduction
 
+##Hello
+I was looking for a C++ logging library but couldn't find the one that suits my requirements: some libraries are too fat and bloated, others do not have the features I need (CSV format and automatic 'this' pointer capture). So this library was born. The main idea: keep things as simple as possible.
+
+This is a minimal hello log sample:
+```cpp
+#include <plog/Log.h>
+
+int main()
+{
+    plog::init("hello-log.csv", plog::debug);
+
+    LOGD << "Hello log!";
+    LOG_DEBUG << "Hello log!";
+    LOG(plog::debug) << "Hello log!";
+
+    return 0;
+}
+```
+
 ##Features
 * Very small (less than 1000 LOC)
 * Easy to use
 * Headers only
-* Cross-platform: Windows, Linux, Mac OSX, Android
+* Cross-platform: Windows, Linux, Mac OS X, Android
 * Thread and type safe
 * No 3rd-party dependencies
 * Small execution overhead if log is disabled
 * TXT and CSV formatters
 * File, RollingFile and Console appenders
-* Automatically log 'this' pointer (supported only on Visual Studio)
+* Automatic 'this' pointer capture (supported only on Visual Studio)
 * Unicode aware, files are stored as UTF8
-
-##Rationale
-I was looking for a C++ log library and couldn't find the one that suits my requirements: some libraries are too fat and bloated, others do not have features I need (CSV format and 'this' pointer capturing). So this library was born.
 
 #Usage
 
