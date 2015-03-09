@@ -22,3 +22,6 @@ set_target_properties(Simple PROPERTIES FOLDER Samples)
 
 add_executable(Multi multi/Main.cpp) 
 set_target_properties(Multi PROPERTIES FOLDER Samples)
+
+add_executable(Hello hello/Main.cpp) 
+set_target_properties(Hello PROPERTIES FOLDER Samples)
