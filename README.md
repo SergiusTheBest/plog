@@ -69,23 +69,56 @@ plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
 ```
 
 ##Step 3: Logging
-Logging is performed as a stream output. Use the following macros:
+Logging is performed as a stream output. 
+
+###Main logging macros 
+These macros perform logging.
+Use the following long macros:
 ```cpp
-LOG_FATAL << "fatal";
-LOG_ERROR << "error";
+LOG_DEBUG << "debug";
 LOG_INFO << "info";
 LOG_WARNING << "warning";
-LOG_DEBUG << "debug";
+LOG_ERROR << "error";
+LOG_FATAL << "fatal";
 ```
-or their shorthands:
+or their short versions:
 ```cpp
-LOGF << "fatal";
-LOGE << "error";
+LOGD << "debug";
 LOGI << "info";
 LOGW << "warning";
-LOGD << "debug";
+LOGE << "error";
+LOGF << "fatal";
 ```
+Also you can use a function-like macro:
+```cpp
+LOG(plog::debug) << "debug";
+```
+Choose what you like the best.
+
 Note that there are 5 logging levels.
+
+###Conditional logging macros
+These macros check a condition and perform logging if it is true.
+Use the following long macros:
+```cpp
+LOG_DEBUG_IF(condition) << "debug";
+LOG_INFO_IF(condition) << "info";
+LOG_WARNING_IF(condition) << "warning";
+LOG_ERROR_IF(condition) << "error";
+LOG_FATAL_IF(condition) << "fatal";
+```
+or their short versions:
+```cpp
+LOGD_IF(condition) << "debug";
+LOGI_IF(condition) << "info";
+LOGW_IF(condition) << "warning";
+LOGE_IF(condition) << "error";
+LOGF_IF(condition) << "fatal";
+```
+Also you can use a function-like macro:
+```cpp
+LOG_IF(plog::debug, condition) << "debug";
+```
 
 #Sample log output
 ##Txt formatter
