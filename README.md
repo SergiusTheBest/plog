@@ -120,6 +120,21 @@ Also you can use a function-like macro:
 LOG_IF(plog::debug, condition) << "debug";
 ```
 
+###Log severity level checker
+If you need to do some actions depending on log severity level there is a macro for that:
+```cpp
+IF_LOG(severity)
+```
+
+Example:
+```cpp
+IF_LOG(plog::debug)
+{
+    int t = ping(); // long running function that we want to execute only at debug level
+    LOGD << "Ping roundtrip is: " << t << " ms";
+}
+```
+
 #Sample log output
 ##Txt formatter
 ```
