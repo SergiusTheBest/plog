@@ -26,14 +26,14 @@ int main()
 * Very small (less than 1000 LOC)
 * Easy to use
 * Headers only
+* No 3rd-party dependencies
 * Cross-platform: Windows, Linux, Mac OS X, Android
 * Thread and type safe
-* No 3rd-party dependencies
-* Small execution overhead if log is disabled
-* TXT and CSV formatters
-* File, RollingFile and Console appenders
+* Formatters: TXT, CSV, FuncMessage
+* Appenders: File, RollingFile, Console, Android
 * Automatic 'this' pointer capture (supported only on Visual Studio)
-* Unicode aware, files are stored as UTF8
+* Small execution overhead if log message is filtered out
+* Unicode aware, files are stored in UTF8
 
 #Usage
 
@@ -44,7 +44,7 @@ int main()
 ##Step 2: Initialization
 
 ###Simple scenario
-Simple scenario means writing a txt or csv log to a file with or without rolling behavior. For these cases use the following initialization functions:
+Simple scenario is writing a txt or csv log to a file with or without rolling behavior. For these cases use the following initialization functions:
 ```cpp
 // single log file
 Logger& init(const char/wchar_t* fileName, Level maxSeverity); 
