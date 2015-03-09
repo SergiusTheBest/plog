@@ -1,6 +1,7 @@
 #pragma once
 
-// For backward compatibility with previous version of plog.
+//////////////////////////////////////////////////////////////////////////
+// This file provides backward compatibility with the old version of plog.
 
 namespace plog
 {
@@ -27,5 +28,5 @@ namespace plog
         initTxt(fileName, maxSeverity);
     }
 
-    #define LOG_TRACE LOG(plog::debug)
+    #define LOG_TRACE LOG_DEBUG
 }

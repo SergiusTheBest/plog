@@ -9,7 +9,9 @@ namespace plog
     public:
         ConsoleAppender(Severity maxSeverity) : Appender(maxSeverity)
         {
+#ifdef _WIN32
             ::setlocale(LC_ALL, "");
+#endif
         }
 
         virtual void write(const Record& record)
