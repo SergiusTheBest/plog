@@ -88,10 +88,10 @@ These macros check a condition and perform logging if it is true.
 
 Long macro | Short macro | Function-style macro
 -----------|-------------|---------------------
-LOG_VERBOSE_IF(cond) << "verbose"; | LOGV_IF(cond) << "verbose"; | LOG_IF(plog::verbose, cond) << "verbose";
+LOG_VERBOSE_IF(cond) << "verb"; | LOGV_IF(cond) << "verb"; | LOG_IF(plog::verbose, cond) << "verb";
 LOG_DEBUG_IF(cond) << "debug"; | LOGD_IF(cond) << "debug"; | LOG_IF(plog::debug, cond) << "debug";
 LOG_INFO_IF(cond) << "info"; | LOGI_IF(cond) << "info"; | LOG_IF(plog::info, cond) << "info";
-LOG_WARNING_IF(cond) << "warning"; | LOGW_IF(cond) << "warning"; | LOG_IF(plog::warning, cond) << "warning";
+LOG_WARNING_IF(cond) << "warn"; | LOGW_IF(cond) << "warn"; | LOG_IF(plog::warning, cond) << "warn";
 LOG_ERROR_IF(cond) << "error"; | LOGE_IF(cond) << "error"; | LOG_IF(plog::error, cond) << "error";
 LOG_FATAL_IF(cond) << "fatal"; | LOGF_IF(cond) << "fatal"; | LOG_IF(plog::fatal, cond) << "fatal";
 
