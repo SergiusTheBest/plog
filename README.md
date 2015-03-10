@@ -84,7 +84,7 @@ LOG_ERROR << "error"; | LOGE << "error"; | LOG(plog::error) << "error";
 LOG_FATAL << "fatal"; | LOGF << "fatal"; | LOG(plog::fatal) << "fatal";
 
 ###Conditional logging macros
-These macros check a condition and perform logging if it is true.
+These macros check a condition and perform logging if it is true:
 
 Long macro | Short macro | Function-style macro
 -----------|-------------|---------------------
