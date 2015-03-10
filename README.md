@@ -72,53 +72,28 @@ plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
 Logging is performed as a stream output thus it is type-safe and extendendable.
 
 ###Main logging macros 
-These macros perform logging.
-Use the following long macros:
-```cpp
-LOG_DEBUG << "debug";
-LOG_INFO << "info";
-LOG_WARNING << "warning";
-LOG_ERROR << "error";
-LOG_FATAL << "fatal";
-```
-or their short versions:
-```cpp
-LOGD << "debug";
-LOGI << "info";
-LOGW << "warning";
-LOGE << "error";
-LOGF << "fatal";
-```
-Also you can use a function-like macro:
-```cpp
-LOG(plog::debug) << "debug";
-```
-Choose what you like the best.
+Use the following macros to perform logging:
 
-Note that there are 5 logging levels.
+Long macro | Short macro | Function-style macro
+-----------|-------------|---------------------
+LOG_VERBOSE << "verbose"; | LOGV << "verbose"; | LOG(plog::verbose) << "verbose";
+LOG_DEBUG << "debug"; | LOGD << "debug"; | LOG(plog::debug) << "debug";
+LOG_INFO << "info"; | LOGI << "info"; | LOG(plog::info) << "info";
+LOG_WARNING << "warning"; | LOGW << "warning"; | LOG(plog::warning) << "warning";
+LOG_ERROR << "error"; | LOGE << "error"; | LOG(plog::error) << "error";
+LOG_FATAL << "fatal"; | LOGF << "fatal"; | LOG(plog::fatal) << "fatal";
 
 ###Conditional logging macros
 These macros check a condition and perform logging if it is true.
-Use the following long macros:
-```cpp
-LOG_DEBUG_IF(condition) << "debug";
-LOG_INFO_IF(condition) << "info";
-LOG_WARNING_IF(condition) << "warning";
-LOG_ERROR_IF(condition) << "error";
-LOG_FATAL_IF(condition) << "fatal";
-```
-or their short versions:
-```cpp
-LOGD_IF(condition) << "debug";
-LOGI_IF(condition) << "info";
-LOGW_IF(condition) << "warning";
-LOGE_IF(condition) << "error";
-LOGF_IF(condition) << "fatal";
-```
-Also you can use a function-like macro:
-```cpp
-LOG_IF(plog::debug, condition) << "debug";
-```
+
+Long macro | Short macro | Function-style macro
+-----------|-------------|---------------------
+LOG_VERBOSE_IF(condition) << "verbose"; | LOGV_IF(condition) << "verbose"; | LOG_IF(plog::verbose, condition) << "verbose";
+LOG_DEBUG_IF(condition) << "debug"; | LOGD_IF(condition) << "debug"; | LOG_IF(plog::debug, condition) << "debug";
+LOG_INFO_IF(condition) << "info"; | LOGI_IF(condition) << "info"; | LOG_IF(plog::info, condition) << "info";
+LOG_WARNING_IF(condition) << "warning"; | LOGW_IF(condition) << "warning"; | LOG_IF(plog::warning, condition) << "warning";
+LOG_ERROR_IF(condition) << "error"; | LOGE_IF(condition) << "error"; | LOG_IF(plog::error, condition) << "error";
+LOG_FATAL_IF(condition) << "fatal"; | LOGF_IF(condition) << "fatal"; | LOG_IF(plog::fatal, condition) << "fatal";
 
 ###Log severity level checker
 If you need to do some actions depending on log severity level there is a macro for that:
@@ -128,10 +103,12 @@ IF_LOG(severity)
 
 Example:
 ```cpp
-IF_LOG(plog::debug)
+IF_LOG(plog::debug) // we want to execute it only at debug level
 {
-    int t = ping(); // long running function that we want to execute only at debug level
-    LOGD << "Ping roundtrip is: " << t << " ms";
+    for (int i = 0; i < vec.size(); ++i)
+    {
+        LOGD << "vec[" << i << "]: " << vec[i];
+    }
 }
 ```
 
