@@ -33,6 +33,8 @@ namespace plog
                 return ANDROID_LOG_INFO;
             case debug:
                 return ANDROID_LOG_DEBUG;
+            case verbose:
+                return ANDROID_LOG_VERBOSE;
             default:
                 return ANDROID_LOG_UNKNOWN;
             }

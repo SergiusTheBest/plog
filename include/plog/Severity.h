@@ -9,7 +9,8 @@ namespace plog
         error = 2,
         warning = 3,
         info = 4,
-        debug = 5
+        debug = 5,
+        verbose = 6,
     };
         
     inline const char* getSeverityName(Severity severity)
@@ -26,6 +27,8 @@ namespace plog
             return "INFO";
         case debug:
             return "DEBUG";
+        case verbose:
+            return "VERB";
         default:
             return "NONE";
         }
