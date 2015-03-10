@@ -88,12 +88,12 @@ These macros check a condition and perform logging if it is true.
 
 Long macro | Short macro | Function-style macro
 -----------|-------------|---------------------
-LOG_VERBOSE_IF(condition) << "verbose"; | LOGV_IF(condition) << "verbose"; | LOG_IF(plog::verbose, condition) << "verbose";
-LOG_DEBUG_IF(condition) << "debug"; | LOGD_IF(condition) << "debug"; | LOG_IF(plog::debug, condition) << "debug";
-LOG_INFO_IF(condition) << "info"; | LOGI_IF(condition) << "info"; | LOG_IF(plog::info, condition) << "info";
-LOG_WARNING_IF(condition) << "warning"; | LOGW_IF(condition) << "warning"; | LOG_IF(plog::warning, condition) << "warning";
-LOG_ERROR_IF(condition) << "error"; | LOGE_IF(condition) << "error"; | LOG_IF(plog::error, condition) << "error";
-LOG_FATAL_IF(condition) << "fatal"; | LOGF_IF(condition) << "fatal"; | LOG_IF(plog::fatal, condition) << "fatal";
+LOG_VERBOSE_IF(cond) << "verbose"; | LOGV_IF(cond) << "verbose"; | LOG_IF(plog::verbose, cond) << "verbose";
+LOG_DEBUG_IF(cond) << "debug"; | LOGD_IF(cond) << "debug"; | LOG_IF(plog::debug, cond) << "debug";
+LOG_INFO_IF(cond) << "info"; | LOGI_IF(cond) << "info"; | LOG_IF(plog::info, cond) << "info";
+LOG_WARNING_IF(cond) << "warning"; | LOGW_IF(cond) << "warning"; | LOG_IF(plog::warning, cond) << "warning";
+LOG_ERROR_IF(cond) << "error"; | LOGE_IF(cond) << "error"; | LOG_IF(plog::error, cond) << "error";
+LOG_FATAL_IF(cond) << "fatal"; | LOGF_IF(cond) << "fatal"; | LOG_IF(plog::fatal, cond) << "fatal";
 
 ###Log severity level checker
 If you need to do some actions depending on log severity level there is a macro for that:
