@@ -10,7 +10,7 @@ namespace plog
         warning = 3,
         info = 4,
         debug = 5,
-        verbose = 6,
+        verbose = 6
     };
         
     inline const char* getSeverityName(Severity severity)
