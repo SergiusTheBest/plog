@@ -20,6 +20,9 @@ namespace plog
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////
+    // Empty initializer
+
     template<int instance>
     inline Logger<instance>& init()
     {
@@ -31,6 +34,9 @@ namespace plog
     {
         return init<0>();
     }
+
+    //////////////////////////////////////////////////////////////////////////
+    // File/RollingFile with any Formatter
 
     template<int instance, class Formatter>
     inline Logger<instance>& init(const char* fileName, Severity maxSeverity)
@@ -46,6 +52,9 @@ namespace plog
         return init<instance>().addAppender(&rollingFileAppender);
     }
 
+    //////////////////////////////////////////////////////////////////////////
+    // File/RollingFile with CSV
+
     template<int instance>
     inline Logger<instance>& initCsv(const char* fileName, Severity maxSeverity)
     {
@@ -57,6 +66,9 @@ namespace plog
     {
         return init<instance, CsvFormatter>(fileName, maxSeverity, maxFileSize, maxFiles);
     }
+
+    //////////////////////////////////////////////////////////////////////////
+    // File/RollingFile with TXT
 
     template<int instance>
     inline Logger<instance>& initTxt(const char* fileName, Severity maxSeverity)
@@ -70,6 +82,9 @@ namespace plog
         return init<instance, TxtFormatter>(fileName, maxSeverity, maxFileSize, maxFiles);
     }
     
+    //////////////////////////////////////////////////////////////////////////
+    // File/RollingFile with TXT/CSV chosen by file extension
+
     template<int instance>
     inline Logger<instance>& init(const char* fileName, Severity maxSeverity)
     {
@@ -105,6 +120,9 @@ namespace plog
     {
         return init<0>(fileName, maxSeverity, maxFileSize, maxFiles);
     }
+
+    //////////////////////////////////////////////////////////////////////////
+    // WCHAR variants for Windows
 
 #ifdef _WIN32
     template<int instance>
