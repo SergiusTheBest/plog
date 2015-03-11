@@ -20,99 +20,112 @@ namespace plog
         }
     }
 
-    inline Logger& init()
+    template<int instance = 0>
+    inline Logger<instance>& init()
     {
-        static Logger logger;
+        static Logger<instance> logger;
         return logger;
     }
 
-    template<class Formatter>
-    inline Logger& init(const char* fileName, Severity maxSeverity)
+    template<int instance, class Formatter>
+    inline Logger<instance>& init(const char* fileName, Severity maxSeverity)
     {
         static FileAppender<Formatter> fileAppender(fileName, maxSeverity);
-        return init().addAppender(&fileAppender);
+        return init<instance>().addAppender(&fileAppender);
     }
 
-    template<class Formatter>
-    inline Logger& init(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
+    template<int instance, class Formatter>
+    inline Logger<instance>& init(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
     {
         static RollingFileAppender<Formatter> rollingFileAppender(fileName, maxSeverity, maxFileSize, maxFiles);
-        return init().addAppender(&rollingFileAppender);
+        return init<instance>().addAppender(&rollingFileAppender);
+    }
+
+    template<int instance = 0>
+    inline Logger<instance>& initCsv(const char* fileName, Severity maxSeverity)
+    {
+        return init<instance, CsvFormatter>(fileName, maxSeverity);
+    }
+
+    template<int instance = 0>
+    inline Logger<instance>& initCsv(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
+    {
+        return init<instance, CsvFormatter>(fileName, maxSeverity, maxFileSize, maxFiles);
+    }
+
+    template<int instance = 0>
+    inline Logger<instance>& initTxt(const char* fileName, Severity maxSeverity)
+    {
+        return init<instance, TxtFormatter>(fileName, maxSeverity);
+    }
+
+    template<int instance = 0>
+    inline Logger<instance>& initTxt(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
+    {
+        return init<instance, TxtFormatter>(fileName, maxSeverity, maxFileSize, maxFiles);
     }
     
-    inline Logger& initCsv(const char* fileName, Severity maxSeverity)
-    {
-        return init<CsvFormatter>(fileName, maxSeverity);
-    }
-
-    inline Logger& initCsv(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
-    {
-        return init<CsvFormatter>(fileName, maxSeverity, maxFileSize, maxFiles);
-    }
-
-    inline Logger& initTxt(const char* fileName, Severity maxSeverity)
-    {
-        return init<TxtFormatter>(fileName, maxSeverity);
-    }
-
-    inline Logger& initTxt(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
-    {
-        return init<TxtFormatter>(fileName, maxSeverity, maxFileSize, maxFiles);
-    }
-    
-    inline Logger& init(const char* fileName, Severity maxSeverity)
+    template<int instance = 0>
+    inline Logger<instance>& init(const char* fileName, Severity maxSeverity)
     {
         if (isCsv(fileName))
         {
-            return initCsv(fileName, maxSeverity);
+            return initCsv<instance>(fileName, maxSeverity);
         }
         else
         {
-            return initTxt(fileName, maxSeverity);
+            return initTxt<instance>(fileName, maxSeverity);
         }
     }
 
-    inline Logger& init(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
+    template<int instance = 0>
+    inline Logger<instance>& init(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
     {
         if (isCsv(fileName))
         {
-            return initCsv(fileName, maxSeverity, maxFileSize, maxFiles);
+            return initCsv<instance>(fileName, maxSeverity, maxFileSize, maxFiles);
         }
         else
         {
-            return initTxt(fileName, maxSeverity, maxFileSize, maxFiles);
+            return initTxt<instance>(fileName, maxSeverity, maxFileSize, maxFiles);
         }
     }
 
 #ifdef _WIN32
-    inline Logger& initCsv(const wchar_t* fileName, Severity maxSeverity)
+    template<int instance = 0>
+    inline Logger<instance>& initCsv(const wchar_t* fileName, Severity maxSeverity)
     {
-        return initCsv(util::toString(fileName).c_str(), maxSeverity);
+        return initCsv<instance>(util::toString(fileName).c_str(), maxSeverity);
     }
 
-    inline Logger& initCsv(const wchar_t* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
+    template<int instance = 0>
+    inline Logger<instance>& initCsv(const wchar_t* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
     {
-        return init<CsvFormatter>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
+        return init<instance, CsvFormatter>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
     }
 
-    inline Logger& initTxt(const wchar_t* fileName, Severity maxSeverity)
+    template<int instance = 0>
+    inline Logger<instance>& initTxt(const wchar_t* fileName, Severity maxSeverity)
     {
-        return init<TxtFormatter>(util::toString(fileName).c_str(), maxSeverity);
+        return init<instance, TxtFormatter>(util::toString(fileName).c_str(), maxSeverity);
     }
 
-    inline Logger& initTxt(const wchar_t* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
+    template<int instance = 0>
+    inline Logger<instance>& initTxt(const wchar_t* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
     {
-        return init<TxtFormatter>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
+        return init<instance, TxtFormatter>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
     }
 
-    inline Logger& init(const wchar_t* fileName, Severity maxSeverity)
+    template<int instance = 0>
+    inline Logger<instance>& init(const wchar_t* fileName, Severity maxSeverity)
     {
-        return init(util::toString(fileName).c_str(), maxSeverity);
+        return init<instance>(util::toString(fileName).c_str(), maxSeverity);
     }
 
-    inline Logger& init(const wchar_t* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
+    template<int instance = 0>
+    inline Logger<instance>& init(const wchar_t* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
     {
-        return init(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
+        return init<instance>(util::toString(fileName).c_str(), maxSeverity, maxFileSize, maxFiles);
     }
 #endif
 }

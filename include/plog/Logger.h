@@ -5,7 +5,8 @@
 
 namespace plog
 {
-    class Logger : public util::Singleton<Logger>
+    template<int instance>
+    class Logger : public util::Singleton<Logger<instance>>
     {
     public:
         Logger& addAppender(Appender* appender)
