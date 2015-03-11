@@ -24,7 +24,7 @@ int main()
     LOG_INFO << "This is a long(hex): " << std::hex << (long)100000000;
     LOG_INFO << "This is an unsigned long: " << (unsigned long)100000000;
     LOG_INFO << "This is a float: " << 1.2345f;
-    LOG_INFO << "This is a double: " << /*std::setprecision(15) <<*/ 1.234512345;
+    LOG_INFO << "This is a double: " << std::setprecision(15) << 1.234512345;
 
     // Null strings
     LOG_DEBUG << static_cast<char*>(NULL);
