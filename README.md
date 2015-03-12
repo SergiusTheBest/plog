@@ -74,14 +74,18 @@ Logging is performed as a stream output thus it is type-safe and extendendable.
 ###Main logging macros 
 Use the following macros to perform logging:
 
-Long macro | Short macro | Function-style macro
------------|-------------|---------------------
-LOG_VERBOSE << "verbose"; | LOGV << "verbose"; | LOG(plog::verbose) << "verbose";
-LOG_DEBUG << "debug"; | LOGD << "debug"; | LOG(plog::debug) << "debug";
-LOG_INFO << "info"; | LOGI << "info"; | LOG(plog::info) << "info";
-LOG_WARNING << "warning"; | LOGW << "warning"; | LOG(plog::warning) << "warning";
-LOG_ERROR << "error"; | LOGE << "error"; | LOG(plog::error) << "error";
-LOG_FATAL << "fatal"; | LOGF << "fatal"; | LOG(plog::fatal) << "fatal";
+| Long macro | Short macro |
+|------------|-------------|
+| LOG_VERBOSE << "verbose"; | LOGV << "verbose"; |
+| LOG_DEBUG << "debug"; | LOGD << "debug"; |
+| LOG_INFO << "info"; | LOGI << "info"; |
+| LOG_WARNING << "warning"; | LOGW << "warning"; |
+| LOG_ERROR << "error"; | LOGE << "error"; |
+| LOG_FATAL << "fatal"; | LOGF << "fatal"; |
+
+| Function-style macro |
+|----------------------|
+| LOG(severity) << "msg"; |
 
 ###Conditional logging macros
 These macros check a condition and perform logging if it is true:
