@@ -34,6 +34,7 @@ int main()
 * Automatic 'this' pointer capture (supported only on Visual Studio)
 * Small execution overhead if log message is filtered out
 * Unicode aware, files are stored in UTF8
+* Doesn't require C++11
 
 #Usage
 
@@ -90,14 +91,18 @@ Use the following macros to perform logging:
 ###Conditional logging macros
 These macros check a condition and perform logging if it is true:
 
-Long macro | Short macro | Function-style macro
------------|-------------|---------------------
-LOG_VERBOSE_IF(cond) << "verb"; | LOGV_IF(cond) << "verb"; | LOG_IF(plog::verbose, cond) << "verb";
-LOG_DEBUG_IF(cond) << "debug"; | LOGD_IF(cond) << "debug"; | LOG_IF(plog::debug, cond) << "debug";
-LOG_INFO_IF(cond) << "info"; | LOGI_IF(cond) << "info"; | LOG_IF(plog::info, cond) << "info";
-LOG_WARNING_IF(cond) << "warn"; | LOGW_IF(cond) << "warn"; | LOG_IF(plog::warning, cond) << "warn";
-LOG_ERROR_IF(cond) << "error"; | LOGE_IF(cond) << "error"; | LOG_IF(plog::error, cond) << "error";
-LOG_FATAL_IF(cond) << "fatal"; | LOGF_IF(cond) << "fatal"; | LOG_IF(plog::fatal, cond) << "fatal";
+| Long macro | Short macro |
+| -----------|-------------|
+| LOG_VERBOSE_IF(cond) << "verbose"; | LOGV_IF(cond) << "verbose"; |
+| LOG_DEBUG_IF(cond) << "debug"; | LOGD_IF(cond) << "debug"; |
+| LOG_INFO_IF(cond) << "info"; | LOGI_IF(cond) << "info"; |
+| LOG_WARNING_IF(cond) << "warning"; | LOGW_IF(cond) << "warning"; |
+| LOG_ERROR_IF(cond) << "error"; | LOGE_IF(cond) << "error"; |
+| LOG_FATAL_IF(cond) << "fatal"; | LOGF_IF(cond) << "fatal"; |
+
+| Function-style macro |
+|----------------------|
+| LOG_IF(severity, cond) << "msg"; |
 
 ###Log severity level checker
 If you need to do some actions depending on log severity level there is a macro for that:
