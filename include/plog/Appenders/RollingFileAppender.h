@@ -5,12 +5,11 @@
 namespace plog
 {
     template<class Formatter>
-    class RollingFileAppender : public Appender
+    class RollingFileAppender : public IAppender
     {
     public:
-        RollingFileAppender(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles) 
-            : Appender(maxSeverity)
-            , m_fileSize()
+        RollingFileAppender(const char* fileName, size_t maxFileSize, int maxFiles) 
+            : m_fileSize()
             , m_maxFileSize((std::max)(maxFileSize, size_t(1000)))
             , m_lastFileNumber((std::max)(maxFiles - 1, 0))
         {

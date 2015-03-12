@@ -1,45 +1,54 @@
 #pragma once
 #include <vector>
-#include <plog/Appenders/Appender.h>
+#include <plog/Appenders/IAppender.h>
 #include <plog/Util.h>
 
 namespace plog
 {
     template<int instance>
-    class Logger : public util::Singleton<Logger<instance> >
+    class Logger : public util::Singleton<Logger<instance> >, public IAppender
     {
     public:
-        Logger& addAppender(Appender* appender)
+        Logger(Severity maxSeverity = none) : m_maxSeverity(maxSeverity)
+        {
+        }
+
+        Logger& addAppender(IAppender* appender)
         {
             m_appenders.push_back(appender);
             return *this;
         }
 
+        Severity getMaxSeverity() const
+        {
+            return m_maxSeverity;
+        }
+
+        void setMaxSeverity(Severity severity)
+        {
+            m_maxSeverity = severity;
+        }
+
         bool checkSeverity(Severity severity) const
         {
-            for (std::vector<Appender*>::const_iterator it = m_appenders.begin(); it != m_appenders.end(); ++it)
-            {
-                if ((*it)->getMaxSeverity() >= severity)
-                {
-                    return true;
-                }
-            }
+            return severity <= m_maxSeverity;
+        }
 
-            return false;
+        virtual void write(const Record& record)
+        {
+            *this += record;
         }
 
         void operator+=(const Record& record)
         {
-            for (std::vector<Appender*>::iterator it = m_appenders.begin(); it != m_appenders.end(); ++it)
+            for (std::vector<IAppender*>::iterator it = m_appenders.begin(); it != m_appenders.end(); ++it)
             {
-                if ((*it)->getMaxSeverity() >= record.m_severity)
-                {
-                    (*it)->write(record);
-                }
+                (*it)->write(record);
             }
         }
 
     private:
-        std::vector<Appender*> m_appenders;
+        Severity m_maxSeverity;
+        std::vector<IAppender*> m_appenders;
     };
 }

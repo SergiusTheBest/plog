@@ -3,9 +3,9 @@
 
 int main()
 {
-    static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("multi-log.csv", plog::debug, 8000, 3);
-    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender(plog::debug);
-    plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
+    static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("multi-log.csv", 8000, 3);
+    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+    plog::init(plog::debug).addAppender(&fileAppender).addAppender(&consoleAppender);
 
     // Log levels
     LOG_FATAL << "fatal";

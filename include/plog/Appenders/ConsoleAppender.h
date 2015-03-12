@@ -4,10 +4,10 @@
 namespace plog
 {
     template<class Formatter>
-    class ConsoleAppender : public Appender
+    class ConsoleAppender : public IAppender
     {
     public:
-        ConsoleAppender(Severity maxSeverity) : Appender(maxSeverity)
+        ConsoleAppender()
         {
 #ifdef _WIN32
             ::setlocale(LC_ALL, "");

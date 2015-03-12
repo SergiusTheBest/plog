@@ -4,10 +4,10 @@
 namespace plog
 {
     template<class Formatter>
-    class AndroidAppender : public Appender
+    class AndroidAppender : public IAppender
     {
     public:
-        AndroidAppender(const char* tag, Severity maxSeverity) : Appender(maxSeverity), m_tag(tag)
+        AndroidAppender(const char* tag) : m_tag(tag)
         {
         }
 

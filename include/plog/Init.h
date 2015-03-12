@@ -24,15 +24,15 @@ namespace plog
     // Empty initializer
 
     template<int instance>
-    inline Logger<instance>& init()
+    inline Logger<instance>& init(Severity maxSeverity = none)
     {
-        static Logger<instance> logger;
+        static Logger<instance> logger(maxSeverity);
         return logger;
     }
 
-    inline Logger<0>& init()
+    inline Logger<0>& init(Severity maxSeverity = none)
     {
-        return init<0>();
+        return init<0>(maxSeverity);
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -41,15 +41,15 @@ namespace plog
     template<int instance, class Formatter>
     inline Logger<instance>& init(const char* fileName, Severity maxSeverity)
     {
-        static FileAppender<Formatter> fileAppender(fileName, maxSeverity);
-        return init<instance>().addAppender(&fileAppender);
+        static FileAppender<Formatter> fileAppender(fileName);
+        return init<instance>(maxSeverity).addAppender(&fileAppender);
     }
 
     template<int instance, class Formatter>
     inline Logger<instance>& init(const char* fileName, Severity maxSeverity, size_t maxFileSize, int maxFiles)
     {
-        static RollingFileAppender<Formatter> rollingFileAppender(fileName, maxSeverity, maxFileSize, maxFiles);
-        return init<instance>().addAppender(&rollingFileAppender);
+        static RollingFileAppender<Formatter> rollingFileAppender(fileName, maxFileSize, maxFiles);
+        return init<instance>(maxSeverity).addAppender(&rollingFileAppender);
     }
 
     //////////////////////////////////////////////////////////////////////////

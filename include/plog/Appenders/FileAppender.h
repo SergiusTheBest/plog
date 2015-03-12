@@ -4,10 +4,10 @@
 namespace plog
 {
     template<class Formatter>
-    class FileAppender : public Appender
+    class FileAppender : public IAppender
     {
     public:
-        FileAppender(const char* fileName, Severity maxSeverity) : Appender(maxSeverity), m_file(fileName)
+        FileAppender(const char* fileName) : m_file(fileName)
         {
             util::nstring str = Formatter::header();
             m_file.writeAsUTF8(str);
