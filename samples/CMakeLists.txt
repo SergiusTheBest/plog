@@ -17,11 +17,11 @@ add_library(plog STATIC ${PLOG_HEADERS})
 set_target_properties(plog PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(plog PROPERTIES FOLDER Include)
 
-add_executable(Simple simple/Main.cpp simple/MyClass.h simple/MyClass.cpp) 
+add_executable(Simple Simple/Main.cpp Simple/MyClass.h Simple/MyClass.cpp) 
 set_target_properties(Simple PROPERTIES FOLDER Samples)
 
-add_executable(Multi multi/Main.cpp) 
-set_target_properties(Multi PROPERTIES FOLDER Samples)
+add_executable(MultiAppender MultiAppender/Main.cpp) 
+set_target_properties(MultiAppender PROPERTIES FOLDER Samples)
 
-add_executable(Hello hello/Main.cpp) 
+add_executable(Hello Hello/Main.cpp) 
 set_target_properties(Hello PROPERTIES FOLDER Samples)

@@ -2,7 +2,7 @@
 
 int main()
 {
-    plog::init("hello-log.csv", plog::debug);
+    plog::init("Hello-log.csv", plog::debug);
 
     LOGD << "Hello log!";
     LOG_DEBUG << "Hello log!";
