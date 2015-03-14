@@ -7,8 +7,8 @@ enum
 
 int main()
 {
-    plog::init("MultiInstance-default.txt", plog::debug);
-    plog::init<SecondLog>("MultiInstance-second.txt", plog::debug);
+    plog::init(plog::debug, "MultiInstance-default.txt");
+    plog::init<SecondLog>(plog::debug, "MultiInstance-second.txt");
 
     LOGD << "Hello default log!";
     LOG_DEBUG << "Hello default log!";

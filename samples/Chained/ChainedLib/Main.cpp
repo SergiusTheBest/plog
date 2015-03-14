@@ -1,8 +1,8 @@
 ﻿#include <plog/Log.h>
 
-extern "C" void init(plog::Severity severity, plog::IAppender* appender)
+extern "C" void initialize(plog::Severity severity, plog::IAppender* appender)
 {
-    plog::init(severity).addAppender(appender);
+    plog::init(severity, appender);
 }
 
 extern "C" void foo()

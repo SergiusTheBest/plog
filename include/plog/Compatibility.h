@@ -29,4 +29,16 @@ namespace plog
     }
 
     #define LOG_TRACE LOG_VERBOSE
+
+    template<int instance, class CharType>
+    inline Logger<instance>& init(const CharType* fileName, Severity maxSeverity, size_t maxFileSize = 0, int maxFiles = 0)
+    {
+        return init<instance>(maxSeverity, fileName, maxFileSize, maxFiles);
+    }
+
+    template<class CharType>
+    inline Logger<0>& init(const CharType* fileName, Severity maxSeverity, size_t maxFileSize = 0, int maxFiles = 0)
+    {
+        return init<0>(maxSeverity, fileName, maxFileSize, maxFiles);
+    }
 }
