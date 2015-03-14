@@ -28,3 +28,10 @@ set_target_properties(MultiInstance PROPERTIES FOLDER Samples)
 
 add_executable(Hello Hello/Main.cpp) 
 set_target_properties(Hello PROPERTIES FOLDER Samples)
+
+add_executable(ChainedApp Chained/ChainedApp/Main.cpp) 
+set_target_properties(ChainedApp PROPERTIES FOLDER Samples/Chained)
+target_link_libraries(ChainedApp ChainedLib)
+
+add_library(ChainedLib SHARED Chained/ChainedLib/Main.cpp Chained/ChainedLib/Export.def) 
+set_target_properties(ChainedLib PROPERTIES FOLDER Samples/Chained)
