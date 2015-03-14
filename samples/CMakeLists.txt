@@ -23,5 +23,8 @@ set_target_properties(Simple PROPERTIES FOLDER Samples)
 add_executable(MultiAppender MultiAppender/Main.cpp) 
 set_target_properties(MultiAppender PROPERTIES FOLDER Samples)
 
+add_executable(MultiInstance MultiInstance/Main.cpp) 
+set_target_properties(MultiInstance PROPERTIES FOLDER Samples)
+
 add_executable(Hello Hello/Main.cpp) 
 set_target_properties(Hello PROPERTIES FOLDER Samples)
