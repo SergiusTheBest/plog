@@ -357,10 +357,9 @@ namespace plog
                 m_instance = 0;
             }
 
-            static T& getInstance()
+            static T* getInstance()
             {
-                assert(m_instance);
-                return *m_instance;
+                return m_instance;
             }
 
         private:

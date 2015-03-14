@@ -9,7 +9,7 @@ int main()
 
     LOGD << "Hello from app!";
 
-    init(plog::debug, &plog::get());
+    init(plog::debug, plog::get());
     foo();
 
     return 0;

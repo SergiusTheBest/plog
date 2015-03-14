@@ -53,12 +53,12 @@ namespace plog
     };
 
     template<int instance>
-    inline Logger<instance>& get()
+    inline Logger<instance>* get()
     {
         return Logger<instance>::getInstance();
     }
 
-    inline Logger<0>& get()
+    inline Logger<0>* get()
     {
         return Logger<0>::getInstance();
     }
