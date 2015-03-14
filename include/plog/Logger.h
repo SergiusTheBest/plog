@@ -51,4 +51,15 @@ namespace plog
         Severity m_maxSeverity;
         std::vector<IAppender*> m_appenders;
     };
+
+    template<int instance>
+    inline Logger<instance>& get()
+    {
+        return Logger<instance>::getInstance();
+    }
+
+    inline Logger<0>& get()
+    {
+        return Logger<0>::getInstance();
+    }
 }

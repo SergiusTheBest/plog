@@ -18,13 +18,13 @@
 //////////////////////////////////////////////////////////////////////////
 // Log severity level checker
 
-#define IF_LOG_(instance, severity)     if (plog::Logger<instance>::getInstance().checkSeverity(severity))
+#define IF_LOG_(instance, severity)     if (plog::get<instance>().checkSeverity(severity))
 #define IF_LOG(severity)                IF_LOG_(0, severity)
 
 //////////////////////////////////////////////////////////////////////////
 // Main logging macros
 
-#define LOG_(instance, severity)        IF_LOG_(instance, severity) plog::Logger<instance>::getInstance() += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_THIS())
+#define LOG_(instance, severity)        IF_LOG_(instance, severity) plog::get<instance>() += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_THIS())
 #define LOG(severity)                   LOG_(0, severity)
 
 #define LOG_VERBOSE                     LOG(plog::verbose)
