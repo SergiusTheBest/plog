@@ -36,7 +36,10 @@ namespace plog
 
         virtual void write(const Record& record)
         {
-            *this += record;
+            if (checkSeverity(record.m_severity))
+            {
+                *this += record;
+            }
         }
 
         void operator+=(const Record& record)
