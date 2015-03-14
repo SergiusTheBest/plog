@@ -3,7 +3,7 @@
 
 int main()
 {
-    static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("MultiAppender-log.csv", 8000, 3);
+    static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("MultiAppender.csv", 8000, 3);
     static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init(plog::debug).addAppender(&fileAppender).addAppender(&consoleAppender);
 

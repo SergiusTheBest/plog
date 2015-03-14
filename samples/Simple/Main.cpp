@@ -3,7 +3,7 @@
 
 int main()
 {
-    plog::init("Simple-log.csv", plog::debug, 5000, 3);
+    plog::init("Simple.csv", plog::debug, 5000, 3);
 
     // Log severity levels
     LOG_VERBOSE << "This is a VERBOSE message";
