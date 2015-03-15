@@ -16,8 +16,6 @@ namespace plog
         Logger& addAppender(IAppender* appender)
         {
             assert(appender != this);
-            assert(std::find(m_appenders.begin(), m_appenders.end(), appender) == m_appenders.end());
-
             m_appenders.push_back(appender);
             return *this;
         }
