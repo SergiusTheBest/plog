@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 project(Samples)
 
@@ -33,5 +35,5 @@ add_executable(ChainedApp Chained/ChainedApp/Main.cpp)
 set_target_properties(ChainedApp PROPERTIES FOLDER Samples/Chained)
 target_link_libraries(ChainedApp ChainedLib)
 
-add_library(ChainedLib SHARED Chained/ChainedLib/Main.cpp Chained/ChainedLib/Export.def) 
+add_library(ChainedLib SHARED Chained/ChainedLib/Main.cpp) 
 set_target_properties(ChainedLib PROPERTIES FOLDER Samples/Chained)
