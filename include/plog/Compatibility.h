@@ -19,13 +19,13 @@ namespace plog
     template<class CharType>
     inline void init_csv(const CharType* fileName, Severity maxSeverity)
     {
-        initCsv<0>(fileName, maxSeverity);
+        initCsv<0>(maxSeverity, fileName);
     }
 
     template<class CharType>
     inline void init_txt(const CharType* fileName, Severity maxSeverity)
     {
-        initTxt<0>(fileName, maxSeverity);
+        initTxt<0>(maxSeverity, fileName);
     }
 
     #define LOG_TRACE LOG_VERBOSE
