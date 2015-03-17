@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 project(Samples)
 
@@ -10,6 +8,8 @@ if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX")
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Werror")
+  set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+  set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/../include)
@@ -37,3 +37,9 @@ target_link_libraries(ChainedApp ChainedLib)
 
 add_library(ChainedLib SHARED Chained/ChainedLib/Main.cpp) 
 set_target_properties(ChainedLib PROPERTIES FOLDER Samples/Chained)
+
+if(NOT MSVC)
+    add_executable(ObjectiveC ObjectiveC/Main.mm) 
+    set_target_properties(ObjectiveC PROPERTIES FOLDER Samples)
+    target_link_libraries(ObjectiveC objc)
+endif()
