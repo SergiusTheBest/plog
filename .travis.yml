@@ -1,5 +1,9 @@
 language: cpp
 
+install:
+  # Prerequisites
+  - sudo apt-get install gobjc++
+
 compiler:
   - gcc
   - clang
