@@ -1,7 +1,7 @@
 #include <objc/Object.h>
 #include <plog/Log.h>
 
-@interface Greeter:Object
+@interface Greeter : Object
 {
     int dummy;
 }
@@ -18,7 +18,7 @@
 int main()
 {
     plog::init(plog::debug, "ObjectiveC.csv");
-    LOGD << "Hello ObjC++!";	
+    LOGD << "Hello ObjC++!";
     
     [Greeter greet];
     
