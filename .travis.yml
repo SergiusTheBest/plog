@@ -1,9 +1,5 @@
 language: cpp
 
-install:
-  # Prerequisites
-  - sudo apt-get install gobjc++
-
 compiler:
   - gcc
   - clang
@@ -12,6 +8,10 @@ env:
   - BUILD_TYPE=Debug
   - BUILD_TYPE=Release
 
+install:
+  # Prerequisites
+  - if [[ $CC == 'gcc' ]]; then sudo apt-get install gobjc++; fi 
+  
 script:
   - cmake -Hsamples -Bbuild -DCMAKE_BUILD_TYPE=$BUILD_TYPE
   - cd build
