@@ -66,34 +66,58 @@ Logging is performed as a stream output thus it is type-safe and extendendable.
 ###Main logging macros 
 Use the following macros to perform logging:
 
-| Long macro | Short macro |
-|------------|-------------|
-| LOG_VERBOSE << "verbose"; | LOGV << "verbose"; |
-| LOG_DEBUG << "debug"; | LOGD << "debug"; |
-| LOG_INFO << "info"; | LOGI << "info"; |
-| LOG_WARNING << "warning"; | LOGW << "warning"; |
-| LOG_ERROR << "error"; | LOGE << "error"; |
-| LOG_FATAL << "fatal"; | LOGF << "fatal"; |
+####Long macro
+```cpp
+LOG_VERBOSE << "verbose";
+LOG_DEBUG << "debug";
+LOG_INFO << "info";
+LOG_WARNING << "warning";
+LOG_ERROR << "error";
+LOG_FATAL << "fatal";
+```
 
-| Function-style macro |
-|----------------------|
-| LOG(severity) << "msg"; |
+####Short macro
+```cpp
+LOGV << "verbose";
+LOGD << "debug";
+LOGI << "info";
+LOGW << "warning";
+LOGE << "error";
+LOGF << "fatal";
+```
+
+####Function-style macro
+```cpp
+LOG(severity) << "msg";
+```
 
 ###Conditional logging macros
 These macros check a condition and perform logging if it is true:
 
-| Long macro | Short macro |
-| -----------|-------------|
-| LOG_VERBOSE_IF(cond) << "verbose"; | LOGV_IF(cond) << "verbose"; |
-| LOG_DEBUG_IF(cond) << "debug"; | LOGD_IF(cond) << "debug"; |
-| LOG_INFO_IF(cond) << "info"; | LOGI_IF(cond) << "info"; |
-| LOG_WARNING_IF(cond) << "warning"; | LOGW_IF(cond) << "warning"; |
-| LOG_ERROR_IF(cond) << "error"; | LOGE_IF(cond) << "error"; |
-| LOG_FATAL_IF(cond) << "fatal"; | LOGF_IF(cond) << "fatal"; |
+####Long macro
+```cpp
+LOG_VERBOSE_IF(cond) << "verbose";
+LOG_DEBUG_IF(cond) << "debug";
+LOG_INFO_IF(cond) << "info";
+LOG_WARNING_IF(cond) << "warning";
+LOG_ERROR_IF(cond) << "error";
+LOG_FATAL_IF(cond) << "fatal";
+```
 
-| Function-style macro |
-|----------------------|
-| LOG_IF(severity, cond) << "msg"; |
+####Short macro
+```cpp
+LOGV_IF(cond) << "verbose";
+LOGD_IF(cond) << "debug";
+LOGI_IF(cond) << "info";
+LOGW_IF(cond) << "warning";
+LOGE_IF(cond) << "error";
+LOGF_IF(cond) << "fatal";
+```
+
+####Function-style macro
+```cpp
+LOG_IF(severity, cond) << "msg";
+```
 
 ###Log severity level checker
 If you need to do some actions depending on log severity level there is a macro for that:
