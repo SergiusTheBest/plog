@@ -38,13 +38,12 @@ int main()
 
 #Usage
 
-##Step 1: Include
+##Step 1: Adding includes
 1. Add `plog/inlcude` to the project include paths
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
 ##Step 2: Initialization
 
-###Simple scenario
 Simple scenario is writing a txt or csv log to a file with or without rolling behavior. For these cases use the following initialization functions:
 ```cpp
 // single log file
@@ -60,14 +59,6 @@ Sample:
 plog::init("c:\\logs\\log.csv", plog::warning, 1000000, 5); 
 ```
 Write all log messages with up to warning level to a file in csv format. Maximum log file size is set to 1000000 bytes and 5 log files are kept.
-
-###Complex scenario
-Sample:
-```cpp
-static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("multi-log.csv", plog::debug, 8000, 3);
-static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender(plog::debug);
-plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
-```
 
 ##Step 3: Logging
 Logging is performed as a stream output thus it is type-safe and extendendable.
@@ -121,7 +112,22 @@ IF_LOG(plog::debug) // we want to execute it only at debug level
 }
 ```
 
-#Sample log output
+#Advanced usage
+
+##Custom initialization
+Sample:
+```cpp
+static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("multi-log.csv", plog::debug, 8000, 3);
+static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender(plog::debug);
+plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
+```
+
+#Samples
+
+#Design
+
+##Formatter
+
 ##TXT formatter
 ```
 2014-11-11 00:29:06.245 FATAL [4460] [main@22] fatal
@@ -137,6 +143,7 @@ multiline!
 2014-11-11 00:29:06.261 DEBUG [4460] [Object::Object@8] 
 2014-11-11 00:29:06.261 DEBUG [4460] [Object::~Object@13] 
 ```
+
 ##CSV formatter
 ```
 Date;Time;Severity;TID;This;Function;Message
@@ -154,7 +161,12 @@ multiline!"
 2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::~Object@13;
 ```
 
-#Competing C++ log libraries
+#Extending
+
+#Future plans
+
+#References
+##Competing C++ log libraries
 * [Boost::Log](http://www.boost.org/doc/libs/release/libs/log/)
 * [EasyLogging++](https://github.com/easylogging/easyloggingpp)
 * [g2log](http://www.codeproject.com/Articles/288827/g-log-An-efficient-asynchronous-logger-using-Cplus)
