@@ -31,39 +31,58 @@ int main()
 * Thread and type safe
 * Formatters: TXT, CSV, FuncMessage
 * Appenders: File, RollingFile, Console, Android
-* Automatic 'this' pointer capture (supported only on Visual Studio)
+* Automatic 'this' pointer capture (supported only on msvc)
 * Lazy stream evaluation
 * Unicode aware, files are stored in UTF8
 * Doesn't require C++11
 
 #Usage
+There are 3 simple steps to start logging with plog.
 
 ##Step 1: Adding includes
+First of all your project needs to know about plog. For that you have to:
+
 1. Add `plog/inlcude` to the project include paths
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
 ##Step 2: Initialization
+The next step is to initialize plog. The basic scenario is writing a log to a file in txt or csv format with or without the rolling behavior. This kind of intialization is done by the following `init` function:
 
-Simple scenario is writing a txt or csv log to a file with or without rolling behavior. For these cases use the following initialization functions:
 ```cpp
-// single log file
-Logger& init(const char/wchar_t* fileName, Level maxSeverity); 
-
-// rolling log files
-Logger& init(const char/wchar_t* fileName, Level maxSeverity, size_t maxFileSize, int maxFiles);
+Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
-If a file extension is `.csv` then csv format is used. Otherwise txt format is used. Rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters.
+
+`maxSeverity` is the logger severity upper limit. All log messages have its own severity and if it is higher than the limit they are dropped. Plog defines the following severity levels (in ascending order):
+* none
+* fatal
+* error
+* warning
+* info
+* debug
+* verbose
+
+The log format is determined automatically by `fileName` file extension:
+* .csv => csv format
+* anyting else => txt format
+
+The rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters:
+* `maxFileSize` - the maximum log file size in bytes
+* `maxFiles` - the number of log files to keep
+
+If one of them is zero then log rolling is disabled.
 
 Sample:
+
 ```cpp
 plog::init("c:\\logs\\log.csv", plog::warning, 1000000, 5); 
 ```
-Write all log messages with up to warning level to a file in csv format. Maximum log file size is set to 1000000 bytes and 5 log files are kept.
+
+It initializes plog to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1 000 000 bytes and 5 log files are kept.
 
 ##Step 3: Logging
 Logging is performed as a stream output thus it is type-safe and extendable.
 
-###Main logging macros 
+###Basic logging macros 
 Use the following macros to perform logging:
 
 ####Long macro:
