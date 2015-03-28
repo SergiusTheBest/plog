@@ -7,6 +7,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 I was looking for a C++ logging library but couldn't find the one that suits my requirements: some libraries are too fat and bloated, others do not have the features I need (CSV format and automatic 'this' pointer capture). So this library was born. The main idea: keep things as simple as possible.
 
 This is a minimal hello log sample:
+
 ```cpp
 #include <plog/Log.h>
 
@@ -53,6 +54,7 @@ Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileS
 ```
 
 `maxSeverity` is the logger severity upper limit. All log messages have its own severity and if it is higher than the limit they are dropped. Plog defines the following severity levels (in ascending order):
+
 * none
 * fatal
 * error
@@ -62,10 +64,12 @@ Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileS
 * verbose
 
 The log format is determined automatically by `fileName` file extension:
+
 * .csv => csv format
 * anyting else => txt format
 
 The rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters:
+
 * `maxFileSize` - the maximum log file size in bytes
 * `maxFiles` - the number of log files to keep
 
@@ -77,15 +81,15 @@ Sample:
 plog::init("c:\\logs\\log.csv", plog::warning, 1000000, 5); 
 ```
 
-It initializes plog to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1 000 000 bytes and 5 log files are kept.
+It initializes plog to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1'000'000 bytes and 5 log files are kept.
 
 ##Step 3: Logging
-Logging is performed as a stream output thus it is type-safe and extendable.
+Logging is performed with the help of special macros. A log message is constructed as a stream output thus it is type-safe and extendable.
 
 ###Basic logging macros 
-Use the following macros to perform logging:
+This type of macros performs unconditional logging.
 
-####Long macro:
+####Long macros:
 ```cpp
 LOG_VERBOSE << "verbose";
 LOG_DEBUG << "debug";
@@ -95,7 +99,7 @@ LOG_ERROR << "error";
 LOG_FATAL << "fatal";
 ```
 
-####Short macro:
+####Short macros:
 ```cpp
 LOGV << "verbose";
 LOGD << "debug";
@@ -105,15 +109,15 @@ LOGE << "error";
 LOGF << "fatal";
 ```
 
-####Function-style macro:
+####Function-style macros:
 ```cpp
 LOG(severity) << "msg";
 ```
 
 ###Conditional logging macros
-These macros check a condition and perform logging if it is true:
+These macros check a condition and perform logging if it is true.
 
-####Long macro:
+####Long macros:
 ```cpp
 LOG_VERBOSE_IF(cond) << "verbose";
 LOG_DEBUG_IF(cond) << "debug";
@@ -123,7 +127,7 @@ LOG_ERROR_IF(cond) << "error";
 LOG_FATAL_IF(cond) << "fatal";
 ```
 
-####Short macro:
+####Short macros:
 ```cpp
 LOGV_IF(cond) << "verbose";
 LOGD_IF(cond) << "debug";
@@ -133,7 +137,7 @@ LOGE_IF(cond) << "error";
 LOGF_IF(cond) << "fatal";
 ```
 
-####Function-style macro:
+####Function-style macros:
 ```cpp
 LOG_IF(severity, cond) << "msg";
 ```
