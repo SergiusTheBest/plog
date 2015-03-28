@@ -61,12 +61,12 @@ plog::init("c:\\logs\\log.csv", plog::warning, 1000000, 5);
 Write all log messages with up to warning level to a file in csv format. Maximum log file size is set to 1000000 bytes and 5 log files are kept.
 
 ##Step 3: Logging
-Logging is performed as a stream output thus it is type-safe and extendendable.
+Logging is performed as a stream output thus it is type-safe and extendable.
 
 ###Main logging macros 
 Use the following macros to perform logging:
 
-####Long macro
+####Long macro:
 ```cpp
 LOG_VERBOSE << "verbose";
 LOG_DEBUG << "debug";
@@ -76,7 +76,7 @@ LOG_ERROR << "error";
 LOG_FATAL << "fatal";
 ```
 
-####Short macro
+####Short macro:
 ```cpp
 LOGV << "verbose";
 LOGD << "debug";
@@ -86,7 +86,7 @@ LOGE << "error";
 LOGF << "fatal";
 ```
 
-####Function-style macro
+####Function-style macro:
 ```cpp
 LOG(severity) << "msg";
 ```
@@ -94,7 +94,7 @@ LOG(severity) << "msg";
 ###Conditional logging macros
 These macros check a condition and perform logging if it is true:
 
-####Long macro
+####Long macro:
 ```cpp
 LOG_VERBOSE_IF(cond) << "verbose";
 LOG_DEBUG_IF(cond) << "debug";
@@ -104,7 +104,7 @@ LOG_ERROR_IF(cond) << "error";
 LOG_FATAL_IF(cond) << "fatal";
 ```
 
-####Short macro
+####Short macro:
 ```cpp
 LOGV_IF(cond) << "verbose";
 LOGD_IF(cond) << "debug";
@@ -114,7 +114,7 @@ LOGE_IF(cond) << "error";
 LOGF_IF(cond) << "fatal";
 ```
 
-####Function-style macro
+####Function-style macro:
 ```cpp
 LOG_IF(severity, cond) << "msg";
 ```
@@ -188,6 +188,7 @@ multiline!"
 #Extending
 
 #Future plans
+* Drop pre C++11 support when C++17 is released
 
 #References
 ##Competing C++ log libraries
