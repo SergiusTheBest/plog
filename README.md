@@ -27,12 +27,12 @@ int main()
 * Easy to use
 * Headers only
 * No 3rd-party dependencies
-* Cross-platform: Windows, Linux, Mac OS X, Android
+* Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc)
 * Thread and type safe
 * Formatters: TXT, CSV, FuncMessage
 * Appenders: File, RollingFile, Console, Android
 * Automatic 'this' pointer capture (supported only on Visual Studio)
-* Small execution overhead if log message is filtered out
+* Lazy stream evaluation
 * Unicode aware, files are stored in UTF8
 * Doesn't require C++11
 
@@ -146,9 +146,21 @@ static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender(plog::debug);
 plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
 ```
 
+##Multiple appenders
+
+##Multiple loggers
+
+##Chained loggers
+
 #Samples
 
 #Design
+
+##Overview
+
+##Record
+
+##Logger
 
 ##Formatter
 
@@ -185,12 +197,21 @@ multiline!"
 2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::~Object@13;
 ```
 
+##Appender
+
 #Extending
+
+##Add custom type to stream output
+
+##Write custom appender
+
+##Write custom formatter
 
 #Future plans
 * Drop pre C++11 support when C++17 is released
 
 #References
+
 ##Competing C++ log libraries
 * [Boost::Log](http://www.boost.org/doc/libs/release/libs/log/)
 * [EasyLogging++](https://github.com/easylogging/easyloggingpp)
