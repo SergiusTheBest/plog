@@ -47,7 +47,7 @@ First of all your project needs to know about plog. For that you have to:
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
 ##Step 2: Initialization
-The next step is to initialize plog. The basic scenario is writing a log to a file in txt or csv format with or without the rolling behavior. This kind of intialization is done by the following `init` function:
+The next step is to initialize plog. The basic scenario is writing a log to a file in txt or csv format with or without the rolling behavior. This kind of intialization is done by the following `plog::init` function:
 
 ```cpp
 Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0);
@@ -177,7 +177,7 @@ Severity Logger::getMaxSeverity() const;
 Logger::setMaxSeverity(Severity severity);
 ```
 
-To get the logger use `get` function:
+To get the logger use `plog::get` function:
 
 ```cpp
 Logger* get();
