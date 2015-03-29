@@ -302,6 +302,38 @@ int main()
 ```
 
 ##Chained loggers
+A logger can work as an appender for another logger. So you can chain several loggers together. This is useful for streaming log messages from a shared library to the main application binary.
+
+Sample:
+
+```cpp
+// library
+extern "C" void EXPORT initialize(plog::Severity severity, plog::IAppender* appender)
+{
+    plog::init(severity, appender);
+}
+
+extern "C" void EXPORT foo()
+{
+    LOGI << "Hello from shared lib!";
+}
+
+// main app
+extern "C" void initialize(plog::Severity severity, plog::IAppender* appender);
+extern "C" void foo();
+
+int main()
+{
+    plog::init(plog::debug, "ChainedApp.txt");
+
+    LOGD << "Hello from app!";
+
+    initialize(plog::debug, plog::get());
+    foo();
+
+    return 0;
+}
+```
 
 #Samples
 There are number of samples that demonstrate various aspects of using plog. They can be found in the [samples](samples) folder:
