@@ -317,7 +317,9 @@ extern "C" void EXPORT foo()
 {
     LOGI << "Hello from shared lib!";
 }
+```
 
+```cpp
 // main app
 extern "C" void initialize(plog::Severity severity, plog::IAppender* appender);
 extern "C" void foo();
