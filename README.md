@@ -13,7 +13,7 @@ This is a minimal hello log sample:
 
 int main()
 {
-    plog::init("hello-log.csv", plog::debug);
+    plog::init(plog::debug, "hello-log.csv");
 
     LOGD << "Hello log!";
     LOG_DEBUG << "Hello log!";
@@ -169,12 +169,42 @@ IF_LOG(plog::debug) // we want to execute the following statements only at debug
 
 #Advanced usage
 
-##Custom initialization
-Sample:
+##Changing maximum severity at runtime 
+It is possible to set the maximum severity not only at the log initialization time but at any time later. There are special accessor methods for that:
+
 ```cpp
-static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("multi-log.csv", plog::debug, 8000, 3);
-static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender(plog::debug);
-plog::init().addAppender(&fileAppender).addAppender(&consoleAppender);
+Severity Logger::getMaxSeverity() const;
+Logger::setMaxSeverity(Severity severity);
+```
+
+To get the logger use `get` function:
+
+```cpp
+Logger* get();
+```
+
+Sample:
+
+```cpp
+plog::get()->setMaxSeverity(plog::debug);
+```
+
+##Custom initialization
+Non-typical log cases require the use of custom initialization. It is done by the following `init` function:
+
+```cpp
+Logger& init(Severity maxSeverity = none, IAppender* appender = NULL);
+```
+
+```cpp
+Logger& addAppender(IAppender* appender);
+```
+
+Sample:
+
+```cpp
+static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+plog::init(plog::debug, &consoleAppender);
 ```
 
 ##Multiple appenders
