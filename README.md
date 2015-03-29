@@ -304,15 +304,15 @@ int main()
 ##Chained loggers
 
 #Samples
-There are number of samples that demonstrate various aspects of using plog. They can be found in the samples folder:
+There are number of samples that demonstrate various aspects of using plog. They can be found in the [samples](samples) folder:
 
-* Android
-* Chained
-* Hello
-* MultiAppender
-* MultiInstance
-* ObjectiveC
-* Simple
+* [Android](samples/Android)
+* [Chained](samples/Chained)
+* [Hello](samples/Hello)
+* [MultiAppender](samples/MultiAppender)
+* [MultiInstance](samples/MultiInstance)
+* [ObjectiveC](samples/ObjectiveC)
+* [Simple](samples/Simple)
 
 #Design
 
