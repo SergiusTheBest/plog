@@ -190,15 +190,13 @@ plog::get()->setMaxSeverity(plog::debug);
 ```
 
 ##Custom initialization
-Non-typical log cases require the use of custom initialization. It is done by the following `init` function:
+Non-typical log cases require the use of custom initialization. It is done by the following `plog::init` function:
 
 ```cpp
 Logger& init(Severity maxSeverity = none, IAppender* appender = NULL);
 ```
 
-```cpp
-Logger& addAppender(IAppender* appender);
-```
+You have to construct an appender parameterized with a formatter and pass it to the `plog::init` function. Note that a lifetime of the appender should be static!
 
 Sample:
 
@@ -208,6 +206,10 @@ plog::init(plog::debug, &consoleAppender);
 ```
 
 ##Multiple appenders
+
+```cpp
+Logger& addAppender(IAppender* appender);
+```
 
 ##Multiple loggers
 
