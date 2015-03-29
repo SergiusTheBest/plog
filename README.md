@@ -312,13 +312,15 @@ There are number of samples that demonstrate various aspects of using plog. They
 
 ##Overview
 
+##Lazy stream evaluation
+
 ##Record
 
 ##Logger
 
 ##Formatter
 
-##TXT formatter
+###TXT formatter
 ```
 2014-11-11 00:29:06.245 FATAL [4460] [main@22] fatal
 2014-11-11 00:29:06.261 ERROR [4460] [main@23] error
@@ -334,7 +336,7 @@ multiline!
 2014-11-11 00:29:06.261 DEBUG [4460] [Object::~Object@13] 
 ```
 
-##CSV formatter
+###CSV formatter
 ```
 Date;Time;Severity;TID;This;Function;Message
 2014/11/14;15:22:25.033;FATAL;4188;00000000;main@22;"fatal"
@@ -351,7 +353,17 @@ multiline!"
 2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::~Object@13;
 ```
 
+###FuncMessage formatter
+
 ##Appender
+
+###File appender
+
+###RollingFile appender
+
+###Console appender
+
+###Android appender
 
 #Extending
 
