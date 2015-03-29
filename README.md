@@ -262,6 +262,38 @@ plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
 It initializes the log in the way when log messages are written to both a file and a console.
 
 ##Multiple loggers
+Multiple loggers can be used simultaneously each with their own separate configuration. The loggers differ by their instance number (that is implemented as a template parameter). The default instance is zero. Initialization is done by the appropriate template `plog::init` functions:
+
+```cpp
+Logger<instance>& init<instance>(...);
+```
+
+All logging macros have their special versions that accept a logger instance parameter. These kind of macros have underscore at the end:
+
+```cpp
+LOGD_(instance) << "debug";
+LOGD_IF(instance, condition) << "conditional debug";
+```
+
+Sample:
+
+```cpp
+enum
+{
+    SecondLog = 1
+};
+
+int main()
+{
+    plog::init(plog::debug, "MultiInstance-default.txt");
+    plog::init<SecondLog>(plog::debug, "MultiInstance-second.txt");
+
+    LOGD << "Hello default log!";
+    LOGD_(SecondLog) << "Hello second log!";
+    
+    return 0;
+}
+```
 
 ##Chained loggers
 
