@@ -87,9 +87,10 @@ It initializes plog to write all messages with up to warning severity to a file 
 Logging is performed with the help of special macros. A log message is constructed as a stream output thus it is type-safe and extendable.
 
 ###Basic logging macros 
-This type of macros performs unconditional logging.
+This is the most used type of logging macros. They do unconditional logging.
 
 ####Long macros:
+
 ```cpp
 LOG_VERBOSE << "verbose";
 LOG_DEBUG << "debug";
@@ -100,6 +101,7 @@ LOG_FATAL << "fatal";
 ```
 
 ####Short macros:
+
 ```cpp
 LOGV << "verbose";
 LOGD << "debug";
@@ -110,14 +112,16 @@ LOGF << "fatal";
 ```
 
 ####Function-style macros:
+
 ```cpp
 LOG(severity) << "msg";
 ```
 
 ###Conditional logging macros
-These macros check a condition and perform logging if it is true.
+These macros are used to do a conditional logging. They accept a condition as a parameter and perform logging if the condition is true.
 
 ####Long macros:
+
 ```cpp
 LOG_VERBOSE_IF(cond) << "verbose";
 LOG_DEBUG_IF(cond) << "debug";
@@ -128,6 +132,7 @@ LOG_FATAL_IF(cond) << "fatal";
 ```
 
 ####Short macros:
+
 ```cpp
 LOGV_IF(cond) << "verbose";
 LOGD_IF(cond) << "debug";
@@ -138,19 +143,22 @@ LOGF_IF(cond) << "fatal";
 ```
 
 ####Function-style macros:
+
 ```cpp
 LOG_IF(severity, cond) << "msg";
 ```
 
-###Log severity level checker
-If you need to do some actions depending on log severity level there is a macro for that:
+###Logger severity checker
+In some cases there is a need to perform a group of actions depending on the current logger severity level. There is a special macro for that. It helps to minimize performance penalty when the log is inactive.
+
 ```cpp
 IF_LOG(severity)
 ```
 
-Example:
+Sample:
+
 ```cpp
-IF_LOG(plog::debug) // we want to execute it only at debug level
+IF_LOG(plog::debug) // we want to execute the following statements only at debug severity (and higher)
 {
     for (int i = 0; i < vec.size(); ++i)
     {
