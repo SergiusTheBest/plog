@@ -18,7 +18,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
       - [Function-style macros:](#function-style-macros-1)
     - [Logger severity checker](#logger-severity-checker)
 - [Advanced usage](#advanced-usage)
-  - [Changing maximum severity at runtime](#changing-maximum-severity-at-runtime)
+  - [Changing severity at runtime](#changing-severity-at-runtime)
   - [Custom initialization](#custom-initialization)
   - [Multiple appenders](#multiple-appenders)
   - [Multiple loggers](#multiple-loggers)
@@ -208,7 +208,7 @@ IF_LOG(plog::debug) // we want to execute the following statements only at debug
 
 #Advanced usage
 
-##Changing maximum severity at runtime 
+##Changing severity at runtime 
 It is possible to set the maximum severity not only at the log initialization time but at any time later. There are special accessor methods for that:
 
 ```cpp
