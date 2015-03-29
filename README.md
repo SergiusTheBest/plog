@@ -245,16 +245,36 @@ plog::init(plog::debug, &consoleAppender);
 ```
 
 ##Multiple appenders
+It is possible to have multiple appenders in a single logger. The following method is used for that:
 
 ```cpp
 Logger& addAppender(IAppender* appender);
 ```
+
+Sample:
+
+```cpp
+static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("MultiAppender.csv", 8000, 3);
+static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
+```
+
+It initializes the log in the way when log messages are written to both a file and a console.
 
 ##Multiple loggers
 
 ##Chained loggers
 
 #Samples
+There are number of samples that demonstrate various aspects of using plog. They can be found in the samples folder:
+
+* Android
+* Chained
+* Hello
+* MultiAppender
+* MultiInstance
+* ObjectiveC
+* Simple
 
 #Design
 
