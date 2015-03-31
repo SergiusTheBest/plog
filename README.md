@@ -392,6 +392,17 @@ Date;Time;Severity;TID;This;Function;Message
 
 ###FuncMessage formatter
 
+```
+main@22: fatal
+main@23: error
+main@24: info
+main@25: warning
+main@26: debug
+main@32: This is a message with "quotes"!
+Object::Object@8: 
+Object::~Object@13: 
+```
+
 ##Appender
 
 ###File appender
