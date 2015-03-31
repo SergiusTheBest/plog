@@ -268,11 +268,18 @@ Multiple loggers can be used simultaneously each with their own separate configu
 Logger<instance>& init<instance>(...);
 ```
 
-All logging macros have their special versions that accept a logger instance parameter. These kind of macros have underscore at the end:
+To get a logger use `plog::get` function (returns NULL if the logger is not initialized):
+
+```cpp
+Logger<instance>* get<instance>();
+```
+
+All logging macros have their special versions that accept an instance parameter. These kind of macros have underscore at the end:
 
 ```cpp
 LOGD_(instance) << "debug";
 LOGD_IF(instance, condition) << "conditional debug";
+IF_LOG_(instance, severity)
 ```
 
 Sample:
@@ -353,24 +360,24 @@ There are number of samples that demonstrate various aspects of using plog. They
 ##Logger
 
 ##Formatter
+`Formatter` is responsible for formatting data from `Record` into various string representations (in theory binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has TXT, CSV and FuncMessage formatters.
 
 ###TXT formatter
+This is a classic log format available in almost any log library. It is good for console output and easy to read without any tools.
+
 ```
 2014-11-11 00:29:06.245 FATAL [4460] [main@22] fatal
 2014-11-11 00:29:06.261 ERROR [4460] [main@23] error
 2014-11-11 00:29:06.261 INFO  [4460] [main@24] info
 2014-11-11 00:29:06.261 WARN  [4460] [main@25] warning
 2014-11-11 00:29:06.261 DEBUG [4460] [main@26] debug
-2014-11-11 00:29:06.261 INFO  [4460] [main@29] This
-is
-a
-multiline!
 2014-11-11 00:29:06.261 INFO  [4460] [main@32] This is a message with "quotes"!
 2014-11-11 00:29:06.261 DEBUG [4460] [Object::Object@8] 
 2014-11-11 00:29:06.261 DEBUG [4460] [Object::~Object@13] 
 ```
 
 ###CSV formatter
+
 ```
 Date;Time;Severity;TID;This;Function;Message
 2014/11/14;15:22:25.033;FATAL;4188;00000000;main@22;"fatal"
@@ -378,10 +385,6 @@ Date;Time;Severity;TID;This;Function;Message
 2014/11/14;15:22:25.033;INFO;4188;00000000;main@24;"info"
 2014/11/14;15:22:25.033;WARN;4188;00000000;main@25;"warning"
 2014/11/14;15:22:25.048;DEBUG;4188;00000000;main@26;"debug"
-2014/11/14;15:22:25.048;INFO;4188;00000000;main@29;"This
-is
-a
-multiline!"
 2014/11/14;15:22:25.048;INFO;4188;00000000;main@32;"This is a message with ""quotes""!"
 2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::Object@8;
 2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::~Object@13;
