@@ -91,7 +91,7 @@ namespace plog
             if (!str.empty())
             {
 #ifdef _WIN32
-                int len = ::WideCharToMultiByte(CP_ACP, 0, wstr, wlen, &str[0], str.size(), 0, 0);
+                int len = ::WideCharToMultiByte(CP_ACP, 0, wstr, static_cast<int>(wlen), &str[0], static_cast<int>(str.size()), 0, 0);
 #else
                 const char* in = reinterpret_cast<const char*>(&wstr[0]);
                 char* out = &str[0];
@@ -118,7 +118,7 @@ namespace plog
 
             if (!wstr.empty())
             {
-                int wlen = ::MultiByteToWideChar(CP_ACP, 0, str, len, &wstr[0], wstr.size());
+                int wlen = ::MultiByteToWideChar(CP_ACP, 0, str, static_cast<int>(len), &wstr[0], static_cast<int>(wstr.size()));
                 wstr.resize(wlen);
             }
 
@@ -131,7 +131,7 @@ namespace plog
 
             if (!str.empty())
             {
-                int len = ::WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.size(), &str[0], str.size(), 0, 0);
+                int len = ::WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], static_cast<int>(str.size()), 0, 0);
                 str.resize(len);
             }
 
@@ -232,7 +232,7 @@ namespace plog
                 return written;
             }
 
-            int writeAsUTF8(const util::nstring& str)
+            size_t writeAsUTF8(const util::nstring& str)
             {
 #ifdef _WIN32
                 std::string utf8str = toUTF8(str);

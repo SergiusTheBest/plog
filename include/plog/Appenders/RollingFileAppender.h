@@ -30,7 +30,7 @@ namespace plog
                 }
             }
 
-            int bytesWritten = m_file.writeAsUTF8(str);
+            size_t bytesWritten = m_file.writeAsUTF8(str);
 
             if (bytesWritten > 0)
             {
