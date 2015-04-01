@@ -377,6 +377,7 @@ This is a classic log format available in almost any log library. It is good for
 ```
 
 ###CSV formatter
+This is the most powerful log format. It can be easily read without any tools (of course slighlty worse than TXT format) and  can be heavily analyzed if it is opened with a CSV-aware tool (like Excel). Some rows can be highlighted or colored according to cell values, another rows can be hidden by provided rules, columns can be manipulated and etc. This is a recommended format if logs are big and require heavy analysis.
 
 ```
 Date;Time;Severity;TID;This;Function;Message
@@ -391,6 +392,7 @@ Date;Time;Severity;TID;This;Function;Message
 ```
 
 ###FuncMessage formatter
+This format is designed to be used with appenders that provide their own timestamps (like `AndroidAppender` or linux syslog facility).
 
 ```
 main@22: fatal
