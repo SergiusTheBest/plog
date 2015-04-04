@@ -356,6 +356,17 @@ There are number of samples that demonstrate various aspects of using plog. They
 ##Lazy stream evaluation
 
 ##Record
+`Record` stores all data for a log message. It includes:
+
+* time
+* severity
+* thread id
+* `this` pointer (if a log message is written from within an object)
+* source line
+* function name
+* message
+
+Also `Record` has a number of overloaded stream output operators to construct a log message. 
 
 ##Logger
 
@@ -406,6 +417,7 @@ Object::~Object@13:
 ```
 
 ##Appender
+`Appender` uses `Formatter` to get a desired representtion of log data and outputs (appends) it to a file/console/etc.
 
 ###File appender
 
