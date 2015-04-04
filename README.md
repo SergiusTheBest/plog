@@ -369,6 +369,7 @@ There are number of samples that demonstrate various aspects of using plog. They
 Also `Record` has a number of overloaded stream output operators to construct a log message. 
 
 ##Logger
+`Logger` is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. `Logger` can act as `Appender` for another `Logger`. Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
 
 ##Formatter
 `Formatter` is responsible for formatting data from `Record` into various string representations (in theory binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has TXT, CSV and FuncMessage formatters.
@@ -417,7 +418,7 @@ Object::~Object@13:
 ```
 
 ##Appender
-`Appender` uses `Formatter` to get a desired representtion of log data and outputs (appends) it to a file/console/etc.
+`Appender` uses `Formatter` to get a desired representation of log data and outputs (appends) it to a file/console/etc.
 
 ###File appender
 
