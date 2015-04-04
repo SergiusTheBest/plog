@@ -353,7 +353,8 @@ There are number of samples that demonstrate various aspects of using plog. They
 
 ##Overview
 
-##Lazy stream evaluation
+##Logger
+`Logger` is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. `Logger` can act as `Appender` for another `Logger`. Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
 
 ##Record
 `Record` stores all data for a log message. It includes:
@@ -368,8 +369,12 @@ There are number of samples that demonstrate various aspects of using plog. They
 
 Also `Record` has a number of overloaded stream output operators to construct a log message. 
 
-##Logger
-`Logger` is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. `Logger` can act as `Appender` for another `Logger`. Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
+##Lazy stream evaluation
+Log messages are constructed using lazy stream evaluation. It means that if a log message will be dropped (because of its high severity) then stream output operators are not executed.
+
+```cpp
+LOGD << /* the following statements will be executed only when the logger severity level is debug or higher */ ...
+```
 
 ##Formatter
 `Formatter` is responsible for formatting data from `Record` into various string representations (in theory binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has TXT, CSV and FuncMessage formatters.
