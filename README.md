@@ -537,12 +537,12 @@ AndroidAppender::AndroidAppender(const char* tag);
 #Extending
 Plog can be extended to support new:
 
-* formatters
-* appenders
 * data types
+* appenders
+* formatters
 
-##Add custom type to stream output
-The following function must be implemented to add a custom type to the log stream output:
+##Custom data type
+The following function must be implemented to add a custom data type to the log stream output:
 
 ```cpp
 namespace plog
@@ -553,7 +553,7 @@ namespace plog
 
 Refer to [CustomType](samples/CustomType) for a complete sample.
 
-##Write custom appender
+##Custom appender
 Appender must implement `IAppender` interface. Also it accepts `Formatter` as a template parameter however this is optional.
 
 ```cpp
@@ -570,7 +570,7 @@ namespace plog
 
 Refer to [CustomAppender](samples/CustomAppender) for a complete sample.   
 
-##Write custom formatter
+##Custom formatter
 A formatter that is compatible with existing appenders must be a class with 2 static methods:
 
 ```cpp
