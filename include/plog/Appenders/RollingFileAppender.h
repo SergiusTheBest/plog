@@ -10,7 +10,7 @@ namespace plog
     public:
         RollingFileAppender(const char* fileName, size_t maxFileSize, int maxFiles) 
             : m_fileSize()
-            , m_maxFileSize((std::max)(maxFileSize, size_t(1000)))
+            , m_maxFileSize((std::max)(maxFileSize, m_kMaxFileSizeLowerLimit))
             , m_lastFileNumber((std::max)(maxFiles - 1, 0))
         {
             util::splitFileName(fileName, m_fileNameNoExt, m_fileExt);
@@ -21,6 +21,7 @@ namespace plog
         {
             util::nstring str = Formatter::format(record);
 
+            if (m_lastFileNumber > 0)
             {
                 util::MutexLock lock(m_mutex);
 
@@ -94,5 +95,6 @@ namespace plog
         const int       m_lastFileNumber;
         std::string     m_fileExt;
         std::string     m_fileNameNoExt;
+        static const size_t m_kMaxFileSizeLowerLimit = 1000;
     };
 }
