@@ -63,10 +63,15 @@ namespace plog
             std::string fileName = buildFileName();
             m_file.open(fileName.c_str());
 
-            util::nstring str = Formatter::header();
-            m_file.writeAsUTF8(str);
-
             m_fileSize = m_file.getSize();
+
+            if (m_fileSize <= 3) // skip the BOM header
+            {
+                util::nstring str = Formatter::header();
+                m_file.writeAsUTF8(str);
+
+                m_fileSize = m_file.getSize();
+            }
         }
 
         std::string buildFileName(int fileNumber = 0)
