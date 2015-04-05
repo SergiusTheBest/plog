@@ -24,13 +24,13 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
   - [Record](#record)
   - [Lazy stream evaluation](#lazy-stream-evaluation)
   - [Formatter](#formatter)
-    - [TXT formatter](#txt-formatter)
-    - [CSV formatter](#csv-formatter)
-    - [FuncMessage formatter](#funcmessage-formatter)
+    - [TxtFormatter](#txtformatter)
+    - [CsvFformatter](#csvformatter)
+    - [FuncMessageFormatter](#funcmessageformatter)
   - [Appender](#appender)
-    - [RollingFile appender](#rollingfile-appender)
-    - [Console appender](#console-appender)
-    - [Android appender](#android-appender)
+    - [RollingFileAppender](#rollingfileappender)
+    - [ConsoleAppender](#consoleappender)
+    - [AndroidAppender](#androidappender)
 - [Extending](#extending)
   - [Add custom type to stream output](#add-custom-type-to-stream-output)
   - [Write custom appender](#write-custom-appender)
@@ -378,7 +378,7 @@ LOGD << /* the following statements will be executed only when the logger severi
 ##Formatter
 `Formatter` is responsible for formatting data from `Record` into various string representations (in theory binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has TXT, CSV and FuncMessage formatters.
 
-###TXT formatter
+###TxtFormatter
 This is a classic log format available in almost any log library. It is good for console output and easy to read without any tools.
 
 ```
@@ -392,7 +392,7 @@ This is a classic log format available in almost any log library. It is good for
 2014-11-11 00:29:06.261 DEBUG [4460] [Object::~Object@13] 
 ```
 
-###CSV formatter
+###CsvFormatter
 This is the most powerful log format. It can be easily read without any tools (of course slighlty worse than TXT format) and  can be heavily analyzed if it is opened with a CSV-aware tool (like Excel). Some rows can be highlighted or colored according to cell values, another rows can be hidden by provided rules, columns can be manipulated and etc. This is a recommended format if logs are big and require heavy analysis. Also 'this' pointer is shown so object instances can be told apart.
 
 ```
@@ -407,7 +407,7 @@ Date;Time;Severity;TID;This;Function;Message
 2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::~Object@13;
 ```
 
-###FuncMessage formatter
+###FuncMessageFormatter
 This format is designed to be used with appenders that provide their own timestamps (like `AndroidAppender` or linux syslog facility).
 
 ```
@@ -424,19 +424,19 @@ Object::~Object@13:
 ##Appender
 `Appender` uses `Formatter` to get a desired representation of log data and outputs (appends) it to a file/console/etc.
 
-###RollingFile appender
+###RollingFileAppender
 
 ```cpp
 RollingFileAppender::RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
 
-###Console appender
+###ConsoleAppender
 
 ```cpp
 ConsoleAppender::ConsoleAppender();
 ```
 
-###Android appender
+###AndroidAppender
 
 ```cpp
 AndroidAppender::AndroidAppender(const char* tag);
