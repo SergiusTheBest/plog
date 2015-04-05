@@ -35,6 +35,15 @@ set_target_properties(MultiInstance PROPERTIES FOLDER Samples)
 add_executable(Hello Hello/Main.cpp) 
 set_target_properties(Hello PROPERTIES FOLDER Samples)
 
+add_executable(CustomFormatter CustomFormatter/Main.cpp) 
+set_target_properties(CustomFormatter PROPERTIES FOLDER Samples)
+
+add_executable(CustomAppender CustomAppender/Main.cpp) 
+set_target_properties(CustomAppender PROPERTIES FOLDER Samples)
+
+add_executable(CustomType CustomType/Main.cpp) 
+set_target_properties(CustomType PROPERTIES FOLDER Samples)
+
 add_executable(ChainedApp Chained/ChainedApp/Main.cpp) 
 set_target_properties(ChainedApp PROPERTIES FOLDER Samples/Chained)
 target_link_libraries(ChainedApp ChainedLib)
