@@ -14,6 +14,9 @@ namespace plog
             util::ftime(&m_time);
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        // Stream output operators
+
         Record& operator<<(char data)
         {
             char str[] = { data, 0 };
@@ -26,9 +29,9 @@ namespace plog
             data = data ? data : "(null)";
 
 #ifdef _WIN32
-            m_stream << util::toUnicode(data);
+            m_message << util::toUnicode(data);
 #else            
-            m_stream << data;
+            m_message << data;
 #endif
 
             return *this;
@@ -59,7 +62,7 @@ namespace plog
             data = data ? data : L"(null)";
 
 #ifdef _WIN32
-            m_stream << data;
+            m_message << data;
 #else
             *this << util::toString(data);
 #endif
@@ -83,24 +86,55 @@ namespace plog
         template<typename T>
         Record& operator<<(const T& data)
         {
-            m_stream << data;
+            m_message << data;
             return *this;
         }
 
-        std::string func() const
+        //////////////////////////////////////////////////////////////////////////
+        // Getters
+
+        const util::Time& getTime() const
+        {
+            return m_time;
+        }
+
+        Severity getSeverity() const
+        {
+            return m_severity;
+        }
+
+        unsigned int getTid() const
+        {
+            return m_tid;
+        }
+
+        const void* getObject() const
+        {
+            return m_object;
+        }
+
+        size_t getLine() const
+        {
+            return m_line;
+        }
+
+        const util::nstring getMessage() const
+        {
+            return m_message.str();
+        }
+
+        std::string getFunc() const
         {
             return util::processFuncName(m_func);
         }
 
-    public:
+    private:
         util::Time          m_time;
         const Severity      m_severity;
         const unsigned int  m_tid;
         const void* const   m_object;
         const size_t        m_line;
-        util::nstringstream m_stream;
-
-    private:
+        util::nstringstream m_message;
         const char* const   m_func;
     };
 }

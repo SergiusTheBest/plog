@@ -16,17 +16,17 @@ namespace plog
         static util::nstring format(const Record& record)
         {
             tm t;
-            util::localtime_s(&t, &record.m_time.time);
+            util::localtime_s(&t, &record.getTime().time);
 
             util::nstringstream ss;
             ss << t.tm_year + 1900 << "/" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mon + 1 << "/" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mday << ";";
-            ss << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_hour << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_min << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_sec << "." << std::setfill(PLOG_NSTR('0')) << std::setw(3) << record.m_time.millitm << ";";
-            ss << getSeverityName(record.m_severity) << ";";
-            ss << record.m_tid << ";";
-            ss << record.m_object << ";";
-            ss << record.func().c_str() << "@" << record.m_line << ";";
+            ss << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_hour << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_min << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_sec << "." << std::setfill(PLOG_NSTR('0')) << std::setw(3) << record.getTime().millitm << ";";
+            ss << getSeverityName(record.getSeverity()) << ";";
+            ss << record.getTid() << ";";
+            ss << record.getObject() << ";";
+            ss << record.getFunc().c_str() << "@" << record.getLine() << ";";
 
-            util::nstring message = record.m_stream.str();
+            util::nstring message = record.getMessage();
 
             if (message.size() > kMaxMessageSize)
             {

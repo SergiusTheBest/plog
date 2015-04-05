@@ -37,7 +37,7 @@ namespace plog
 
         virtual void write(const Record& record)
         {
-            if (checkSeverity(record.m_severity))
+            if (checkSeverity(record.getSeverity()))
             {
                 *this += record;
             }
