@@ -28,7 +28,6 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
     - [CSV formatter](#csv-formatter)
     - [FuncMessage formatter](#funcmessage-formatter)
   - [Appender](#appender)
-    - [File appender](#file-appender)
     - [RollingFile appender](#rollingfile-appender)
     - [Console appender](#console-appender)
     - [Android appender](#android-appender)
@@ -70,7 +69,7 @@ int main()
 * Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc)
 * Thread and type safe
 * Formatters: TXT, CSV, FuncMessage
-* Appenders: File, RollingFile, Console, Android
+* Appenders: File, Console, Android
 * Automatic 'this' pointer capture (supported only on msvc)
 * Lazy stream evaluation
 * Unicode aware, files are stored in UTF8
@@ -367,7 +366,7 @@ There are number of samples that demonstrate various aspects of using plog. They
 * function name
 * message
 
-Also `Record` has a number of overloaded stream output operators to construct a log message. 
+Also `Record` has a number of overloaded stream output operators to construct a log message.
 
 ##Lazy stream evaluation
 Log messages are constructed using lazy stream evaluation. It means that if a log message will be dropped (because of its high severity) then stream output operators are not executed.
@@ -425,13 +424,23 @@ Object::~Object@13:
 ##Appender
 `Appender` uses `Formatter` to get a desired representation of log data and outputs (appends) it to a file/console/etc.
 
-###File appender
-
 ###RollingFile appender
+
+```cpp
+RollingFileAppender::RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0);
+```
 
 ###Console appender
 
+```cpp
+ConsoleAppender::ConsoleAppender();
+```
+
 ###Android appender
+
+```cpp
+AndroidAppender::AndroidAppender(const char* tag);
+```
 
 #Extending
 
