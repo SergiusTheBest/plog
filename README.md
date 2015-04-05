@@ -91,15 +91,20 @@ The next step is to initialize plog. The basic scenario is writing a log to a fi
 Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
 
-`maxSeverity` is the logger severity upper limit. All log messages have its own severity and if it is higher than the limit they are dropped. Plog defines the following severity levels (in ascending order):
+`maxSeverity` is the logger severity upper limit. All log messages have its own severity and if it is higher than the limit they are dropped. Plog defines the following severity levels:
 
-* none
-* fatal
-* error
-* warning
-* info
-* debug
-* verbose
+```cpp
+enum Severity
+{
+    none = 0,
+    fatal = 1,
+    error = 2,
+    warning = 3,
+    info = 4,
+    debug = 5,
+    verbose = 6
+};
+```
 
 The log format is determined automatically by `fileName` file extension:
 
@@ -260,6 +265,8 @@ plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
 
 It initializes the log in the way when log messages are written to both a file and a console.
 
+Refer to [MultiAppender](samples/MultiAppender) for a complete sample.
+
 ##Multiple loggers
 Multiple loggers can be used simultaneously each with their own separate configuration. The loggers differ by their instance number (that is implemented as a template parameter). The default instance is zero. Initialization is done by the appropriate template `plog::init` functions:
 
@@ -301,6 +308,8 @@ int main()
 }
 ```
 
+Refer to [MultiInstance](samples/MultiInstance) for a complete sample.
+
 ##Chained loggers
 A logger can work as an appender for another logger. So you can chain several loggers together. This is useful for streaming log messages from a shared library to the main application binary.
 
@@ -336,6 +345,8 @@ int main()
     return 0;
 }
 ```
+
+Refer to [Chained](samples/Chained) for a complete sample.
 
 #Samples
 There are number of samples that demonstrate various aspects of using plog. They can be found in the [samples](samples) folder:
@@ -535,11 +546,11 @@ AndroidAppender::AndroidAppender(const char* tag);
 ```
 
 #Extending
-Plog can be extended to support new:
+Plog can be extended to support new custom:
 
-* data types
-* appenders
-* formatters
+* data type
+* appender
+* formatter
 
 ##Custom data type
 The following function must be implemented to add a custom data type to the log stream output:
