@@ -541,6 +541,21 @@ AndroidAppender::AndroidAppender(const char* tag);
 ##Write custom appender
 
 ##Write custom formatter
+A formatter that is compatible with existing appenders must be a class with 2 static methods:
+
+```cpp
+namespace plog
+{
+    class MyFormatter
+    {
+    public:
+        static util::nstring header();
+        static util::nstring format(const Record& record);
+    };
+}
+```
+
+`header` returns a file header for a new file. `format` converts `Record` to a string. Refer to [CustomFormatter](samples/CustomFormatter) for a complete sample.   
 
 #Future plans
 * Drop pre C++11 support when C++17 is released
