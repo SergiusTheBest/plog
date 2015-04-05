@@ -71,14 +71,18 @@ namespace plog
         std::string buildFileName(int fileNumber = 0)
         {
             std::stringstream ss;
-            ss << m_fileNameNoExt << '.';
+            ss << m_fileNameNoExt;
             
             if (fileNumber > 0)
             {
-                ss << fileNumber << '.';
+                ss << '.' << fileNumber;
             }
             
-            ss << m_fileExt;
+            if (!m_fileExt.empty())
+            {
+                ss << '.' << m_fileExt;
+            }
+
             return ss.str();
         }
 
