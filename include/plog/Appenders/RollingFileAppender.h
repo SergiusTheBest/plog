@@ -35,9 +35,6 @@ namespace plog
             if (bytesWritten > 0)
             {
                 m_fileSize += bytesWritten;
-#ifdef _WIN32
-                ++m_fileSize;
-#endif
             }
         }
 
