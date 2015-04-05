@@ -3,6 +3,8 @@
 //////////////////////////////////////////////////////////////////////////
 // This file provides backward compatibility with the old version of plog.
 
+#define LOG_TRACE LOG_VERBOSE
+
 namespace plog
 {
     const Severity trace = verbose;
@@ -19,16 +21,14 @@ namespace plog
     template<class CharType>
     inline void init_csv(const CharType* fileName, Severity maxSeverity)
     {
-        initCsv<0>(maxSeverity, fileName);
+        init<CsvFormatter, 0>(maxSeverity, fileName);
     }
 
     template<class CharType>
     inline void init_txt(const CharType* fileName, Severity maxSeverity)
     {
-        initTxt<0>(maxSeverity, fileName);
+        init<TxtFormatter, 0>(maxSeverity, fileName);
     }
-
-    #define LOG_TRACE LOG_VERBOSE
 
     template<int instance, class CharType>
     inline Logger<instance>& init(const CharType* fileName, Severity maxSeverity, size_t maxFileSize = 0, int maxFiles = 0)
