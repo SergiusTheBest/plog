@@ -440,8 +440,8 @@ hide empty fields
 -->
 There are 4 functional parts:
 
-* `Record` keeps log message data
 * `Logger` is the main object
+* `Record` keeps log message data
 * `Appender` is a log data destination
 * `Formatter` converts log data into its string represantation
 
@@ -560,17 +560,29 @@ Object::~Object@13:
 RollingFileAppender::RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
 
+It writes log data to a file with rolling behaviour. The sample file names produced by this appender: 
+
+* mylog.log <== current log file (size < maxFileSize)
+* mylog.1.log <== previous log file (size >= maxFileSize)
+* mylog.2.log <== previous log file (size >= maxFileSize)
+
+If `maxFileSize` or `maxFiles` is 0 then rolling behaviour is turned off.
+
 ###ConsoleAppender
 
 ```cpp
 ConsoleAppender::ConsoleAppender();
 ```
 
+This appender outputs log data to `stdout`.
+
 ###AndroidAppender
 
 ```cpp
 AndroidAppender::AndroidAppender(const char* tag);
 ```
+
+This appender uses Android logging system to output log data. They can be viewed with [logcat](http://developer.android.com/tools/help/logcat.html) or in a log window of Android IDEs.
 
 #Extending
 Plog can be extended to support new custom:
