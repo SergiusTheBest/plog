@@ -212,11 +212,6 @@ namespace plog
 #else
                 m_file = std::fopen(fileName, "a");
 #endif
-                if (0 == getSize())
-                {
-                    const unsigned char kBOM[] = { 0xEF, 0xBB, 0xBF };
-                    write(kBOM, sizeof(kBOM));
-                }
             }
 
             size_t write(const void* buf, size_t count)
@@ -232,14 +227,10 @@ namespace plog
                 return written;
             }
 
-            size_t writeAsUTF8(const util::nstring& str)
+            template<class CharType>
+            size_t write(const std::basic_string<CharType>& str)
             {
-#ifdef _WIN32
-                std::string utf8str = toUTF8(str);
-#else
-                const std::string& utf8str = str;
-#endif
-                return write(utf8str.c_str(), utf8str.size());
+                return write(str.data(), str.size() * sizeof(CharType));
             }
 
             off_t getSize()

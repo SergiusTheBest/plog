@@ -1,10 +1,11 @@
 #pragma once
 #include <algorithm>
 #include <plog/Util.h>
+#include <plog/Converters/UTF8Converter.h>
 
 namespace plog
 {
-    template<class Formatter>
+    template<class Formatter, class Converter = UTF8Converter>
     class RollingFileAppender : public IAppender
     {
     public:
@@ -19,19 +20,14 @@ namespace plog
 
         virtual void write(const Record& record)
         {
-            util::nstring str = Formatter::format(record);
+            util::MutexLock lock(m_mutex);
 
-            if (m_lastFileNumber > 0)
+            if (m_lastFileNumber > 0 && m_fileSize > m_maxFileSize)
             {
-                util::MutexLock lock(m_mutex);
-
-                if (m_fileSize > m_maxFileSize)
-                {
-                    rollLogFiles();
-                }
+                rollLogFiles();
             }
 
-            size_t bytesWritten = m_file.writeAsUTF8(str);
+            size_t bytesWritten = m_file.write(Converter::convert(Formatter::format(record)));
 
             if (bytesWritten > 0)
             {
@@ -65,11 +61,9 @@ namespace plog
 
             m_fileSize = m_file.getSize();
 
-            if (m_fileSize <= 3) // skip the BOM header
+            if (0 == m_fileSize)
             {
-                util::nstring str = Formatter::header();
-                m_file.writeAsUTF8(str);
-
+                m_file.write(Converter::header(Formatter::header()));
                 m_fileSize = m_file.getSize();
             }
         }
