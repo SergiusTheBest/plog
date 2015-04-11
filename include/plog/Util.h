@@ -235,7 +235,7 @@ namespace plog
 
             off_t getSize()
             {
-                return m_file ? std::ftell(m_file) : 0;
+                return m_file ? std::fseek(m_file, 0, SEEK_END), std::ftell(m_file) : 0;
             }
 
             void close()
