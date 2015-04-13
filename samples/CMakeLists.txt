@@ -38,6 +38,9 @@ set_target_properties(Facilities PROPERTIES FOLDER Samples)
 add_executable(Hello Hello/Main.cpp) 
 set_target_properties(Hello PROPERTIES FOLDER Samples)
 
+add_executable(Performance Performance/Main.cpp) 
+set_target_properties(Performance PROPERTIES FOLDER Samples)
+
 add_executable(CustomConverter CustomConverter/Main.cpp) 
 set_target_properties(CustomConverter PROPERTIES FOLDER Samples)
 
