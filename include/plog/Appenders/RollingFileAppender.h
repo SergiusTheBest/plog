@@ -13,16 +13,21 @@ namespace plog
             : m_fileSize()
             , m_maxFileSize((std::max)(maxFileSize, static_cast<size_t>(1000))) // set a lower limit for the maxFileSize
             , m_lastFileNumber((std::max)(maxFiles - 1, 0))
+            , m_firstWrite(true)
         {
             util::splitFileName(fileName, m_fileNameNoExt, m_fileExt);
-            openLogFile();
         }
 
         virtual void write(const Record& record)
         {
             util::MutexLock lock(m_mutex);
 
-            if (m_lastFileNumber > 0 && m_fileSize > m_maxFileSize)
+            if (m_firstWrite)
+            {
+                openLogFile();
+                m_firstWrite = false;
+            }
+            else if (m_lastFileNumber > 0 && m_fileSize > m_maxFileSize)
             {
                 rollLogFiles();
             }
@@ -94,5 +99,6 @@ namespace plog
         const int       m_lastFileNumber;
         std::string     m_fileExt;
         std::string     m_fileNameNoExt;
+        bool            m_firstWrite;
     };
 }
