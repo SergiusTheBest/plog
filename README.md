@@ -363,6 +363,7 @@ There are number of samples that demonstrate various aspects of using plog. They
 * [Simple](samples/Simple)
 * [CustomAppender](samples/CustomAppender)
 * [CustomFormatter](samples/CustomFormatter)
+* [CustomConverter](samples/CustomConverter)
 * [CustomType](samples/CustomType)
 * [Facilities](samples/Facilities)
 
@@ -444,16 +445,17 @@ hide empty fields
 @enduml
 -->
 
-There are 4 functional parts:
+There are 5 functional parts:
 
 * `Logger` is the main object
 * `Record` keeps log message data
 * `Appender` is a log data destination
-* `Formatter` converts log data into its string represantation
+* `Formatter` formats log data into its string represantation
+* `Converter` converts formatter output into raw buffer (`std::string`)
 
 The log data flow is shown below:
 
-![UML data flow](http://gravizo.com/g?@startuml;%28*%29%20-r->%20"LOG%20macro";-r->%20"Record";-r->%20"Logger";-r->%20"Appender";-d->%20"Formatter";-r->%20"Converter";-u->%20"Appender";-r->%20%28*%29;@enduml)
+![UML data flow](http://gravizo.com/g?@startuml;%28*%29%20-r->%20"LOG%20macro";-r->%20"Record";-r->%20"Logger";-r-->%20"Appender";-d->%20"Formatter";-d->%20"Converter";-u->%20"Appender";-r->%20%28*%29;@enduml)
 <!--
 @startuml
 (*) -r-> "LOG macro"
@@ -461,7 +463,7 @@ The log data flow is shown below:
 -r-> "Logger"
 -r-> "Appender"
 -d-> "Formatter"
--r-> "Converter"
+-d-> "Converter"
 -u-> "Appender"
 -r-> (*)
 @enduml
@@ -642,7 +644,24 @@ namespace plog
 }
 ```
 
-`header` returns a file header for a new file. `format` converts `Record` to a string. Refer to [CustomFormatter](samples/CustomFormatter) for a complete sample.   
+`header` returns a file header for a new file. `format` formats `Record` to a string. Refer to [CustomFormatter](samples/CustomFormatter) for a complete sample.   
+
+##Custom converter
+A converter must be a class with 2 static methods:
+
+```cpp
+namespace plog
+{
+    class MyConverter
+    {
+    public:
+        static std::string header(const util::nstring& str);
+        static std::string convert(const util::nstring& str);
+    };
+}
+```
+
+`header` converts a file header for a new file. `convert` converts all other messages. Refer to [CustomConverter](samples/CustomConverter) for a complete sample.
 
 #Future plans
 * Drop pre C++11 support when C++17 is released
