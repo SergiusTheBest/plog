@@ -10,7 +10,7 @@ int main()
 {
     plog::init(plog::debug, "Performance.txt");
 
-    plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init<Console>(plog::debug, &consoleAppender);
 
     LOGI_(Console) << "Test started";

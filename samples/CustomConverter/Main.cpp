@@ -31,7 +31,7 @@ namespace plog
 
 int main()
 {
-    plog::RollingFileAppender<plog::TxtFormatter, plog::MyConverter> appender("CustomConverter.txt");
+    static plog::RollingFileAppender<plog::TxtFormatter, plog::MyConverter> appender("CustomConverter.txt");
     plog::init(plog::debug, &appender);
 
     LOGD << "A debug message!";
