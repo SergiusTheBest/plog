@@ -1,4 +1,8 @@
-﻿#include <plog/Log.h>
+﻿//
+// Performance - this sample measures time per a log call.
+//
+
+#include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
 
 enum
@@ -8,18 +12,21 @@ enum
 
 int main()
 {
+    // Initialize a log that will be measured.
     plog::init(plog::debug, "Performance.txt");
 
+    // Initialize a log for printing info messages.
     static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init<Console>(plog::debug, &consoleAppender);
 
     LOGI_(Console) << "Test started";
 
-    const int kCount = 50000;
-
     plog::util::Time startTime;
     plog::util::ftime(&startTime);
 
+    const int kCount = 50000;
+
+    // Performance measure loop.
     for (int i = 0; i < kCount; ++i)
     {
         LOGD << "Hello log!";

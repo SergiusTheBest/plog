@@ -1,19 +1,25 @@
-﻿#include <plog/Log.h>
+﻿//
+// MultiInstance - this sample shows how to use multiple log instances. Each instance has its own independent configuration.
+//
 
-enum
+#include <plog/Log.h>
+
+enum // Define log instances. Default is 0 and is omitted from this enum.
 {
     SecondLog = 1
 };
 
 int main()
 {
-    plog::init(plog::debug, "MultiInstance-default.txt");
-    plog::init<SecondLog>(plog::debug, "MultiInstance-second.txt");
+    plog::init(plog::debug, "MultiInstance-default.txt"); // Initialize the default log instance.
+    plog::init<SecondLog>(plog::debug, "MultiInstance-second.txt"); // Initialize the 2nd log instance.
 
+    // Write some messages to the default log.
     LOGD << "Hello default log!";
     LOG_DEBUG << "Hello default log!";
     LOG(plog::debug) << "Hello default log!";
 
+    // Write some messages to the 2nd log.
     LOGD_(SecondLog) << "Hello second log!";
     LOG_DEBUG_(SecondLog) << "Hello second log!";
     LOG_(SecondLog, plog::debug) << "Hello second log!";

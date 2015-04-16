@@ -1,4 +1,8 @@
-﻿#include <plog/Log.h>
+﻿//
+// Simple - this sample outputs various types of messages.
+//
+
+#include <plog/Log.h>
 #include "MyClass.h"
 
 int main()

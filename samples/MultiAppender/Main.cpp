@@ -1,13 +1,17 @@
-﻿#include <plog/Log.h>
+﻿//
+// MultiAppender - this sample shows how to use multiple appenders with the same log. 
+//
+
+#include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
 
 int main()
 {
-    static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("MultiAppender.csv", 8000, 3);
-    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-    plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
+    static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("MultiAppender.csv", 8000, 3); // Create the 1st appender.
+    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender; // Create the 2nd appender.
+    plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender); // Initialize a log with the both appenders.
 
-    // A lot of log lines that goes to the file and the console.
+    // A bunch of log lines that goes to the both appenders: to the file and to the console.
     for (int i = 0; i < 100; ++i)
     {
         LOG_INFO << "i: " << i;
