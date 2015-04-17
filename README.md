@@ -358,17 +358,17 @@ There are number of samples that demonstrate various aspects of using plog. They
 |------|-----------|
 |[Android](samples/Android)||
 |[Chained](samples/Chained)||
-|[Hello](samples/Hello)|This is a minimal introduction sample. It shows the basic 3 steps to start using plog.|
-|[MultiAppender](samples/MultiAppender)|This sample shows how to use multiple appenders with the same log.|
-|[MultiInstance](samples/MultiInstance)|This sample shows how to use multiple log instances. Each instance has its own independent configuration.|
+|[Hello](samples/Hello)|A minimal introduction sample. It shows the basic 3 steps to start using plog.|
+|[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same log.|
+|[MultiInstance](samples/MultiInstance)|Shows how to use multiple log instances. Each instance has its own independent configuration.|
 |[ObjectiveC](samples/ObjectiveC)||
-|[Simple](samples/Simple)|This sample outputs various types of messages.|
-|[CustomAppender](samples/CustomAppender)|This sample shows how to implement a custom appender that stores log messages in memory.|
-|[CustomFormatter](samples/CustomFormatter)|This sample shows how to implement a custom formatter.|
-|[CustomConverter](samples/CustomConverter)|This sample shows how to implement a custom converter that encrypts log messages.|
-|[CustomType](samples/CustomType)|This sample shows how to write a custom type to a log stream.|
-|[Facilities](samples/Facilities)|This sample shows how to use logging per facilities via multiple log instances (useful for big projects).|
-|[Permormance](samples/Permormance)||
+|[Simple](samples/Simple)|Outputs various types of messages.|
+|[CustomAppender](samples/CustomAppender)|Shows how to implement a custom appender that stores log messages in memory.|
+|[CustomFormatter](samples/CustomFormatter)|Shows how to implement a custom formatter.|
+|[CustomConverter](samples/CustomConverter)|Shows how to implement a custom converter that encrypts log messages.|
+|[CustomType](samples/CustomType)|Shows how to write a custom type to a log stream.|
+|[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple log instances (useful for big projects).|
+|[Performance](samples/Performance)|Measures time per a log call.|
 
 #Design
 
