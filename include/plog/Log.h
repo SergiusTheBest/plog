@@ -4,6 +4,8 @@
 #include <plog/Init.h>
 #include <plog/Compatibility.h>
 
+#define PLOG_VERSION 0x0507
+
 //////////////////////////////////////////////////////////////////////////
 // Helper macros that get context info
 
