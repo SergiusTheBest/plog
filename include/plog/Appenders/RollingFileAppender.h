@@ -27,7 +27,7 @@ namespace plog
                 openLogFile();
                 m_firstWrite = false;
             }
-            else if (m_lastFileNumber > 0 && m_fileSize > m_maxFileSize)
+            else if (m_lastFileNumber > 0 && m_fileSize > m_maxFileSize && -1 != m_fileSize)
             {
                 rollLogFiles();
             }
@@ -62,14 +62,16 @@ namespace plog
         void openLogFile()
         {
             std::string fileName = buildFileName();
-            m_file.open(fileName.c_str());
-
-            m_fileSize = m_file.getSize();
+            m_fileSize = m_file.open(fileName.c_str());
 
             if (0 == m_fileSize)
             {
-                m_file.write(Converter::header(Formatter::header()));
-                m_fileSize = m_file.getSize();
+                size_t bytesWritten = m_file.write(Converter::header(Formatter::header()));
+
+                if (bytesWritten > 0)
+                {
+                    m_fileSize += bytesWritten;
+                }
             }
         }
 

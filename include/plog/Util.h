@@ -1,7 +1,6 @@
 #pragma once
 #include <cassert>
 #include <cstring>
-#include <cstdio>
 #include <fcntl.h>
 #include <sys/stat.h>
 
@@ -9,6 +8,7 @@
 #   include <Windows.h>
 #   include <time.h>
 #   include <sys/timeb.h>
+#   include <io.h>
 #else
 #   include <unistd.h>
 #   include <sys/syscall.h>
@@ -191,11 +191,11 @@ namespace plog
         class File : NonCopyable
         {
         public:
-            File() : m_file()
+            File() : m_file(-1)
             {
             }
 
-            File(const char* fileName) : m_file()
+            File(const char* fileName) : m_file(-1)
             {
                 open(fileName);
             }
@@ -205,26 +205,23 @@ namespace plog
                 close();
             }
 
-            void open(const char* fileName)
+            off_t open(const char* fileName)
             {
 #ifdef _WIN32
-                m_file = ::_fsopen(fileName, "ab", _SH_DENYWR);
+                ::_sopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #else
-                m_file = std::fopen(fileName, "a");
+                m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
+                return seek(0, SEEK_END);
             }
 
             size_t write(const void* buf, size_t count)
             {
-                size_t written = 0;
-
-                if (m_file)
-                {
-                    written = std::fwrite(buf, 1, count, m_file);
-                    std::fflush(m_file);
-                }
-
-                return written;
+#ifdef _WIN32
+                return m_file != -1 ? ::_write(m_file, buf, count) : -1;
+#else
+                return m_file != -1 ? ::write(m_file, buf, count) : -1;
+#endif
             }
 
             template<class CharType>
@@ -233,17 +230,25 @@ namespace plog
                 return write(str.data(), str.size() * sizeof(CharType));
             }
 
-            off_t getSize()
+            off_t seek(off_t offset, int whence)
             {
-                return m_file ? std::fseek(m_file, 0, SEEK_END), std::ftell(m_file) : 0;
+#ifdef _WIN32
+                return m_file != -1 ? ::_lseek(m_file, offset, whence) : -1;
+#else
+                return m_file != -1 ? ::lseek(m_file, offset, whence) : -1;
+#endif
             }
 
             void close()
             {
-                if (m_file)
+                if (m_file != -1)
                 {
-                    std::fclose(m_file);
-                    m_file = NULL;
+#ifdef _WIN32
+                    ::_close(m_file);
+#else
+                    ::close(m_file);
+#endif
+                    m_file = -1;
                 }
             }
 
@@ -262,7 +267,7 @@ namespace plog
             }
 
         private:
-            FILE* m_file;
+            int m_file;
         };
 
         class Mutex : NonCopyable
