@@ -15,7 +15,7 @@ namespace plog
         {
             std::string str = Formatter::format(record);
 
-            __android_log_print(toPriority(record.m_severity), m_tag, "%s", str.c_str());
+            __android_log_print(toPriority(record.getSeverity()), m_tag, "%s", str.c_str());
         }
 
     private:
