@@ -27,7 +27,7 @@ namespace plog
                 openLogFile();
                 m_firstWrite = false;
             }
-            else if (m_lastFileNumber > 0 && m_fileSize > m_maxFileSize && -1 != m_fileSize)
+            else if (m_lastFileNumber > 0 && m_fileSize > m_maxFileSize && static_cast<size_t>(-1) != m_fileSize)
             {
                 rollLogFiles();
             }
