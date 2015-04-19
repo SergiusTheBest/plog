@@ -1,5 +1,5 @@
 ﻿//
-// Facilities - this sample shows how to use logging per facilities via multiple log instances (useful for big projects).
+// Facilities - shows how to use logging per facilities via multiple logger instances (useful for big projects).
 //
 
 #include <plog/Log.h>
@@ -14,9 +14,9 @@ enum Facility // Define log facilities.
 
 int main()
 {
-    plog::init<Sink>(plog::debug, "Facility.csv"); // Initialize the log sink.
+    plog::init<Sink>(plog::debug, "Facility.csv"); // Initialize the sink logger.
 
-    // Initialize all other logs and set the log sink as an appender. Each of the logs can have their own severity level.
+    // Initialize all other loggers and set the sink logger as an appender. Each of the loggers can have their own severity level.
     plog::init<Default>(plog::debug, plog::get<Sink>());
     plog::init<Auth>(plog::warning, plog::get<Sink>());
     plog::init<FileIO>(plog::info, plog::get<Sink>());

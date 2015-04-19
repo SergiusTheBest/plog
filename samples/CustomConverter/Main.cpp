@@ -1,5 +1,5 @@
 ﻿//
-// CustomConverter - this sample shows how to implement a custom converter that encrypts log messages.
+// CustomConverter - shows how to implement a custom converter that encrypts log messages.
 //
 
 #include <plog/Log.h>
@@ -37,8 +37,8 @@ namespace plog
 
 int main()
 {
-    static plog::RollingFileAppender<plog::TxtFormatter, plog::MyConverter> appender("CustomConverter.txt"); // Pass the custom converter as a template parameter.
-    plog::init(plog::debug, &appender);
+    static plog::RollingFileAppender<plog::TxtFormatter, plog::MyConverter> appender("CustomConverter.txt"); // Create an appender and pass our converter as a template parameter.
+    plog::init(plog::debug, &appender); // Initialize the logger with the appender.
 
     LOGD << "A debug message!";
     LOGD << "Another one debug message!";

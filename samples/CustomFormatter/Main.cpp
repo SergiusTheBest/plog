@@ -1,5 +1,5 @@
 ﻿//
-// CustomFormatter - this sample shows how to implement a custom formatter.
+// CustomFormatter - shows how to implement a custom formatter.
 //
 
 #include <plog/Log.h>
@@ -26,7 +26,7 @@ namespace plog
 
 int main()
 {
-    plog::init<plog::MyFormatter>(plog::debug, "CustomFormatter.txt"); // Pass our custom formatter as a template parameter to init function.
+    plog::init<plog::MyFormatter>(plog::debug, "CustomFormatter.txt"); // Initialize the logger and pass our formatter as a template parameter to init function.
 
     LOGD << "A debug message!";
 

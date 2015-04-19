@@ -1,3 +1,7 @@
+//
+// ObjectiveC - shows that plog can be used in ObjectiveC++.
+//
+
 #include <objc/Object.h>
 #include <plog/Log.h>
 
@@ -17,7 +21,7 @@
 
 int main()
 {
-    plog::init(plog::debug, "ObjectiveC.csv");
+    plog::init(plog::debug, "ObjectiveC.csv"); // Initialize the logger.
     LOGD << "Hello ObjC++!";
     
     [Greeter greet];

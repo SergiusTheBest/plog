@@ -23,8 +23,8 @@ add_library(plog STATIC ${PLOG_HEADERS})
 set_target_properties(plog PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(plog PROPERTIES FOLDER Include)
 
-add_executable(Simple Simple/Main.cpp Simple/MyClass.h Simple/MyClass.cpp) 
-set_target_properties(Simple PROPERTIES FOLDER Samples)
+add_executable(Demo Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp) 
+set_target_properties(Demo PROPERTIES FOLDER Samples)
 
 add_executable(MultiAppender MultiAppender/Main.cpp) 
 set_target_properties(MultiAppender PROPERTIES FOLDER Samples)
@@ -61,7 +61,19 @@ add_library(ChainedLib SHARED Chained/ChainedLib/Main.cpp)
 set_target_properties(ChainedLib PROPERTIES FOLDER Samples/Chained)
 
 if(NOT MSVC AND NOT CMAKE_COMPILER_IS_CLANGXX)
-    add_executable(ObjectiveC ObjectiveC/Main.mm) 
-    set_target_properties(ObjectiveC PROPERTIES FOLDER Samples)
+    add_executable(ObjectiveC ObjectiveC/Main.mm)
     target_link_libraries(ObjectiveC objc)
+else()
+    add_custom_target(ObjectiveC SOURCES ObjectiveC/Main.mm)
 endif()
+set_target_properties(ObjectiveC PROPERTIES FOLDER Samples)
+
+add_custom_target(Android SOURCES Android/jni/Sample.cpp) 
+set_target_properties(Android PROPERTIES FOLDER Samples)
+
+add_executable(LibraryApp Library/LibraryApp/Main.cpp) 
+set_target_properties(LibraryApp PROPERTIES FOLDER Samples/Library)
+target_link_libraries(LibraryApp LibraryLib)
+
+add_library(LibraryLib STATIC Library/LibraryLib/Lib.cpp) 
+set_target_properties(LibraryLib PROPERTIES FOLDER Samples/Library)

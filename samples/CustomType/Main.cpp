@@ -1,10 +1,10 @@
 ﻿//
-// CustomType - this sample shows how to write a custom type to a log stream.
+// CustomType - shows how to print a custom type to the log stream.
 //
 
 #include <plog/Log.h>
 
-struct Point // This is our custom type that we want to write to a log stream.
+struct Point // This is our custom type that we want to print to the log stream.
 {
     int x;
     int y;
@@ -20,12 +20,12 @@ namespace plog
 
 int main()
 {
-    plog::init(plog::debug, "CustomType.txt");
+    plog::init(plog::debug, "CustomType.txt"); // Initialize the logger.
 
     Point pt1 = { 0, 0 };
     Point pt2 = { 10, -5 };
 
-    LOGI << "We've got a line with coords: " << pt1 << pt2; // Write our custom type to a log stream.
+    LOGI << "We've got a line with coords: " << pt1 << pt2; // Print our type to the log stream.
 
     return 0;
 }

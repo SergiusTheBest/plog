@@ -43,7 +43,8 @@ namespace plog
             return *this;
         }
 
-        Record& operator<<(const std::string& data)
+        template<class CharType>
+        Record& operator<<(const std::basic_string<CharType>& data)
         {
             *this << data.c_str();
             return *this;
@@ -73,12 +74,6 @@ namespace plog
         Record& operator<<(wchar_t* data)
         {
             *this << const_cast<const wchar_t*>(data);
-            return *this;
-        }
-
-        Record& operator<<(const std::wstring& data)
-        {
-            *this << data.c_str();
             return *this;
         }
 #endif

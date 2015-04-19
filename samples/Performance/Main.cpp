@@ -1,5 +1,5 @@
 ﻿//
-// Performance - this sample measures time per a log call.
+// Performance - measures time per a log call.
 //
 
 #include <plog/Log.h>
@@ -12,10 +12,10 @@ enum
 
 int main()
 {
-    // Initialize a log that will be measured.
+    // Initialize the logger that will be measured.
     plog::init(plog::debug, "Performance.txt");
 
-    // Initialize a log for printing info messages.
+    // Initialize the logger for printing info messages.
     static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init<Console>(plog::debug, &consoleAppender);
 
