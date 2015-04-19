@@ -356,18 +356,19 @@ There are number of samples that demonstrate various aspects of using plog. They
 
 |Sample|Description|
 |------|-----------|
-|[Android](samples/Android)||
-|[Chained](samples/Chained)||
-|[Hello](samples/Hello)|A minimal introduction sample. It shows the basic 3 steps to start using plog.|
-|[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same log.|
-|[MultiInstance](samples/MultiInstance)|Shows how to use multiple log instances. Each instance has its own independent configuration.|
-|[ObjectiveC](samples/ObjectiveC)||
-|[Simple](samples/Simple)|Outputs various types of messages.|
+|[Android](samples/Android)|Shows how to use the android-specific appender.|
+|[Chained](samples/Chained)|Shows how to chain a logger (route messages) in a shared library with the main logger.|
+|[Library](samples/Library)|Shows plog usage in static libraries.|
+|[Hello](samples/Hello)|A minimal introduction sample, shows the basic 3 steps to start using plog.|
+|[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
+|[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
+|[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
+|[Demo](samples/Demo)|Demonstrates log stream abilities, prints various types of messages.|
 |[CustomAppender](samples/CustomAppender)|Shows how to implement a custom appender that stores log messages in memory.|
 |[CustomFormatter](samples/CustomFormatter)|Shows how to implement a custom formatter.|
 |[CustomConverter](samples/CustomConverter)|Shows how to implement a custom converter that encrypts log messages.|
-|[CustomType](samples/CustomType)|Shows how to write a custom type to a log stream.|
-|[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple log instances (useful for big projects).|
+|[CustomType](samples/CustomType)|Shows how to print a custom type to the log stream.|
+|[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple logger instances (useful for big projects).|
 |[Performance](samples/Performance)|Measures time per a log call.|
 
 #Design
