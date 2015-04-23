@@ -11,6 +11,7 @@ namespace plog
     const Severity minimum_log_level = none;
     const Severity maximum_log_level = verbose;
     
+    typedef Severity Level;
     typedef Severity log_level;
     typedef Record message;
 
