@@ -2,10 +2,25 @@
 
 MyClass::MyClass()
 {
-    LOG_DEBUG;
+    LOGD;
 }
 
 MyClass::~MyClass()
 {
-    LOG_DEBUG;
+    LOGD;
+}
+
+void MyClass::method()
+{
+    LOGD;
+}
+
+void MyClass::staticMethod()
+{
+    LOGD;
+}
+
+MyClass::operator std::string() const
+{
+    return std::string("This is an implicit cast to string.");
 }

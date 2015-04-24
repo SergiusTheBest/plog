@@ -6,13 +6,14 @@ public:
     MyClass();
     ~MyClass();
     
+    void method();
+
     void inlineMethod()
     {
-        LOG_DEBUG;
+        LOGD;
     }
 
-    static void staticMethod()
-    {
-        LOG_DEBUG;
-    }
+    static void staticMethod();
+
+    operator std::string() const;
 };

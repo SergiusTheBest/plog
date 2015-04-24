@@ -61,9 +61,13 @@ int main()
 
     // Log in a class (capture this pointer, c++ function names).
     MyClass obj;
+    obj.method();
     obj.inlineMethod();
 
     MyClass::staticMethod();
+
+    // Implicit cast to string.
+    LOG_INFO << obj;
 
     return 0;
 }
