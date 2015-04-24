@@ -5,6 +5,46 @@
 
 namespace plog
 {
+    namespace detail
+    {
+        //////////////////////////////////////////////////////////////////////////
+        // Stream output operators as free functions
+
+        inline void operator<<(util::nstringstream& stream, const char* data)
+        {
+            data = data ? data : "(null)";
+
+#ifdef _WIN32
+            std::operator<<(stream, util::toUnicode(data));
+#else            
+            std::operator<<(stream, data);
+#endif
+        }
+
+        inline void operator<<(util::nstringstream& stream, const std::string& data)
+        {
+            plog::detail::operator<<(stream, data.c_str());
+        }
+
+#ifndef __ANDROID__
+        inline void operator<<(util::nstringstream& stream, const wchar_t* data)
+        {
+            data = data ? data : L"(null)";
+
+#ifdef _WIN32
+            std::operator<<(stream, data);
+#else
+            std::operator<<(stream, util::toString(data));
+#endif
+        }
+
+        inline void operator<<(util::nstringstream& stream, const std::wstring& data)
+        {
+            plog::detail::operator<<(stream, data.c_str());
+        }
+#endif
+    }
+
     class Record
     {
     public:
@@ -24,49 +64,11 @@ namespace plog
             return *this;
         }
 
-        Record& operator<<(const char* data)
-        {
-            data = data ? data : "(null)";
-
-#ifdef _WIN32
-            m_message << util::toUnicode(data);
-#else            
-            m_message << data;
-#endif
-
-            return *this;
-        }
-
-        Record& operator<<(char* data)
-        {
-            *this << const_cast<const char*>(data);
-            return *this;
-        }
-
 #ifndef __ANDROID__
         Record& operator<<(wchar_t data)
         {
             wchar_t str[] = { data, 0 };
             *this << str;
-            return *this;
-        }
-
-        Record& operator<<(const wchar_t* data)
-        {
-            data = data ? data : L"(null)";
-
-#ifdef _WIN32
-            m_message << data;
-#else
-            *this << util::toString(data);
-#endif
-
-            return *this;
-        }
-
-        Record& operator<<(wchar_t* data)
-        {
-            *this << const_cast<const wchar_t*>(data);
             return *this;
         }
 #endif
@@ -127,27 +129,4 @@ namespace plog
         util::nstringstream m_message;
         const char* const   m_func;
     };
-
-    namespace detail
-    {
-        // Allows implicit conversion to std::string
-        inline void operator<<(util::nstringstream& stream, const std::string& data)
-        {
-            std::operator<<(stream, data.c_str());
-        }
-
-#ifndef __ANDROID__
-        // Allows implicit conversion to std::wstring
-        inline void operator<<(util::nstringstream& stream, const std::wstring& data)
-        {
-            std::operator<<(stream, data.c_str());
-        }
-
-        // Allows implicit conversion to const wchar_t* (const char* is handled by std implementation)
-        inline void operator<<(util::nstringstream& stream, const wchar_t* data)
-        {
-            std::operator<<(stream, data);
-        }
-#endif
-    }
 }
