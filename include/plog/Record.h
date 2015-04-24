@@ -43,13 +43,6 @@ namespace plog
             return *this;
         }
 
-        template<class CharType>
-        Record& operator<<(const std::basic_string<CharType>& data)
-        {
-            *this << data.c_str();
-            return *this;
-        }
-
 #ifndef __ANDROID__
         Record& operator<<(wchar_t data)
         {
@@ -81,6 +74,8 @@ namespace plog
         template<typename T>
         Record& operator<<(const T& data)
         {
+            using namespace plog::detail;
+
             m_message << data;
             return *this;
         }
@@ -132,4 +127,27 @@ namespace plog
         util::nstringstream m_message;
         const char* const   m_func;
     };
+
+    namespace detail
+    {
+        // Allows implicit conversion to std::string
+        inline void operator<<(util::nstringstream& stream, const std::string& data)
+        {
+            std::operator<<(stream, data.c_str());
+        }
+
+#ifndef __ANDROID__
+        // Allows implicit conversion to std::wstring
+        inline void operator<<(util::nstringstream& stream, const std::wstring& data)
+        {
+            std::operator<<(stream, data.c_str());
+        }
+
+        // Allows implicit conversion to const wchar_t* (const char* is handled by std implementation)
+        inline void operator<<(util::nstringstream& stream, const wchar_t* data)
+        {
+            std::operator<<(stream, data);
+        }
+#endif
+    }
 }
