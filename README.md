@@ -480,12 +480,17 @@ LOGD << /* the following statements will be executed only when the logger severi
 ```
 
 ##Unicode
-All messages are converted to a system native char type:
+Plog is unicode aware and wide string friendly. All messages are converted to a system native char type:
 
-* `wchar_t` - for windows
-* `char` - for all other systems
+* `wchar_t` - on Windows
+* `char` - on all other systems
 
-Internally plog uses `nstring` and `nstringstream` that are defined as:
+`char` is treated as:
+
+* active code page - on Windows
+* UTF-8 - on all other systems
+
+Internally Plog uses `nstring` and `nstringstream` that are defined as:
 
 ```cpp
 #ifdef _WIN32
@@ -497,7 +502,14 @@ Internally plog uses `nstring` and `nstringstream` that are defined as:
 #endif
 ```
 
-All files are stored as UTF-8 with BOM.
+Character sets convertion is done by:
+
+* `WideCharToMultiByte`/`MultiByteToWideChar` - on Windows
+* `iconv` - on other systems
+
+By default all log files are stored in UTF-8 with BOM.
+
+*Note: on Android wide string support in Plog is disabled.*
 
 ##Formatter
 `Formatter` is responsible for formatting data from `Record` into various string representations (in theory binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has TXT, CSV and FuncMessage formatters.
