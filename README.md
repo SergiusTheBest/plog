@@ -475,6 +475,24 @@ A more detailed description is provided in the following sections.
 ##Logger
 `Logger` is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. `Logger` can act as `Appender` for another `Logger`. Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
 
+```cpp
+template<int instance>
+class Logger : public util::Singleton<Logger<instance> >, public IAppender
+{
+public:
+    Logger(Severity maxSeverity = none);
+    
+    Logger& addAppender(IAppender* appender);
+    
+    Severity getMaxSeverity() const;
+    void setMaxSeverity(Severity severity);
+    bool checkSeverity(Severity severity) const;
+    
+    virtual void write(const Record& record);
+    void operator+=(const Record& record);
+};
+```
+
 ##Record
 `Record` stores all data for a log message. It includes:
 
@@ -487,6 +505,28 @@ A more detailed description is provided in the following sections.
 - message
 
 Also `Record` has a number of overloaded stream output operators to construct a log message.
+
+```cpp
+class Record
+{
+public:
+    Record(Severity severity, const char* func, size_t line, const void* object);
+    
+    Record& operator<<(char data);
+    Record& operator<<(wchar_t data);
+    
+    template<typename T>
+    Record& operator<<(const T& data);
+    
+    const util::Time& getTime() const;
+    Severity getSeverity() const;
+    unsigned int getTid() const;
+    const void* getObject() const;
+    size_t getLine() const;
+    const util::nstring getMessage() const;
+    std::string getFunc() const;
+};
+```
 
 ##Lazy stream evaluation
 Log messages are constructed using lazy stream evaluation. It means that if a log message will be dropped (because of its severity) then stream output operators are not executed.
