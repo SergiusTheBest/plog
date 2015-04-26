@@ -528,7 +528,16 @@ By default all log files are stored in UTF-8 with BOM.
 *Note: on Android wide string support in plog is disabled.*
 
 ##Formatter
-`Formatter` is responsible for formatting data from `Record` into various string representations (in theory binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has TXT, CSV and FuncMessage formatters.
+`Formatter` is responsible for formatting data from `Record` into various string representations (binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has TXT, CSV and FuncMessage formatters.
+
+```cpp
+class Formatter
+{
+public:
+    static util::nstring header();
+    static util::nstring format(const Record& record);
+};
+```
 
 ###TxtFormatter
 This is a classic log format available in almost any log library. It is good for console output and easy to read without any tools.
@@ -574,20 +583,24 @@ Object::~Object@13:
 ```
 
 ##Converter
-`Converter` is responsible for conversion of `Formatter` output to a raw buffer. It is uses by `RollingFileAppender`.
-
-###UTF8Converter
-`UTF8Converter` is the only converter available in plog out of the box. It converts string data to UTF-8. 
-
-##Appender
-`Appender` uses `Formatter` to get a desired representation of log data and outputs (appends) it to a file/console/etc.
-
-###RollingFileAppender
+`Converter` is responsible for conversion of `Formatter` output data to a raw buffer (represented as `std::string`). It is uses by `RollingFileAppender` to perform a conversion before writing to a file.
 
 ```cpp
-RollingFileAppender::RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0);
+class Converter
+{
+public:
+    static std::string header(const util::nstring& str);
+    static std::string convert(const util::nstring& str);
+};
 ```
 
+###UTF8Converter
+`UTF8Converter` is the only converter available in plog out of the box. It converts string data to UTF-8 with BOM. 
+
+##Appender
+`Appender` uses `Formatter` and `Converter`  to get a desired representation of log data and outputs (appends) it to a file/console/etc.
+
+###RollingFileAppender
 It writes log data to a file with rolling behaviour. The sample file names produced by this appender: 
 
 - mylog.log <== current log file (size < maxFileSize)
@@ -596,21 +609,23 @@ It writes log data to a file with rolling behaviour. The sample file names produ
 
 If `maxFileSize` or `maxFiles` is 0 then rolling behaviour is turned off.
 
+```cpp
+RollingFileAppender::RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0);
+```
+
 ###ConsoleAppender
+This appender outputs log data to `stdout`.
 
 ```cpp
 ConsoleAppender::ConsoleAppender();
 ```
 
-This appender outputs log data to `stdout`.
-
 ###AndroidAppender
+This appender uses Android logging system to output log data. They can be viewed with [logcat](http://developer.android.com/tools/help/logcat.html) or in a log window of Android IDEs.
 
 ```cpp
 AndroidAppender::AndroidAppender(const char* tag);
 ```
-
-This appender uses Android logging system to output log data. They can be viewed with [logcat](http://developer.android.com/tools/help/logcat.html) or in a log window of Android IDEs.
 
 #Extending
 Plog can be extended to support new custom:
