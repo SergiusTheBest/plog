@@ -610,6 +610,7 @@ It writes log data to a file with rolling behaviour. The sample file names produ
 If `maxFileSize` or `maxFiles` is 0 then rolling behaviour is turned off.
 
 ```cpp
+template<class Formatter, class Converter = UTF8Converter>
 RollingFileAppender::RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
 
@@ -617,6 +618,7 @@ RollingFileAppender::RollingFileAppender(const char* fileName, size_t maxFileSiz
 This appender outputs log data to `stdout`.
 
 ```cpp
+template<class Formatter>
 ConsoleAppender::ConsoleAppender();
 ```
 
@@ -624,6 +626,7 @@ ConsoleAppender::ConsoleAppender();
 This appender uses Android logging system to output log data. They can be viewed with [logcat](http://developer.android.com/tools/help/logcat.html) or in a log window of Android IDEs.
 
 ```cpp
+template<class Formatter>
 AndroidAppender::AndroidAppender(const char* tag);
 ```
 
