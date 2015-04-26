@@ -66,18 +66,18 @@ int main()
 ```
 
 ##Features
-* Very small (less than 1000 LOC)
-* Easy to use
-* Headers only
-* No 3rd-party dependencies
-* Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc)
-* Thread and type safe
-* Formatters: TXT, CSV, FuncMessage
-* Appenders: File, Console, Android
-* Automatic 'this' pointer capture (supported only on msvc)
-* Lazy stream evaluation
-* Unicode aware, files are stored in UTF8
-* Doesn't require C++11
+- Very small (less than 1000 LOC)
+- Easy to use
+- Headers only
+- No 3rd-party dependencies
+- Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc)
+- Thread and type safe
+- Formatters: TXT, CSV, FuncMessage
+- Appenders: File, Console, Android
+- Automatic 'this' pointer capture (supported only on msvc)
+- Lazy stream evaluation
+- Unicode aware, files are stored in UTF8
+- Doesn't require C++11
 
 #Usage
 There are 3 simple steps to start logging with plog.
@@ -112,13 +112,13 @@ enum Severity
 
 The log format is determined automatically by `fileName` file extension:
 
-* .csv => csv format
-* anyting else => txt format
+- .csv => csv format
+- anyting else => txt format
 
 The rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters:
 
-* `maxFileSize` - the maximum log file size in bytes
-* `maxFiles` - the number of log files to keep
+- `maxFileSize` - the maximum log file size in bytes
+- `maxFiles` - the number of log files to keep
 
 If one of them is zero then log rolling is disabled.
 
@@ -432,11 +432,11 @@ hide empty fields
 
 There are 5 functional parts:
 
-* `Logger` is the main object
-* `Record` keeps log message data
-* `Appender` is a log data destination
-* `Formatter` formats log data into its string represantation
-* `Converter` converts formatter output into raw buffer (`std::string`)
+- `Logger` is the main object
+- `Record` keeps log message data
+- `Appender` is a log data destination
+- `Formatter` formats log data into its string represantation
+- `Converter` converts formatter output into raw buffer (`std::string`)
 
 The log data flow is shown below:
 
@@ -462,13 +462,13 @@ A more detailed description is provided in the following sections.
 ##Record
 `Record` stores all data for a log message. It includes:
 
-* time
-* severity
-* thread id
-* `this` pointer (if a log message is written from within an object)
-* source line
-* function name
-* message
+- time
+- severity
+- thread id
+- `this` pointer (if a log message is written from within an object)
+- source line
+- function name
+- message
 
 Also `Record` has a number of overloaded stream output operators to construct a log message.
 
@@ -482,13 +482,13 @@ LOGD << /* the following statements will be executed only when the logger severi
 ##Unicode
 Plog is unicode aware and wide string friendly. All messages are converted to a system native char type:
 
-* `wchar_t` - on Windows
-* `char` - on all other systems
+- `wchar_t` - on Windows
+- `char` - on all other systems
 
 `char` is treated as:
 
-* active code page - on Windows
-* UTF-8 - on all other systems
+- active code page - on Windows
+- UTF-8 - on all other systems
 
 Internally Plog uses `nstring` and `nstringstream` that are defined as:
 
@@ -502,10 +502,10 @@ Internally Plog uses `nstring` and `nstringstream` that are defined as:
 #endif
 ```
 
-Character set convertion is done by:
+Character set conversion is done by:
 
-* `WideCharToMultiByte`/`MultiByteToWideChar` - on Windows
-* `iconv` - on other systems
+- `WideCharToMultiByte`/`MultiByteToWideChar` - on Windows
+- `iconv` - on other systems
 
 By default all log files are stored in UTF-8 with BOM.
 
@@ -568,9 +568,9 @@ RollingFileAppender::RollingFileAppender(const char* fileName, size_t maxFileSiz
 
 It writes log data to a file with rolling behaviour. The sample file names produced by this appender: 
 
-* mylog.log <== current log file (size < maxFileSize)
-* mylog.1.log <== previous log file (size >= maxFileSize)
-* mylog.2.log <== previous log file (size >= maxFileSize)
+- mylog.log <== current log file (size < maxFileSize)
+- mylog.1.log <== previous log file (size >= maxFileSize)
+- mylog.2.log <== previous log file (size >= maxFileSize)
 
 If `maxFileSize` or `maxFiles` is 0 then rolling behaviour is turned off.
 
@@ -593,9 +593,9 @@ This appender uses Android logging system to output log data. They can be viewed
 #Extending
 Plog can be extended to support new custom:
 
-* data type
-* appender
-* formatter
+- data type
+- appender
+- formatter
 
 ##Custom data type
 The following function must be implemented to add a custom data type to the log stream output:
@@ -681,26 +681,26 @@ There are number of samples that demonstrate various aspects of using plog. They
 |[Performance](samples/Performance)|Measures time per a log call.|
 
 #Future plans
-* Drop pre C++11 support when C++17 is released
+- Drop pre C++11 support when C++17 is released
 
 #References
 
 ##C++ language
 
-* [__if_exists Statement](https://msdn.microsoft.com/en-us/library/x7wy9xh3.aspx)
+- [__if_exists Statement](https://msdn.microsoft.com/en-us/library/x7wy9xh3.aspx)
 
 ##Competing C++ log libraries
 
-* [Boost::Log](http://www.boost.org/doc/libs/release/libs/log/)
-* [EasyLogging++](https://github.com/easylogging/easyloggingpp)
-* [g2log](http://www.codeproject.com/Articles/288827/g-log-An-efficient-asynchronous-logger-using-Cplus)
-* [glog](https://code.google.com/p/google-glog/)
-* [Log4cplus](http://sourceforge.net/projects/log4cplus/)
-* [Log4cpp](http://log4cpp.sourceforge.net/)
-* [Log4cxx](http://logging.apache.org/log4cxx/)
+- [Boost::Log](http://www.boost.org/doc/libs/release/libs/log/)
+- [EasyLogging++](https://github.com/easylogging/easyloggingpp)
+- [g2log](http://www.codeproject.com/Articles/288827/g-log-An-efficient-asynchronous-logger-using-Cplus)
+- [glog](https://code.google.com/p/google-glog/)
+- [Log4cplus](http://sourceforge.net/projects/log4cplus/)
+- [Log4cpp](http://log4cpp.sourceforge.net/)
+- [Log4cxx](http://logging.apache.org/log4cxx/)
 
 ##Tools
 
-* [Gravizo](http://gravizo.com)
-* [PlantUML](http://plantuml.sourceforge.net)
-* [DocToc](https://github.com/thlorenz/doctoc)
+- [Gravizo](http://gravizo.com)
+- [PlantUML](http://plantuml.sourceforge.net)
+- [DocToc](https://github.com/thlorenz/doctoc)
