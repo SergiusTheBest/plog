@@ -432,11 +432,11 @@ hide empty fields
 
 There are 5 functional parts:
 
-- `Logger` is the main object
-- `Record` keeps log message data
-- `Appender` is a log data destination
-- `Formatter` formats log data into its string represantation
-- `Converter` converts formatter output into raw buffer (`std::string`)
+- `Logger` - is the main object
+- `Record` - keeps log message data
+- `Appender` - is a log data destination
+- `Formatter` - formats log data into its string represantation
+- `Converter` - converts formatter output into the raw buffer
 
 The log data flow is shown below:
 
@@ -485,12 +485,12 @@ Plog is unicode aware and wide string friendly. All messages are converted to a 
 - `wchar_t` - on Windows
 - `char` - on all other systems
 
-`char` is treated as:
+Also `char` is treated as:
 
 - active code page - on Windows
 - UTF-8 - on all other systems
 
-Internally Plog uses `nstring` and `nstringstream` that are defined as:
+Internally plog uses `nstring` and `nstringstream` ('n' for native) that are defined as:
 
 ```cpp
 #ifdef _WIN32
@@ -505,11 +505,11 @@ Internally Plog uses `nstring` and `nstringstream` that are defined as:
 Character set conversion is done by:
 
 - `WideCharToMultiByte`/`MultiByteToWideChar` - on Windows
-- `iconv` - on other systems
+- `iconv` - on all other systems
 
 By default all log files are stored in UTF-8 with BOM.
 
-*Note: on Android wide string support in Plog is disabled.*
+*Note: on Android wide string support in plog is disabled.*
 
 ##Formatter
 `Formatter` is responsible for formatting data from `Record` into various string representations (in theory binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has TXT, CSV and FuncMessage formatters.
