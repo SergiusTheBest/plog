@@ -486,10 +486,10 @@ A more detailed description is provided in the following sections.
 Also `Record` has a number of overloaded stream output operators to construct a log message.
 
 ##Lazy stream evaluation
-Log messages are constructed using lazy stream evaluation. It means that if a log message will be dropped (because of its high severity) then stream output operators are not executed.
+Log messages are constructed using lazy stream evaluation. It means that if a log message will be dropped (because of its severity) then stream output operators are not executed.
 
 ```cpp
-LOGD << /* the following statements will be executed only when the logger severity level is debug or higher */ ...
+LOGD << /* statements will be executed only when the logger severity level is debug or higher */ ...
 ```
 
 ##Unicode
