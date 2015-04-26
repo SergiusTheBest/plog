@@ -71,7 +71,7 @@ namespace plog
     template<class Formatter, int instance>
     inline Logger<instance>& init(Severity maxSeverity, const wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0)
     {
-        return init<Formatter, instance>(maxSeverity, util::toString(fileName).c_str(), maxFileSize, maxFiles);
+        return init<Formatter, instance>(maxSeverity, util::toNarrow(fileName).c_str(), maxFileSize, maxFiles);
     }
 
     template<class Formatter>
@@ -83,7 +83,7 @@ namespace plog
     template<int instance>
     inline Logger<instance>& init(Severity maxSeverity, const wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0)
     {
-        return init<instance>(maxSeverity, util::toString(fileName).c_str(), maxFileSize, maxFiles);
+        return init<instance>(maxSeverity, util::toNarrow(fileName).c_str(), maxFileSize, maxFiles);
     }
 
     inline Logger<0>& init(Severity maxSeverity, const wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0)

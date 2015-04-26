@@ -15,7 +15,7 @@ namespace plog
             data = data ? data : "(null)";
 
 #ifdef _WIN32
-            std::operator<<(stream, util::toUnicode(data));
+            std::operator<<(stream, util::toWide(data));
 #else            
             std::operator<<(stream, data);
 #endif
@@ -34,7 +34,7 @@ namespace plog
 #ifdef _WIN32
             std::operator<<(stream, data);
 #else
-            std::operator<<(stream, util::toString(data));
+            std::operator<<(stream, util::toNarrow(data));
 #endif
         }
 

@@ -84,7 +84,7 @@ namespace plog
         }
 
 #ifndef __ANDROID__
-        inline std::string toString(const wchar_t* wstr)
+        inline std::string toNarrow(const wchar_t* wstr)
         {
             size_t wlen = ::wcslen(wstr);
             std::string str(wlen * sizeof(wchar_t), 0);
@@ -112,7 +112,7 @@ namespace plog
 #endif
 
 #ifdef _WIN32
-        inline std::wstring toUnicode(const char* str)
+        inline std::wstring toWide(const char* str)
         {
             size_t len = ::strlen(str);
             std::wstring wstr(len, 0);
