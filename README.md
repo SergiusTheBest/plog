@@ -352,6 +352,19 @@ int main()
 
 Refer to [Chained](samples/Chained) for a complete sample.
 
+##Performance
+Plog is not using any asynchronous techniques so it may slow down your application on large volumes of log messages. 
+
+According to [Performance](samples/Performance) sample producing a single log message takes the following amount of time:
+
+|CPU|OS|Time per a log call, microsec|
+|----|----|:----:|
+|AMD Phenom II 1055T  3.5GHz|Windows 2008R2|12|
+|AMD Phenom II 1055T  3.5GHz|Linux Mint 17.1|8|
+|Intel Core i3-3120M  2.5GHz|Windows 20012R2|25|
+
+Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. 
+
 #Design
 
 ##Overview
