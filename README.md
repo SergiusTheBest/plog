@@ -623,7 +623,7 @@ Object::~Object@13:
 ```
 
 ##Converter
-`Converter` is responsible for conversion of `Formatter` output data to a raw buffer (represented as `std::string`). It is uses by `RollingFileAppender` to perform a conversion before writing to a file.
+`Converter` is responsible for conversion of `Formatter` output data to a raw buffer (represented as `std::string`). It is uses by `RollingFileAppender` to perform a conversion before writing to a file. There is no base class for converters, they are implemented as classes with static functions `convert` and `header`. 
 
 ```cpp
 class Converter
@@ -638,7 +638,16 @@ public:
 `UTF8Converter` is the only converter available in plog out of the box. It converts string data to UTF-8 with BOM. 
 
 ##Appender
-`Appender` uses `Formatter` and `Converter`  to get a desired representation of log data and outputs (appends) it to a file/console/etc.
+`Appender` uses `Formatter` and `Converter`  to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must inherit `IAppender` interface:
+
+```cpp
+class IAppender
+{
+public:
+    virtual ~IAppender();
+    virtual void write(const Record& record) = 0;
+};
+```
 
 ###RollingFileAppender
 It writes log data to a file with rolling behaviour. The sample file names produced by this appender: 
