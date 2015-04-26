@@ -502,7 +502,7 @@ Internally Plog uses `nstring` and `nstringstream` that are defined as:
 #endif
 ```
 
-Character sets convertion is done by:
+Character set convertion is done by:
 
 * `WideCharToMultiByte`/`MultiByteToWideChar` - on Windows
 * `iconv` - on other systems
