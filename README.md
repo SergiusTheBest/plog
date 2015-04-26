@@ -570,6 +570,12 @@ Object::Object@8:
 Object::~Object@13: 
 ```
 
+##Converter
+`Converter` is responsible for conversion of `Formatter` output to a raw buffer. It is uses by `RollingFileAppender`.
+
+###UTF8Converter
+`UTF8Converter` is the only converter available in plog out of the box. It converts string data to UTF-8. 
+
 ##Appender
 `Appender` uses `Formatter` to get a desired representation of log data and outputs (appends) it to a file/console/etc.
 
@@ -609,6 +615,7 @@ Plog can be extended to support new custom:
 - data type
 - appender
 - formatter
+- converter
 
 ##Custom data type
 The following function must be implemented to add a custom data type to the log stream output:
