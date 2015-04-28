@@ -2,6 +2,23 @@ cmake_minimum_required(VERSION 2.8)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+macro(checkObjCXX)
+    file(WRITE "${CMAKE_BINARY_DIR}/CMakeFiles/dummy.mm" "int main(){return 0;}\n")
+    execute_process(
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles
+      COMMAND ${CMAKE_CXX_COMPILER} dummy.mm
+      RESULT_VARIABLE result
+      ERROR_QUIET
+      OUTPUT_QUIET
+      )
+    file(REMOVE "${CMAKE_BINARY_DIR}/CMakeFiles/dummy.mm")
+
+    if("${result}" STREQUAL "0")
+        set(CMAKE_OBJCXX_AVAILABLE 1)
+        message("-- ObjectiveC++ support is detected")
+    endif()
+endmacro()
+
 project(Samples)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -14,6 +31,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Werror")
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
     set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+    checkObjCXX()
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/../include)
@@ -60,7 +78,7 @@ target_link_libraries(ChainedApp ChainedLib)
 add_library(ChainedLib SHARED Chained/ChainedLib/Main.cpp) 
 set_target_properties(ChainedLib PROPERTIES FOLDER Samples/Chained)
 
-if(NOT MSVC AND NOT CMAKE_COMPILER_IS_CLANGXX)
+if(CMAKE_OBJCXX_AVAILABLE AND NOT CMAKE_COMPILER_IS_CLANGXX)
     add_executable(ObjectiveC ObjectiveC/Main.mm)
     target_link_libraries(ObjectiveC objc)
 else()
