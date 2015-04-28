@@ -216,17 +216,17 @@ namespace plog
                 return seek(0, SEEK_END);
             }
 
-            size_t write(const void* buf, size_t count)
+            int write(const void* buf, size_t count)
             {
 #ifdef _WIN32
                 return m_file != -1 ? ::_write(m_file, buf, static_cast<unsigned int>(count)) : -1;
 #else
-                return m_file != -1 ? ::write(m_file, buf, count) : -1;
+                return m_file != -1 ? static_cast<int>(::write(m_file, buf, count)) : -1;
 #endif
             }
 
             template<class CharType>
-            size_t write(const std::basic_string<CharType>& str)
+            int write(const std::basic_string<CharType>& str)
             {
                 return write(str.data(), str.size() * sizeof(CharType));
             }
@@ -253,18 +253,18 @@ namespace plog
                 }
             }
 
-            static void unlink(const char* fileName)
+            static int unlink(const char* fileName)
             {
 #ifdef _WIN32
-                ::_unlink(fileName);
+                return ::_unlink(fileName);
 #else
-                ::unlink(fileName);
+                return ::unlink(fileName);
 #endif
             }
 
-            static void rename(const char* oldFilename, const char* newFilename)
+            static int rename(const char* oldFilename, const char* newFilename)
             {
-                ::rename(oldFilename, newFilename);
+                return ::rename(oldFilename, newFilename);
             }
 
         private:

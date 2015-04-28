@@ -32,9 +32,9 @@ namespace plog
                 rollLogFiles();
             }
 
-            size_t bytesWritten = m_file.write(Converter::convert(Formatter::format(record)));
+            int bytesWritten = m_file.write(Converter::convert(Formatter::format(record)));
 
-            if (bytesWritten != -1)
+            if (bytesWritten > 0)
             {
                 m_fileSize += bytesWritten;
             }
@@ -66,9 +66,9 @@ namespace plog
 
             if (0 == m_fileSize)
             {
-                size_t bytesWritten = m_file.write(Converter::header(Formatter::header()));
+                int bytesWritten = m_file.write(Converter::header(Formatter::header()));
 
-                if (bytesWritten != -1)
+                if (bytesWritten > 0)
                 {
                     m_fileSize += bytesWritten;
                 }
