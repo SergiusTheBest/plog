@@ -364,6 +364,6 @@ namespace plog
         };
 
         template<class T> 
-        T* Singleton<T>::m_instance;
+        T* Singleton<T>::m_instance = NULL;
     }
 }
