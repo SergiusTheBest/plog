@@ -219,7 +219,7 @@ namespace plog
             size_t write(const void* buf, size_t count)
             {
 #ifdef _WIN32
-                return m_file != -1 ? ::_write(m_file, buf, count) : -1;
+                return m_file != -1 ? ::_write(m_file, buf, static_cast<unsigned int>(count)) : -1;
 #else
                 return m_file != -1 ? ::write(m_file, buf, count) : -1;
 #endif

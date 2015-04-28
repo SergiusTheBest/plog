@@ -34,7 +34,7 @@ namespace plog
 
             size_t bytesWritten = m_file.write(Converter::convert(Formatter::format(record)));
 
-            if (bytesWritten > 0)
+            if (bytesWritten != -1)
             {
                 m_fileSize += bytesWritten;
             }
@@ -68,7 +68,7 @@ namespace plog
             {
                 size_t bytesWritten = m_file.write(Converter::header(Formatter::header()));
 
-                if (bytesWritten > 0)
+                if (bytesWritten != -1)
                 {
                     m_fileSize += bytesWritten;
                 }
