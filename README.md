@@ -54,15 +54,18 @@ I was looking for a C++ logging library but couldn't find the one that suits my 
 This is a minimal hello log sample:
 
 ```cpp
-#include <plog/Log.h>
+#include <plog/Log.h> // Step1: include the header.
 
 int main()
 {
-    plog::init(plog::debug, "hello-log.csv");
+    plog::init(plog::debug, "Hello.txt"); // Step2: initialize the logger.
 
-    LOGD << "Hello log!";
-    LOG_DEBUG << "Hello log!";
-    LOG(plog::debug) << "Hello log!";
+    // Step3: write log messages using a special macro. 
+    // There are several log macros, use the macro you liked the most.
+
+    LOGD << "Hello log!"; // short macro
+    LOG_DEBUG << "Hello log!"; // long macro
+    LOG(plog::debug) << "Hello log!"; // function-style macro
 
     return 0;
 }
@@ -76,11 +79,12 @@ int main()
 - Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc)
 - Thread and type safe
 - Formatters: TXT, CSV, FuncMessage
-- Appenders: File, Console, Android
+- Appenders: RollingFile, Console, Android
 - Automatic 'this' pointer capture (supported only on msvc)
 - Lazy stream evaluation
 - Unicode aware, files are stored in UTF8
 - Doesn't require C++11
+- Extendable
 
 #Usage
 There are 3 simple steps to start logging with plog.
