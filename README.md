@@ -366,9 +366,11 @@ According to [Performance](samples/Performance) sample producing a single log me
 
 |CPU|OS|Time per a log call, microsec|
 |----|----|:----:|
-|AMD Phenom II 1055T  3.5GHz|Windows 2008R2|12|
-|AMD Phenom II 1055T  3.5GHz|Linux Mint 17.1|8|
-|Intel Core i3-3120M  2.5GHz|Windows 20012R2|25|
+|AMD Phenom II 1055T @3.5GHz|Windows 2008 R2|12|
+|AMD Phenom II 1055T @3.5GHz|Linux Mint 17.1|8|
+|Intel Core i3-3120M @2.5GHz|Windows 2012 R2|25|
+|Intel Core i5-2500K @4.2GHz|Windows 2008 R2|8|
+|Intel Atom N270 @1.6GHz|Windows 2003|68|
 
 Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. 
 
