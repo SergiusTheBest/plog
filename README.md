@@ -359,22 +359,7 @@ int main()
 
 Refer to [Chained](samples/Chained) for a complete sample.
 
-##Performance
-Plog is not using any asynchronous techniques so it may slow down your application on large volumes of log messages. 
-
-According to [Performance](samples/Performance) sample producing a single log message takes the following amount of time:
-
-|CPU|OS|Time per a log call, microsec|
-|----|----|:----:|
-|AMD Phenom II 1055T @3.5GHz|Windows 2008 R2|12|
-|AMD Phenom II 1055T @3.5GHz|Linux Mint 17.1|8|
-|Intel Core i3-3120M @2.5GHz|Windows 2012 R2|25|
-|Intel Core i5-2500K @4.2GHz|Windows 2008 R2|8|
-|Intel Atom N270 @1.6GHz|Windows 2003|68|
-
-Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. 
-
-#Design
+#Architecture
 
 ##Overview
 Plog is designed to be small but flexible. All main entities are shown on the following UML diagram:   
@@ -534,45 +519,6 @@ public:
 };
 ```
 
-##Lazy stream evaluation
-Log messages are constructed using lazy stream evaluation. It means that if a log message will be dropped (because of its severity) then stream output operators are not executed.
-
-```cpp
-LOGD << /* statements will be executed only when the logger severity level is debug or higher */ ...
-```
-
-##Unicode
-Plog is unicode aware and wide string friendly. All messages are converted to a system native char type:
-
-- `wchar_t` - on Windows
-- `char` - on all other systems
-
-Also `char` is treated as:
-
-- active code page - on Windows
-- UTF-8 - on all other systems
-
-Internally plog uses `nstring` and `nstringstream` ('n' for native) that are defined as:
-
-```cpp
-#ifdef _WIN32
-    typedef std::wstring nstring;
-    typedef std::wstringstream nstringstream;
-#else
-    typedef std::string nstring;
-    typedef std::stringstream nstringstream;
-#endif
-```
-
-Character set conversion is done by:
-
-- `WideCharToMultiByte`/`MultiByteToWideChar` - on Windows
-- `iconv` - on all other systems
-
-By default all log files are stored in UTF-8 with BOM.
-
-*Note: on Android wide string support in plog is disabled.*
-
 ##Formatter
 `Formatter` is responsible for formatting data from `Record` into various string representations (binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has TXT, CSV and FuncMessage formatters.
 
@@ -684,6 +630,62 @@ This appender uses Android logging system to output log data. They can be viewed
 template<class Formatter>
 AndroidAppender::AndroidAppender(const char* tag);
 ```
+
+#Misc
+
+##Lazy stream evaluation
+Log messages are constructed using lazy stream evaluation. It means that if a log message will be dropped (because of its severity) then stream output operators are not executed.
+
+```cpp
+LOGD << /* statements will be executed only when the logger severity level is debug or higher */ ...
+```
+
+##Unicode
+Plog is unicode aware and wide string friendly. All messages are converted to a system native char type:
+
+- `wchar_t` - on Windows
+- `char` - on all other systems
+
+Also `char` is treated as:
+
+- active code page - on Windows
+- UTF-8 - on all other systems
+
+Internally plog uses `nstring` and `nstringstream` ('n' for native) that are defined as:
+
+```cpp
+#ifdef _WIN32
+    typedef std::wstring nstring;
+    typedef std::wstringstream nstringstream;
+#else
+    typedef std::string nstring;
+    typedef std::stringstream nstringstream;
+#endif
+```
+
+Character set conversion is done by:
+
+- `WideCharToMultiByte`/`MultiByteToWideChar` - on Windows
+- `iconv` - on all other systems
+
+By default all log files are stored in UTF-8 with BOM.
+
+*Note: on Android wide string support in plog is disabled.*
+
+##Performance
+Plog is not using any asynchronous techniques so it may slow down your application on large volumes of log messages. 
+
+According to [Performance](samples/Performance) sample producing a single log message takes the following amount of time:
+
+|CPU|OS|Time per a log call, microsec|
+|----|----|:----:|
+|AMD Phenom II 1055T @3.5GHz|Windows 2008 R2|12|
+|AMD Phenom II 1055T @3.5GHz|Linux Mint 17.1|8|
+|Intel Core i3-3120M @2.5GHz|Windows 2012 R2|25|
+|Intel Core i5-2500K @4.2GHz|Windows 2008 R2|8|
+|Intel Atom N270 @1.6GHz|Windows 2003|68|
+
+Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. 
 
 #Extending
 Plog can be extended to support new custom:
