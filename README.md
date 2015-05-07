@@ -91,13 +91,13 @@ int main()
 To start using plog you need to make 3 simple steps.
 
 ##Step 1: Adding includes
-First of all your project needs to know about plog. For that you have to:
+At first your project needs to know about plog. For that you have to:
 
 1. Add `plog/inlcude` to the project include paths
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
 ##Step 2: Initialization
-The next step is to initialize the logger. This is done by `plog::init` function:
+The next step is to initialize the logger. This is done by the following `plog::init` function:
 
 ```cpp
 Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0);
@@ -136,10 +136,12 @@ Sample:
 plog::init(plog::warning, "c:\\logs\\log.csv", 1000000, 5); 
 ```
 
-It initializes the logger to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1'000'000 bytes and 5 log files are kept.
+Here the logger is initialized to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1'000'000 bytes and 5 log files are kept.
+
+*Note: see [Custom initialization](#custom-initialization) for advanced usage.*
 
 ##Step 3: Logging
-Logging is performed with the help of special macros. A log message is constructed as a stream output thus it is type-safe and extendable.
+Logging is performed with the help of special macros. A log message is constructed using stream output operators. Thus it is type-safe and extendable in contrast to a format output.
 
 ###Basic logging macros 
 This is the most used type of logging macros. They do unconditional logging.
@@ -225,7 +227,7 @@ IF_LOG(plog::debug) // we want to execute the following statements only at debug
 #Advanced usage
 
 ##Changing severity at runtime 
-It is possible to set the maximum severity not only at the log initialization time but at any time later. There are special accessor methods for that:
+It is possible to set the maximum severity not only at the logger initialization time but at any time later. There are special accessor methods for that:
 
 ```cpp
 Severity Logger::getMaxSeverity() const;
@@ -251,7 +253,9 @@ Non-typical log cases require the use of custom initialization. It is done by th
 Logger& init(Severity maxSeverity = none, IAppender* appender = NULL);
 ```
 
-You have to construct an appender parameterized with a formatter and pass it to the `plog::init` function. Note that a lifetime of the appender should be static!
+You have to construct an appender parameterized with a formatter and pass it to the `plog::init` function. 
+
+*Note: a lifetime of the appender should be static!*
 
 Sample:
 
