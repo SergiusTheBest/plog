@@ -281,7 +281,7 @@ plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender); // Initial
 
 Here the logger is initialized in the way when log messages are written to both a file and a console.
 
-Refer to [MultiAppender](samples/MultiAppender) for a complete sample.
+*Refer to [MultiAppender](samples/MultiAppender) for a complete sample.*
 
 ##Multiple loggers
 Multiple loggers can be used simultaneously each with their own separate configuration. The loggers differ by their instance number (that is implemented as a template parameter). The default instance is zero. Initialization is done by the appropriate template `plog::init` functions:
@@ -327,7 +327,7 @@ int main()
 }
 ```
 
-Refer to [MultiInstance](samples/MultiInstance) for a complete sample.
+*Refer to [MultiInstance](samples/MultiInstance) for a complete sample.*
 
 ##Chained loggers
 A logger can work as an appender for another logger. So you can chain several loggers together. This is useful for streaming log messages from a shared library to the main application binary.
@@ -370,7 +370,7 @@ int main()
 }
 ```
 
-Refer to [Chained](samples/Chained) for a complete sample.
+*Refer to [Chained](samples/Chained) for a complete sample.*
 
 #Architecture
 
@@ -715,7 +715,7 @@ namespace plog
 }
 ```
 
-Refer to [CustomType](samples/CustomType) for a complete sample.
+*Refer to [CustomType](samples/CustomType) for a complete sample.*
 
 ##Custom appender
 Appender must implement `IAppender` interface. Also it accepts `Formatter` as a template parameter however this is optional.
@@ -732,7 +732,7 @@ namespace plog
 }
 ```
 
-Refer to [CustomAppender](samples/CustomAppender) for a complete sample.   
+*Refer to [CustomAppender](samples/CustomAppender) for a complete sample.*
 
 ##Custom formatter
 A formatter that is compatible with existing appenders must be a class with 2 static methods:
@@ -749,7 +749,9 @@ namespace plog
 }
 ```
 
-`header` returns a file header for a new file. `format` formats `Record` to a string. Refer to [CustomFormatter](samples/CustomFormatter) for a complete sample.   
+`header` returns a file header for a new file. `format` formats `Record` to a string. 
+
+*Refer to [CustomFormatter](samples/CustomFormatter) for a complete sample.*
 
 ##Custom converter
 A converter must be a class with 2 static methods:
@@ -766,7 +768,9 @@ namespace plog
 }
 ```
 
-`header` converts a file header for a new file. `convert` converts all other messages. Refer to [CustomConverter](samples/CustomConverter) for a complete sample.
+`header` converts a file header for a new file. `convert` converts all other messages. 
+
+*Refer to [CustomConverter](samples/CustomConverter) for a complete sample.*
 
 #Samples
 There are number of samples that demonstrate various aspects of using plog. They can be found in the [samples](samples) folder:
