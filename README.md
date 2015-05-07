@@ -44,7 +44,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 - [Future plans](#future-plans)
 - [References](#references)
   - [Competing C++ log libraries](#competing-c-log-libraries)
-  - [Tools](#misc-1)
+  - [Misc](#misc-1)
 
 #Introduction
 
