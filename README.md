@@ -375,7 +375,7 @@ int main()
 #Architecture
 
 ##Overview
-Plog is designed to be small but flexible. All main entities are shown on the following UML diagram:   
+Plog is designed to be small but flexible, so it prefers templates to interface inheritance. All main entities are shown on the following UML diagram:
 
 ![UML class diagram](http://gravizo.com/g?@startuml;interface%20IAppender%20{;%20%20%20%20+write%28%29;};class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};class%20RollingFileAppender<Formatter,%20Converter>;class%20ConsoleAppender<Formatter>;class%20AndroidAppender<Formatter>;IAppender%20<|-u-%20Logger;IAppender%20<|--%20RollingFileAppender;IAppender%20<|--%20ConsoleAppender;IAppender%20<|--%20AndroidAppender;Logger%20"1"%20o--%20"0..n"%20IAppender;class%20CsvFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20TxtFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20FuncMessageFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20UTF8Converter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20convert%28%29;};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
 <!-- 
@@ -452,11 +452,11 @@ hide empty fields
 
 There are 5 functional parts:
 
-- `Logger` - is the main object
-- `Record` - keeps log message data
-- `Appender` - is a log data destination
-- `Formatter` - formats log data into its string represantation
-- `Converter` - converts formatter output into the raw buffer
+- `Logger` - the main object, implemented as singleton
+- `Record` - keeps log data: time, message, etc
+- `Appender` - represents a log data destination: file, console, etc
+- `Formatter` - formats log data into a string
+- `Converter` - converts formatter output into a raw buffer
 
 The log data flow is shown below:
 
@@ -473,8 +473,6 @@ The log data flow is shown below:
 -r-> (*)
 @enduml
 -->
-
-A more detailed description is provided in the following sections.
 
 ##Logger
 `Logger` is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. `Logger` can act as `Appender` for another `Logger`. Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
@@ -498,17 +496,17 @@ public:
 ```
 
 ##Record
-`Record` stores all data for a log message. It includes:
+`Record` stores all log data. It includes:
 
 - time
 - severity
 - thread id
-- `this` pointer (if a log message is written from within an object)
+- 'this' pointer (if a log message is written from within an object)
 - source line
 - function name
 - message
 
-Also `Record` has a number of overloaded stream output operators to construct a log message.
+Also `Record` has a number of overloaded stream output operators to construct a message.
 
 ```cpp
 class Record
@@ -516,11 +514,17 @@ class Record
 public:
     Record(Severity severity, const char* func, size_t line, const void* object);
     
+    //////////////////////////////////////////////////////////////////////////
+    // Stream output operators
+        
     Record& operator<<(char data);
     Record& operator<<(wchar_t data);
     
     template<typename T>
     Record& operator<<(const T& data);
+    
+    //////////////////////////////////////////////////////////////////////////
+    // Getters
     
     const util::Time& getTime() const;
     Severity getSeverity() const;
@@ -533,7 +537,7 @@ public:
 ```
 
 ##Formatter
-`Formatter` is responsible for formatting data from `Record` into various string representations (binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has TXT, CSV and FuncMessage formatters.
+`Formatter` is responsible for formatting log data from `Record` into various string representations (binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has `TxtFormatter`, `CsvFormatter` and `FuncMessageFormatter`.
 
 ```cpp
 class Formatter
@@ -559,7 +563,7 @@ This is a classic log format available in almost any log library. It is good for
 ```
 
 ###CsvFormatter
-This is the most powerful log format. It can be easily read without any tools (of course slighlty worse than TXT format) and  can be heavily analyzed if it is opened with a CSV-aware tool (like Excel). Some rows can be highlighted or colored according to cell values, another rows can be hidden by provided rules, columns can be manipulated and etc. This is a recommended format if logs are big and require heavy analysis. Also 'this' pointer is shown so object instances can be told apart.
+This is the most powerful log format. It can be easily read without any tools (but slighlty harder than TXT format) and can be heavily analyzed if it is opened with a CSV-aware tool (like Excel). One rows can be highlighted according to their cell values, another rows can be hidden, columns can be manipulated and you can even run SQL queries on log data! This is a recommended format if logs are big and require heavy analysis. Also 'this' pointer is shown so object instances can be told apart.
 
 ```
 Date;Time;Severity;TID;This;Function;Message
@@ -603,7 +607,7 @@ public:
 `UTF8Converter` is the only converter available in plog out of the box. It converts string data to UTF-8 with BOM. 
 
 ##Appender
-`Appender` uses `Formatter` and `Converter`  to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must inherit `IAppender` interface:
+`Appender` uses `Formatter` and `Converter` to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must inherit `IAppender` interface:
 
 ```cpp
 class IAppender
@@ -621,11 +625,13 @@ It writes log data to a file with rolling behaviour. The sample file names produ
 - mylog.1.log <== previous log file (size >= maxFileSize)
 - mylog.2.log <== previous log file (size >= maxFileSize)
 
-If `maxFileSize` or `maxFiles` is 0 then rolling behaviour is turned off.
-
 ```cpp
 RollingFileAppender<Formatter, Converter>::RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
+
+If `maxFileSize` or `maxFiles` is 0 then rolling behaviour is turned off. 
+
+*Note: the lower limit for a log file size is 1000 bytes.*
 
 ###ConsoleAppender
 This appender outputs log data to `stdout`.
