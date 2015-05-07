@@ -79,8 +79,8 @@ int main()
 - No 3rd-party dependencies
 - Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc)
 - Thread and type safe
-- Formatters: TXT, CSV, FuncMessage
-- Appenders: RollingFile, Console, Android
+- Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter)
+- Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [Android](#androidappender)
 - Automatic 'this' pointer capture (supported only on msvc)
 - Lazy stream evaluation
 - Unicode aware, files are stored in UTF8
@@ -452,11 +452,11 @@ hide empty fields
 
 There are 5 functional parts:
 
-- `Logger` - the main object, implemented as singleton
-- `Record` - keeps log data: time, message, etc
-- `Appender` - represents a log data destination: file, console, etc
-- `Formatter` - formats log data into a string
-- `Converter` - converts formatter output into a raw buffer
+- [Logger](#logger) - the main object, implemented as singleton
+- [Record](#record) - keeps log data: time, message, etc
+- [Appender](#appender) - represents a log data destination: file, console, etc
+- [Formatter](#formatter) - formats log data into a string
+- [Converter](#converter) - converts formatter output into a raw buffer
 
 The log data flow is shown below:
 
@@ -475,7 +475,7 @@ The log data flow is shown below:
 -->
 
 ##Logger
-`Logger` is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. `Logger` can act as `Appender` for another `Logger`. Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
+[Logger](#logger) is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. [Logger](#logger) can act as [Appender](#appender) for another [Logger](#logger). Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
 
 ```cpp
 template<int instance>
@@ -496,7 +496,7 @@ public:
 ```
 
 ##Record
-`Record` stores all log data. It includes:
+[Record](#record) stores all log data. It includes:
 
 - time
 - severity
@@ -506,7 +506,7 @@ public:
 - function name
 - message
 
-Also `Record` has a number of overloaded stream output operators to construct a message.
+Also [Record](#record) has a number of overloaded stream output operators to construct a message.
 
 ```cpp
 class Record
@@ -537,7 +537,7 @@ public:
 ```
 
 ##Formatter
-`Formatter` is responsible for formatting log data from `Record` into various string representations (binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has `TxtFormatter`, `CsvFormatter` and `FuncMessageFormatter`.
+[Formatter](#formatter) is responsible for formatting log data from [Record](#record) into various string representations (binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has [TxtFormatter](#txtformatter), [CsvFormatter](#csvformatter) and [FuncMessageFormatter](#funcmessageformatter).
 
 ```cpp
 class Formatter
@@ -578,7 +578,7 @@ Date;Time;Severity;TID;This;Function;Message
 ```
 
 ###FuncMessageFormatter
-This format is designed to be used with appenders that provide their own timestamps (like `AndroidAppender` or linux syslog facility).
+This format is designed to be used with appenders that provide their own timestamps (like [AndroidAppender](#androidappender) or linux syslog facility).
 
 ```
 main@22: fatal
@@ -592,7 +592,7 @@ Object::~Object@13:
 ```
 
 ##Converter
-`Converter` is responsible for conversion of `Formatter` output data to a raw buffer (represented as `std::string`). It is uses by `RollingFileAppender` to perform a conversion before writing to a file. There is no base class for converters, they are implemented as classes with static functions `convert` and `header`. 
+[Converter](#converter) is responsible for conversion of [Formatter](#formatter) output data to a raw buffer (represented as `std::string`). It is uses by [RollingFileAppender](#rollingfileappender) to perform a conversion before writing to a file. There is no base class for converters, they are implemented as classes with static functions `convert` and `header`. 
 
 ```cpp
 class Converter
@@ -604,10 +604,10 @@ public:
 ```
 
 ###UTF8Converter
-`UTF8Converter` is the only converter available in plog out of the box. It converts string data to UTF-8 with BOM. 
+[UTF8Converter](#utf8converter) is the only converter available in plog out of the box. It converts string data to UTF-8 with BOM. 
 
 ##Appender
-`Appender` uses `Formatter` and `Converter` to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must inherit `IAppender` interface:
+[Appender](#appender) uses [Formatter](#formatter) and [Converter](#converter) to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must inherit `IAppender` interface:
 
 ```cpp
 class IAppender
@@ -724,7 +724,7 @@ namespace plog
 *Refer to [CustomType](samples/CustomType) for a complete sample.*
 
 ##Custom appender
-Appender must implement `IAppender` interface. Also it accepts `Formatter` as a template parameter however this is optional.
+Appender must implement `IAppender` interface. Also it accepts [Formatter](#formatter) as a template parameter however this is optional.
 
 ```cpp
 namespace plog
@@ -755,7 +755,7 @@ namespace plog
 }
 ```
 
-`header` returns a file header for a new file. `format` formats `Record` to a string. 
+`header` returns a file header for a new file. `format` formats [Record](#record) to a string. 
 
 *Refer to [CustomFormatter](samples/CustomFormatter) for a complete sample.*
 
