@@ -2,7 +2,7 @@
 Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.org/SergiusTheBest/plog)
 
 - [Introduction](#introduction)
-  - [Hello log!](#hello-log!)
+  - [Hello log!](#hello-log)
   - [Features](#features)
 - [Usage](#usage)
   - [Step 1: Adding includes](#step-1-adding-includes)
