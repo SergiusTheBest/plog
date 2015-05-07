@@ -2,7 +2,7 @@
 Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.org/SergiusTheBest/plog)
 
 - [Introduction](#introduction)
-  - [Hello](#hello)
+  - [Hello log!](#hello-log!)
   - [Features](#features)
 - [Usage](#usage)
   - [Step 1: Adding includes](#step-1-adding-includes)
@@ -49,8 +49,8 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 
 #Introduction
 
-##Hello
-I was looking for a C++ logging library but couldn't find the one that suits my requirements: some libraries are too fat and bloated, others do not have the features I need (CSV format and automatic 'this' pointer capture). So this library was born. The main idea: keep things as simple as possible.
+##Hello log!
+Plog is a C++ logging library that is designed to be as simple, small and flexible as possible. It is created as an alternative to existing big libraries and provides some unique features as CSV log format and automatic 'this' pointer capture.
 
 This is a minimal hello log sample:
 
