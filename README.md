@@ -697,7 +697,7 @@ Producing a single log message takes the following amount of time:
 |Intel Core i5-2500K @4.2GHz|Windows 2008 R2|8|
 |Intel Atom N270 @1.6GHz|Windows 2003|68|
 
-Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. This is fine for the most use cases.
+Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. That's fine for the most use cases.
 
 *Refer to [Performance](samples/Performance) for a complete sample.*
 
