@@ -265,21 +265,21 @@ plog::init(plog::debug, &consoleAppender);
 ```
 
 ##Multiple appenders
-It is possible to have multiple appenders in a single logger. The following method is used for that:
+It is possible to have multiple appenders within a single logger. In such case log message will be written to all of them. Use the following method to accomplish that:
 
 ```cpp
-Logger& addAppender(IAppender* appender);
+Logger& Logger::addAppender(IAppender* appender);
 ```
 
 Sample:
 
 ```cpp
-static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("MultiAppender.csv", 8000, 3);
-static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
+static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("MultiAppender.csv", 8000, 3); // Create the 1st appender.
+static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender; // Create the 2nd appender.
+plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender); // Initialize the logger with the both appenders.
 ```
 
-It initializes the log in the way when log messages are written to both a file and a console.
+Here the logger is initialized in the way when log messages are written to both a file and a console.
 
 Refer to [MultiAppender](samples/MultiAppender) for a complete sample.
 
@@ -296,7 +296,7 @@ To get a logger use `plog::get` function (returns NULL if the logger is not init
 Logger<instance>* get<instance>();
 ```
 
-All logging macros have their special versions that accept an instance parameter. These kind of macros have underscore at the end:
+All logging macros have their special versions that accept an instance parameter. These kind of macros have an underscore at the end:
 
 ```cpp
 LOGD_(instance) << "debug";
@@ -307,19 +307,22 @@ IF_LOG_(instance, severity)
 Sample:
 
 ```cpp
-enum
+enum // Define log instances. Default is 0 and is omitted from this enum.
 {
     SecondLog = 1
 };
 
 int main()
 {
-    plog::init(plog::debug, "MultiInstance-default.txt");
-    plog::init<SecondLog>(plog::debug, "MultiInstance-second.txt");
+    plog::init(plog::debug, "MultiInstance-default.txt"); // Initialize the default logger instance.
+    plog::init<SecondLog>(plog::debug, "MultiInstance-second.txt"); // Initialize the 2nd logger instance.
 
+    // Write some messages to the default log.
     LOGD << "Hello default log!";
+
+    // Write some messages to the 2nd log.
     LOGD_(SecondLog) << "Hello second log!";
-    
+
     return 0;
 }
 ```
@@ -332,12 +335,15 @@ A logger can work as an appender for another logger. So you can chain several lo
 Sample:
 
 ```cpp
-// library
+// shared library
+
+// Function that initializes the logger in the shared library. 
 extern "C" void EXPORT initialize(plog::Severity severity, plog::IAppender* appender)
 {
-    plog::init(severity, appender);
+    plog::init(severity, appender); // Initialize the shared library logger.
 }
 
+// Function that produces a log message.
 extern "C" void EXPORT foo()
 {
     LOGI << "Hello from shared lib!";
@@ -346,17 +352,19 @@ extern "C" void EXPORT foo()
 
 ```cpp
 // main app
+
+// Functions imported form the shared library.
 extern "C" void initialize(plog::Severity severity, plog::IAppender* appender);
 extern "C" void foo();
 
 int main()
 {
-    plog::init(plog::debug, "ChainedApp.txt");
+    plog::init(plog::debug, "ChainedApp.txt"); // Initialize the main logger.
 
-    LOGD << "Hello from app!";
+    LOGD << "Hello from app!"; // Write a log message.
 
-    initialize(plog::debug, plog::get());
-    foo();
+    initialize(plog::debug, plog::get()); // Initialize the logger in the shared library. Note that it has its own severity.
+    foo(); // Call a function from the shared library that produces a log message.
 
     return 0;
 }
