@@ -577,6 +577,8 @@ Date;Time;Severity;TID;This;Function;Message
 2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::~Object@13;
 ```
 
+*Note: message size is limited to 32000 chars.*
+
 ###FuncMessageFormatter
 This format is designed to be used with appenders that provide their own timestamps (like [AndroidAppender](#androidappender) or linux syslog facility).
 
