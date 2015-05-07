@@ -787,6 +787,7 @@ There are number of samples that demonstrate various aspects of using plog. They
 ##C++ language
 
 - [__if_exists Statement](https://msdn.microsoft.com/en-us/library/x7wy9xh3.aspx)
+- [Controlling Symbol Visibility](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html)
 
 ##Competing C++ log libraries
 
@@ -803,3 +804,4 @@ There are number of samples that demonstrate various aspects of using plog. They
 - [Gravizo](http://gravizo.com)
 - [PlantUML](http://plantuml.sourceforge.net)
 - [DocToc](https://github.com/thlorenz/doctoc)
+- [CMake](http://www.cmake.org)
