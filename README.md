@@ -43,7 +43,6 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 - [Samples](#samples)
 - [Future plans](#future-plans)
 - [References](#references)
-  - [C++ language](#c-language)
   - [Competing C++ log libraries](#competing-c-log-libraries)
   - [Tools](#tools)
 
@@ -652,10 +651,10 @@ AndroidAppender<Formatter>::AndroidAppender(const char* tag);
 #Misc
 
 ##Lazy stream evaluation
-Log messages are constructed using lazy stream evaluation. It means that if a log message will be dropped (because of its severity) then stream output operators are not executed.
+Log messages are constructed using lazy stream evaluation. It means that if a log message will be dropped (because of its severity) then stream output operators are not executed. Thus performance penalty of unprinted log messages is negligible.
 
 ```cpp
-LOGD << /* statements will be executed only when the logger severity level is debug or higher */ ...
+LOGD << /* the following statements will be executed only when the logger severity is debug or higher */ ...
 ```
 
 ##Unicode
@@ -681,19 +680,14 @@ Internally plog uses `nstring` and `nstringstream` ('n' for native) that are def
 #endif
 ```
 
-Character set conversion is done by:
-
-- `WideCharToMultiByte`/`MultiByteToWideChar` - on Windows
-- `iconv` - on all other systems
-
-By default all log files are stored in UTF-8 with BOM.
+By default all log files are stored in UTF-8 with BOM thanks to [UTF8Converter](#utf8converter).
 
 *Note: on Android wide string support in plog is disabled.*
 
 ##Performance
 Plog is not using any asynchronous techniques so it may slow down your application on large volumes of log messages. 
 
-According to [Performance](samples/Performance) sample producing a single log message takes the following amount of time:
+Producing a single log message takes the following amount of time:
 
 |CPU|OS|Time per a log call, microsec|
 |----|----|:----:|
@@ -703,10 +697,12 @@ According to [Performance](samples/Performance) sample producing a single log me
 |Intel Core i5-2500K @4.2GHz|Windows 2008 R2|8|
 |Intel Atom N270 @1.6GHz|Windows 2003|68|
 
-Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. 
+Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. This is fine for the most use cases.
+
+*Refer to [Performance](samples/Performance) for a complete sample.*
 
 #Extending
-Plog can be extended to support new custom:
+Plog can be easily extended to support new custom:
 
 - data type
 - appender
@@ -714,7 +710,7 @@ Plog can be extended to support new custom:
 - converter
 
 ##Custom data type
-The following function must be implemented to add a custom data type to the log stream output:
+To write a custom data type to a log message implement the following function:
 
 ```cpp
 namespace plog
@@ -726,7 +722,7 @@ namespace plog
 *Refer to [CustomType](samples/CustomType) for a complete sample.*
 
 ##Custom appender
-Appender must implement `IAppender` interface. Also it accepts [Formatter](#formatter) as a template parameter however this is optional.
+A custom appender must implement `IAppender` interface. Also it may accept [Formatter](#formatter) and [Converter](#converter) as template parameters however this is optional.
 
 ```cpp
 namespace plog
@@ -745,6 +741,9 @@ namespace plog
 ##Custom formatter
 A formatter that is compatible with existing appenders must be a class with 2 static methods:
 
+- `header` returns a file header for a new file
+- `format` formats [Record](#record) to a string
+
 ```cpp
 namespace plog
 {
@@ -757,12 +756,13 @@ namespace plog
 }
 ```
 
-`header` returns a file header for a new file. `format` formats [Record](#record) to a string. 
-
 *Refer to [CustomFormatter](samples/CustomFormatter) for a complete sample.*
 
 ##Custom converter
 A converter must be a class with 2 static methods:
+
+- `header` converts a file header for a new file
+- `convert` converts all other messages
 
 ```cpp
 namespace plog
@@ -776,12 +776,10 @@ namespace plog
 }
 ```
 
-`header` converts a file header for a new file. `convert` converts all other messages. 
-
 *Refer to [CustomConverter](samples/CustomConverter) for a complete sample.*
 
 #Samples
-There are number of samples that demonstrate various aspects of using plog. They can be found in the [samples](samples) folder:
+There are a number of samples that demonstrate various aspects of using plog. They can be found in the [samples](samples) folder:
 
 |Sample|Description|
 |------|-----------|
@@ -805,11 +803,6 @@ There are number of samples that demonstrate various aspects of using plog. They
 
 #References
 
-##C++ language
-
-- [__if_exists Statement](https://msdn.microsoft.com/en-us/library/x7wy9xh3.aspx)
-- [Controlling Symbol Visibility](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html)
-
 ##Competing C++ log libraries
 
 - [Boost::Log](http://www.boost.org/doc/libs/release/libs/log/)
@@ -820,8 +813,10 @@ There are number of samples that demonstrate various aspects of using plog. They
 - [Log4cpp](http://log4cpp.sourceforge.net/)
 - [Log4cxx](http://logging.apache.org/log4cxx/)
 
-##Tools
+##Misc
 
+- [__if_exists Statement](https://msdn.microsoft.com/en-us/library/x7wy9xh3.aspx)
+- [Controlling Symbol Visibility](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html)
 - [Gravizo](http://gravizo.com)
 - [PlantUML](http://plantuml.sourceforge.net)
 - [DocToc](https://github.com/thlorenz/doctoc)
