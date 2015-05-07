@@ -14,7 +14,7 @@
 // Function that initializes the logger in the shared library. 
 extern "C" void EXPORT initialize(plog::Severity severity, plog::IAppender* appender)
 {
-    plog::init(severity, appender);
+    plog::init(severity, appender); // Initialize the shared library logger.
 }
 
 // Function that produces a log message.
