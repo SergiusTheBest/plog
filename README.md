@@ -88,7 +88,7 @@ int main()
 - Extendable
 
 #Usage
-There are 3 simple steps to start logging with plog.
+To start using plog you need to make 3 simple steps.
 
 ##Step 1: Adding includes
 First of all your project needs to know about plog. For that you have to:
@@ -97,13 +97,13 @@ First of all your project needs to know about plog. For that you have to:
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
 ##Step 2: Initialization
-The next step is to initialize plog. The basic scenario is writing a log to a file in txt or csv format with or without the rolling behavior. This kind of intialization is done by the following `plog::init` function:
+The next step is to initialize the logger. This is done by `plog::init` function:
 
 ```cpp
 Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
 
-`maxSeverity` is the logger severity upper limit. All log messages have its own severity and if it is higher than the limit they are dropped. Plog defines the following severity levels:
+`maxSeverity` is the logger severity upper limit. All log messages have its own severity and if it is higher than the limit those messages are dropped. Plog defines the following severity levels:
 
 ```cpp
 enum Severity
@@ -133,10 +133,10 @@ If one of them is zero then log rolling is disabled.
 Sample:
 
 ```cpp
-plog::init("c:\\logs\\log.csv", plog::warning, 1000000, 5); 
+plog::init(plog::warning, "c:\\logs\\log.csv", 1000000, 5); 
 ```
 
-It initializes plog to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1'000'000 bytes and 5 log files are kept.
+It initializes the logger to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1'000'000 bytes and 5 log files are kept.
 
 ##Step 3: Logging
 Logging is performed with the help of special macros. A log message is constructed as a stream output thus it is type-safe and extendable.
