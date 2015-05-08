@@ -1,4 +1,4 @@
-#plog
+#Plog
 Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.org/SergiusTheBest/plog)
 
 - [Introduction](#introduction)
