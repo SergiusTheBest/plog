@@ -41,10 +41,10 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
   - [Custom formatter](#custom-formatter)
   - [Custom converter](#custom-converter)
 - [Samples](#samples)
-- [License](#license)
 - [References](#references)
   - [Competing C++ log libraries](#competing-c-log-libraries)
   - [Tools and useful info](#tools-and-useful-info)
+- [License](#license)
 
 #Introduction
 
@@ -798,9 +798,6 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple logger instances (useful for big projects).|
 |[Performance](samples/Performance)|Measures time per a log call.|
 
-#License
-Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
-
 #References
 
 ##Competing C++ log libraries
@@ -821,3 +818,6 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 - [PlantUML](http://plantuml.sourceforge.net)
 - [DocToc](https://github.com/thlorenz/doctoc)
 - [CMake](http://www.cmake.org)
+
+#License
+Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
