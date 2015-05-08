@@ -31,7 +31,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
     - [RollingFileAppender](#rollingfileappender)
     - [ConsoleAppender](#consoleappender)
     - [AndroidAppender](#androidappender)
-- [Misc](#misc)
+- [Miscellaneous notes](#miscellaneous-notes)
   - [Lazy stream evaluation](#lazy-stream-evaluation)
   - [Unicode](#unicode)
   - [Performance](#performance)
@@ -648,7 +648,7 @@ This appender uses Android logging system to output log data. They can be viewed
 AndroidAppender<Formatter>::AndroidAppender(const char* tag);
 ```
 
-#Misc
+#Miscellaneous notes
 
 ##Lazy stream evaluation
 Log messages are constructed using lazy stream evaluation. It means that if a log message will be dropped (because of its severity) then stream output operators are not executed. Thus performance penalty of unprinted log messages is negligible.
