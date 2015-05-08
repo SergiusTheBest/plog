@@ -799,7 +799,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[Performance](samples/Performance)|Measures time per a log call.|
 
 #License
-Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/).
+Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
 
 #References
 
