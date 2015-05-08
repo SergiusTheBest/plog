@@ -41,10 +41,10 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
   - [Custom formatter](#custom-formatter)
   - [Custom converter](#custom-converter)
 - [Samples](#samples)
-- [Future plans](#future-plans)
+- [License](#license)
 - [References](#references)
   - [Competing C++ log libraries](#competing-c-log-libraries)
-  - [Misc](#misc-1)
+  - [Tools and useful info](#tools-and-useful-info)
 
 #Introduction
 
@@ -798,8 +798,8 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple logger instances (useful for big projects).|
 |[Performance](samples/Performance)|Measures time per a log call.|
 
-#Future plans
-- Drop pre C++11 support when C++17 is released
+#License
+Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/).
 
 #References
 
@@ -813,7 +813,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 - [Log4cpp](http://log4cpp.sourceforge.net/)
 - [Log4cxx](http://logging.apache.org/log4cxx/)
 
-##Misc
+##Tools and useful info
 
 - [__if_exists Statement](https://msdn.microsoft.com/en-us/library/x7wy9xh3.aspx)
 - [Controlling Symbol Visibility](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html)
