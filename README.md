@@ -33,6 +33,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
     - [AndroidAppender](#androidappender)
 - [Miscellaneous notes](#miscellaneous-notes)
   - [Lazy stream evaluation](#lazy-stream-evaluation)
+  - [Headers to include](#headers-to-include)
   - [Unicode](#unicode)
   - [Performance](#performance)
 - [Extending](#extending)
@@ -656,6 +657,26 @@ Log messages are constructed using lazy stream evaluation. It means that if a lo
 ```cpp
 LOGD << /* the following statements will be executed only when the logger severity is debug or higher */ ...
 ```
+
+##Headers to include
+![Plog components per headers](http://gravizo.com/g?@startuml;package%20"Plog%20extra\\n%28requires%20additional%20include%29"%20<<Rect>>%20{;%20%20class%20FuncMessageFormatter;%20%20class%20ConsoleAppender;%20%20class%20AndroidAppender;};package%20"Plog%20core\\n%28no%20additional%20include,%20just%20plog/Log.h%29"%20<<Rect>>%20{;%20%20class%20TxtFormatter;%20%20class%20CsvFormatter;%20%20class%20UTF8Converter;%20%20class%20RollingFileAppender;};hide%20empty%20members;hide%20empty%20fields;@enduml)
+<!--
+@startuml
+package "Plog extra\n(requires additional include)" <<Rect>> {
+  class FuncMessageFormatter
+  class ConsoleAppender
+  class AndroidAppender
+}
+package "Plog core\n(no additional include, just plog/Log.h)" <<Rect>> {
+  class TxtFormatter
+  class CsvFormatter
+  class UTF8Converter
+  class RollingFileAppender
+}
+hide empty members
+hide empty fields
+@enduml
+-->
 
 ##Unicode
 Plog is unicode aware and wide string friendly. All messages are converted to a system native char type:
