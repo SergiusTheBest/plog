@@ -284,7 +284,7 @@ Here the logger is initialized in the way when log messages are written to both 
 *Refer to [MultiAppender](samples/MultiAppender) for a complete sample.*
 
 ##Multiple loggers
-Multiple loggers can be used simultaneously each with their own separate configuration. The loggers differ by their instance number (that is implemented as a template parameter). The default instance is zero. Initialization is done by the appropriate template `plog::init` functions:
+Multiple [Loggers](#logger) can be used simultaneously each with their own separate configuration. The [Loggers](#logger) differ by their instance number (that is implemented as a template parameter). The default instance is zero. Initialization is done by the appropriate template `plog::init` functions:
 
 ```cpp
 Logger<instance>& init<instance>(...);
@@ -475,7 +475,7 @@ The log data flow is shown below:
 -->
 
 ##Logger
-[Logger](#logger) is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. [Logger](#logger) can act as [Appender](#appender) for another [Logger](#logger). Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
+[Logger](#logger) is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. [Logger](#logger) can act as [Appender](#appender) for another [Logger](#logger) because it implements `IAppender` interface. Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
 
 ```cpp
 template<int instance>
@@ -505,6 +505,8 @@ public:
 - source line
 - function name
 - message
+
+*Note: 'this' pointer capture is supported only on msvc.* 
 
 Also [Record](#record) has a number of overloaded stream output operators to construct a message.
 
@@ -549,7 +551,7 @@ public:
 ```
 
 ###TxtFormatter
-This is a classic log format available in almost any log library. It is good for console output and easy to read without any tools.
+This is a classic log format available in almost any log library. It is good for console output and it is easy to read without any tools.
 
 ```
 2014-11-11 00:29:06.245 FATAL [4460] [main@22] fatal
@@ -563,7 +565,7 @@ This is a classic log format available in almost any log library. It is good for
 ```
 
 ###CsvFormatter
-This is the most powerful log format. It can be easily read without any tools (but slighlty harder than TXT format) and can be heavily analyzed if it is opened with a CSV-aware tool (like Excel). One rows can be highlighted according to their cell values, another rows can be hidden, columns can be manipulated and you can even run SQL queries on log data! This is a recommended format if logs are big and require heavy analysis. Also 'this' pointer is shown so object instances can be told apart.
+This is the most powerful log format. It can be easily read without any tools (but slighlty harder than [TXT format](#txtformatter)) and can be heavily analyzed if it is opened with a CSV-aware tool (like Excel). One rows can be highlighted according to their cell values, another rows can be hidden, columns can be manipulated and you can even run SQL queries on log data! This is a recommended format if logs are big and require heavy analysis. Also 'this' pointer is shown so object instances can be told apart.
 
 ```
 Date;Time;Severity;TID;This;Function;Message
@@ -609,7 +611,7 @@ public:
 [UTF8Converter](#utf8converter) is the only converter available in plog out of the box. It converts string data to UTF-8 with BOM. 
 
 ##Appender
-[Appender](#appender) uses [Formatter](#formatter) and [Converter](#converter) to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must inherit `IAppender` interface:
+[Appender](#appender) uses [Formatter](#formatter) and [Converter](#converter) to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must implement `IAppender` interface (the only interface in plog):
 
 ```cpp
 class IAppender
