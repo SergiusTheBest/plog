@@ -50,9 +50,9 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 #Introduction
 
 ##Hello log!
-Plog is a C++ logging library that is designed to be as simple, small and flexible as possible. It is created as an alternative to existing big libraries and provides some unique features as [CSV log format]((#csvformatter)) and automatic 'this' pointer capture.
+Plog is a C++ logging library that is designed to be as simple, small and flexible as possible. It is created as an alternative to existing large libraries and provides some unique features as [CSV log format]((#csvformatter)) and automatic 'this' pointer capture.
 
-This is a minimal hello log sample:
+Here is a minimal hello log sample:
 
 ```cpp
 #include <plog/Log.h> // Step1: include the header.
@@ -141,7 +141,7 @@ Here the logger is initialized to write all messages with up to warning severity
 *Note: see [Custom initialization](#custom-initialization) for advanced usage.*
 
 ##Step 3: Logging
-Logging is performed with the help of special macros. A log message is constructed using stream output operators. Thus it is type-safe and extendable in contrast to a format output.
+Logging is performed with the help of special macros. A log message is constructed using stream output operators `<<`. Thus it is type-safe and extendable in contrast to a format string output.
 
 ###Basic logging macros 
 This is the most used type of logging macros. They do unconditional logging.
@@ -206,7 +206,7 @@ LOG_IF(severity, cond) << "msg";
 ```
 
 ###Logger severity checker
-In some cases there is a need to perform a group of actions depending on the current logger severity level. There is a special macro for that. It helps to minimize performance penalty when the log is inactive.
+In some cases there is a need to perform a group of actions depending on the current logger severity level. There is a special macro for that. It helps to minimize performance penalty when the logger is inactive.
 
 ```cpp
 IF_LOG(severity)
