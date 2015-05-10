@@ -82,10 +82,10 @@ int main()
 - Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter)
 - Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [Android](#androidappender)
 - Automatic 'this' pointer capture (supported only on msvc)
-- Lazy stream evaluation
-- Unicode aware, files are stored in UTF8
+- [Lazy stream evaluation](#lazy-stream-evaluation)
+- [Unicode aware](#unicode), files are stored in UTF8
 - Doesn't require C++11
-- Extendable
+- [Extendable](#extending)
 
 #Usage
 To start using plog you need to make 3 simple steps.
@@ -253,7 +253,7 @@ Non-typical log cases require the use of custom initialization. It is done by th
 Logger& init(Severity maxSeverity = none, IAppender* appender = NULL);
 ```
 
-You have to construct an appender parameterized with a formatter and pass it to the `plog::init` function. 
+You have to construct an [Appender](#appender) parameterized with a [Formatter](#formatter) and pass it to the `plog::init` function. 
 
 *Note: a lifetime of the appender should be static!*
 
@@ -265,7 +265,7 @@ plog::init(plog::debug, &consoleAppender);
 ```
 
 ##Multiple appenders
-It is possible to have multiple appenders within a single logger. In such case log message will be written to all of them. Use the following method to accomplish that:
+It is possible to have multiple [Appenders](#appender) within a single logger. In such case log message will be written to all of them. Use the following method to accomplish that:
 
 ```cpp
 Logger& Logger::addAppender(IAppender* appender);
@@ -330,7 +330,7 @@ int main()
 *Refer to [MultiInstance](samples/MultiInstance) for a complete sample.*
 
 ##Chained loggers
-A logger can work as an appender for another logger. So you can chain several loggers together. This is useful for streaming log messages from a shared library to the main application binary.
+A logger can work as an [Appender](#appender) for another logger. So you can chain several loggers together. This is useful for streaming log messages from a shared library to the main application binary.
 
 Sample:
 
