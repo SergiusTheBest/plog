@@ -50,7 +50,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 #Introduction
 
 ##Hello log!
-Plog is a C++ logging library that is designed to be as simple, small and flexible as possible. It is created as an alternative to existing big libraries and provides some unique features as CSV log format and automatic 'this' pointer capture.
+Plog is a C++ logging library that is designed to be as simple, small and flexible as possible. It is created as an alternative to existing big libraries and provides some unique features as [CSV log format]((#csvformatter)) and automatic 'this' pointer capture.
 
 This is a minimal hello log sample:
 
@@ -97,7 +97,7 @@ At first your project needs to know about plog. For that you have to:
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
 ##Step 2: Initialization
-The next step is to initialize the logger. This is done by the following `plog::init` function:
+The next step is to initialize the [Logger](#logger). This is done by the following `plog::init` function:
 
 ```cpp
 Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0);
@@ -265,7 +265,7 @@ plog::init(plog::debug, &consoleAppender);
 ```
 
 ##Multiple appenders
-It is possible to have multiple [Appenders](#appender) within a single logger. In such case log message will be written to all of them. Use the following method to accomplish that:
+It is possible to have multiple [Appenders](#appender) within a single [Logger](#logger). In such case log message will be written to all of them. Use the following method to accomplish that:
 
 ```cpp
 Logger& Logger::addAppender(IAppender* appender);
@@ -330,7 +330,7 @@ int main()
 *Refer to [MultiInstance](samples/MultiInstance) for a complete sample.*
 
 ##Chained loggers
-A logger can work as an [Appender](#appender) for another logger. So you can chain several loggers together. This is useful for streaming log messages from a shared library to the main application binary.
+A [Logger](#logger) can work as an [Appender](#appender) for another [Logger](#logger). So you can chain several loggers together. This is useful for streaming log messages from a shared library to the main application binary.
 
 Sample:
 
