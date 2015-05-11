@@ -539,7 +539,7 @@ public:
 ```
 
 ##Formatter
-[Formatter](#formatter) is responsible for formatting log data from [Record](#record) into various string representations (binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`. Plog has [TxtFormatter](#txtformatter), [CsvFormatter](#csvformatter) and [FuncMessageFormatter](#funcmessageformatter).
+[Formatter](#formatter) is responsible for formatting log data from [Record](#record) into various string representations (binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`:
 
 ```cpp
 class Formatter
@@ -549,6 +549,8 @@ public:
     static util::nstring format(const Record& record);
 };
 ```
+
+*See [How to implement a custom formatter](#custom-formatter).*
 
 ###TxtFormatter
 This is a classic log format available in almost any log library. It is good for console output and it is easy to read without any tools.
@@ -596,7 +598,7 @@ Object::~Object@13:
 ```
 
 ##Converter
-[Converter](#converter) is responsible for conversion of [Formatter](#formatter) output data to a raw buffer (represented as `std::string`). It is uses by [RollingFileAppender](#rollingfileappender) to perform a conversion before writing to a file. There is no base class for converters, they are implemented as classes with static functions `convert` and `header`. 
+[Converter](#converter) is responsible for conversion of [Formatter](#formatter) output data to a raw buffer (represented as `std::string`). It is uses by [RollingFileAppender](#rollingfileappender) to perform a conversion before writing to a file. There is no base class for converters, they are implemented as classes with static functions `convert` and `header`: 
 
 ```cpp
 class Converter
@@ -606,6 +608,8 @@ public:
     static std::string convert(const util::nstring& str);
 };
 ```
+
+*See [How to implement a custom converter](#custom-converter).*
 
 ###UTF8Converter
 [UTF8Converter](#utf8converter) is the only converter available in plog out of the box. It converts string data to UTF-8 with BOM. 
@@ -621,6 +625,8 @@ public:
     virtual void write(const Record& record) = 0;
 };
 ```
+
+*See [How to implement a custom appender](#custom-appender).*
 
 ###RollingFileAppender
 This appender outputs log data to a file with rolling behaviour. As template parameters it accepts both [Formatter](#formatter) and [Converter](#converter).
