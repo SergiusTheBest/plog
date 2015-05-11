@@ -623,29 +623,37 @@ public:
 ```
 
 ###RollingFileAppender
-It writes log data to a file with rolling behaviour. The sample file names produced by this appender: 
-
-- mylog.log <== current log file (size < maxFileSize)
-- mylog.1.log <== previous log file (size >= maxFileSize)
-- mylog.2.log <== previous log file (size >= maxFileSize)
+This appender outputs log data to a file with rolling behaviour. As template parameters it accepts both [Formatter](#formatter) and [Converter](#converter).
 
 ```cpp
 RollingFileAppender<Formatter, Converter>::RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
 
+- `fileName` - a log file name
+- `maxFileSize` - the maximum log file size in bytes
+- `maxFiles` - the number of log files to keep
+
 If `maxFileSize` or `maxFiles` is 0 then rolling behaviour is turned off. 
 
-*Note: the lower limit for a log file size is 1000 bytes.*
+The sample file names produced by this appender:
+
+- mylog.log <== current log file (size < maxFileSize)
+- mylog.1.log <== previous log file (size >= maxFileSize)
+- mylog.2.log <== previous log file (size >= maxFileSize)
+
+*Note: the lowest `maxFileSize` is 1000 bytes.*
+
+*Note: a log file is created on the first log message.*
 
 ###ConsoleAppender
-This appender outputs log data to `stdout`.
+This appender outputs log data to `stdout`.  As a template parameter it accepts [Formatter](#formatter).
 
 ```cpp
 ConsoleAppender<Formatter>::ConsoleAppender();
 ```
 
 ###AndroidAppender
-This appender uses Android logging system to output log data. They can be viewed with [logcat](http://developer.android.com/tools/help/logcat.html) or in a log window of Android IDEs.
+[AndroidAppender](#androidappender) uses Android logging system to output log data. It can be viewed with [logcat](http://developer.android.com/tools/help/logcat.html) or in a log window of Android IDEs. As a template parameter this appender accepts [Formatter](#formatter) (usually [FuncMessageFormatter](#funcmessageformatter)).
 
 ```cpp
 AndroidAppender<Formatter>::AndroidAppender(const char* tag);
