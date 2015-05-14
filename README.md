@@ -51,7 +51,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
 #Introduction
 
 ##Hello log!
-Plog is a C++ logging library that is designed to be as simple, small and flexible as possible. It is created as an alternative to existing large libraries and provides some unique features as [CSV log format]((#csvformatter)) and automatic 'this' pointer capture.
+Plog is a C++ logging library that is designed to be as simple, small and flexible as possible. It is created as an alternative to existing large libraries and provides some unique features as [CSV log format]((#csvformatter)) and [automatic 'this' pointer capture](#automatic-this-pointer-capture).
 
 Here is a minimal hello log sample:
 
@@ -82,7 +82,7 @@ int main()
 - Thread and type safe
 - Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter)
 - Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [Android](#androidappender)
-- Automatic 'this' pointer capture (supported only on msvc)
+- [Automatic 'this' pointer capture](#automatic-this-pointer-capture) (supported only on msvc)
 - [Lazy stream evaluation](#lazy-stream-evaluation)
 - [Unicode aware](#unicode), files are stored in UTF8
 - Doesn't require C++11
@@ -675,7 +675,7 @@ Log messages are constructed using lazy stream evaluation. It means that if a lo
 LOGD << /* the following statements will be executed only when the logger severity is debug or higher */ ...
 ```
 ##Automatic 'this' pointer capture
-'this' pointer is captured automatically to log data and can be printed by [CsvFormatter](#csvformatter). Unfortunately this feature is supported only on msvc 2010 and higher.
+'This' pointer is captured automatically to log data and can be printed by [CsvFormatter](#csvformatter). Unfortunately this feature is supported only on msvc 2010 and higher.
 
 ##Headers to include
 The core plog functionality is provided by inclusion of `plog/Log.h` file. Extra components require inclusion of corresponding extra headers after `plog/Log.h`.
