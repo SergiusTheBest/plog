@@ -33,6 +33,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
     - [AndroidAppender](#androidappender)
 - [Miscellaneous notes](#miscellaneous-notes)
   - [Lazy stream evaluation](#lazy-stream-evaluation)
+  - [Automatic 'this' pointer capture](#automatic-this-pointer-capture)
   - [Headers to include](#headers-to-include)
   - [Unicode](#unicode)
   - [Performance](#performance)
@@ -673,6 +674,8 @@ Log messages are constructed using lazy stream evaluation. It means that if a lo
 ```cpp
 LOGD << /* the following statements will be executed only when the logger severity is debug or higher */ ...
 ```
+##Automatic 'this' pointer capture
+'this' pointer is captured automatically to log data and can be printed by [CsvFormatter](#csvformatter). Unfortunately this feature is supported only on msvc 2010 and higher.
 
 ##Headers to include
 The core plog functionality is provided by inclusion of `plog/Log.h` file. Extra components require inclusion of corresponding extra headers after `plog/Log.h`.
