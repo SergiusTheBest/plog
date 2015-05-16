@@ -228,7 +228,7 @@ IF_LOG(plog::debug) // we want to execute the following statements only at debug
 #Advanced usage
 
 ##Changing severity at runtime 
-It is possible to set the maximum severity not only at the logger initialization time but at any time later. There are special accessor methods for that:
+It is possible to set the maximum severity not only at the logger initialization time but at any time later. There are special accessor methods:
 
 ```cpp
 Severity Logger::getMaxSeverity() const;
@@ -301,7 +301,7 @@ All logging macros have their special versions that accept an instance parameter
 
 ```cpp
 LOGD_(instance) << "debug";
-LOGD_IF(instance, condition) << "conditional debug";
+LOGD_IF_(instance, condition) << "conditional debug";
 IF_LOG_(instance, severity)
 ```
 
@@ -507,8 +507,6 @@ public:
 - function name
 - message
 
-*Note: 'this' pointer capture is supported only on msvc.* 
-
 Also [Record](#record) has a number of overloaded stream output operators to construct a message.
 
 ```cpp
@@ -538,6 +536,8 @@ public:
     std::string getFunc() const;
 };
 ```
+
+*Refer to [Demo](samples/Demo) sample to see what can be written to the log stream.*
 
 ##Formatter
 [Formatter](#formatter) is responsible for formatting log data from [Record](#record) into various string representations (binary forms can be used too). There is no base class for formatters, they are implemented as classes with static functions `format` and `header`:
@@ -599,7 +599,7 @@ Object::~Object@13:
 ```
 
 ##Converter
-[Converter](#converter) is responsible for conversion of [Formatter](#formatter) output data to a raw buffer (represented as `std::string`). It is uses by [RollingFileAppender](#rollingfileappender) to perform a conversion before writing to a file. There is no base class for converters, they are implemented as classes with static functions `convert` and `header`: 
+[Converter](#converter) is responsible for conversion of [Formatter](#formatter) output data to a raw buffer (represented as `std::string`). It is used by [RollingFileAppender](#rollingfileappender) to perform a conversion before writing to a file. There is no base class for converters, they are implemented as classes with static functions `convert` and `header`: 
 
 ```cpp
 class Converter
@@ -739,20 +739,20 @@ Producing a single log message takes the following amount of time:
 |Intel Core i5-2500K @4.2GHz|Windows 2008 R2|8|
 |Intel Atom N270 @1.6GHz|Windows 2003|68|
 
-Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. That's fine for the most use cases.
+Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. It is acceptable for the most use cases.
 
 *Refer to [Performance](samples/Performance) for a complete sample.*
 
 #Extending
-Plog can be easily extended to support new custom:
+Plog can be easily extended to support new:
 
-- data type
-- appender
-- formatter
-- converter
+- [custom data type](#custom-data-type)
+- [custom appender](#custom-appender)
+- [custom formatter](#custom-formatter)
+- [custom converter](#custom-converter)
 
 ##Custom data type
-To write a custom data type to a log message implement the following function:
+To output a custom data type to a log message implement the following function:
 
 ```cpp
 namespace plog
@@ -804,7 +804,7 @@ namespace plog
 A converter must be a class with 2 static methods:
 
 - `header` converts a header for a new log
-- `convert` converts log messages to a raw buffer
+- `convert` converts log messages
 
 ```cpp
 namespace plog
@@ -826,7 +826,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |Sample|Description|
 |------|-----------|
 |[Android](samples/Android)|Shows how to use the android-specific appender.|
-|[Chained](samples/Chained)|Shows how to chain a logger (route messages) in a shared library with the main logger.|
+|[Chained](samples/Chained)|Shows how to chain a logger in a shared library with the main logger (route messages).|
 |[Library](samples/Library)|Shows plog usage in static libraries.|
 |[Hello](samples/Hello)|A minimal introduction sample, shows the basic 3 steps to start using plog.|
 |[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
