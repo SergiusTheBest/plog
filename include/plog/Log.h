@@ -1,10 +1,13 @@
+//////////////////////////////////////////////////////////////////////////
+//  Plog - portable and simple log for C++
+//  Documentation and sources: https://github.com/SergiusTheBest/plog
+//  License: MPL 2.0, http://mozilla.org/MPL/2.0/
+
 #pragma once
 #include <plog/Record.h>
 #include <plog/Logger.h>
 #include <plog/Init.h>
 #include <plog/Compatibility.h>
-
-#define PLOG_VERSION 602
 
 //////////////////////////////////////////////////////////////////////////
 // Helper macros that get context info
