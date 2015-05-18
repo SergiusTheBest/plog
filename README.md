@@ -73,6 +73,14 @@ int main()
 }
 ```
 
+And its output:
+
+```
+2015-05-18 23:12:43.921 DEBUG [21428] [main@13] Hello log!
+2015-05-18 23:12:43.968 DEBUG [21428] [main@14] Hello log!
+2015-05-18 23:12:43.968 DEBUG [21428] [main@15] Hello log!
+```
+
 ##Features
 - Very small (less than 1000 LOC)
 - Easy to use
@@ -127,7 +135,7 @@ The log format is determined automatically by `fileName` file extension:
 The rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters:
 
 - `maxFileSize` - the maximum log file size in bytes
-- `maxFiles` - the number of log files to keep
+- `maxFiles` - a number of log files to keep
 
 If one of them is zero then log rolling is disabled.
 
@@ -291,7 +299,7 @@ Multiple [Loggers](#logger) can be used simultaneously each with their own separ
 Logger<instance>& init<instance>(...);
 ```
 
-To get a logger use `plog::get` function (returns NULL if the logger is not initialized):
+To get a logger use `plog::get` function (returns `NULL` if the logger is not initialized):
 
 ```cpp
 Logger<instance>* get<instance>();
@@ -638,7 +646,7 @@ RollingFileAppender<Formatter, Converter>::RollingFileAppender(const char* fileN
 
 - `fileName` - a log file name
 - `maxFileSize` - the maximum log file size in bytes
-- `maxFiles` - the number of log files to keep
+- `maxFiles` - a number of log files to keep
 
 If `maxFileSize` or `maxFiles` is 0 then rolling behaviour is turned off. 
 
@@ -783,8 +791,8 @@ namespace plog
 ##Custom formatter
 A formatter that is compatible with existing appenders must be a class with 2 static methods:
 
-- `header` returns a header for a new log
-- `format` formats [Record](#record) to a string
+- `header` - returns a header for a new log
+- `format` - formats [Record](#record) to a string
 
 ```cpp
 namespace plog
@@ -803,8 +811,8 @@ namespace plog
 ##Custom converter
 A converter must be a class with 2 static methods:
 
-- `header` converts a header for a new log
-- `convert` converts log messages
+- `header` - converts a header for a new log
+- `convert` - converts log messages
 
 ```cpp
 namespace plog
