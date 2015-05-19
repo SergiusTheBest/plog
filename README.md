@@ -1,5 +1,5 @@
-#Plog
-Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.org/SergiusTheBest/plog)
+#Plog - portable and simple log for C++
+Pretty powerful log in less than 1000 lines of code [![Build Status](https://travis-ci.org/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.org/SergiusTheBest/plog)
 
 - [Introduction](#introduction)
   - [Hello log!](#hello-log)
