@@ -33,7 +33,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
     - [AndroidAppender](#androidappender)
 - [Miscellaneous notes](#miscellaneous-notes)
   - [Lazy stream evaluation](#lazy-stream-evaluation)
-  - [Stream improvements over `std::ostream`](#stream-improvements-over-stdostream)
+  - [Stream improvements over std::ostream](#stream-improvements-over-stdostream)
   - [Automatic 'this' pointer capture](#automatic-this-pointer-capture)
   - [Headers to include](#headers-to-include)
   - [Unicode](#unicode)
@@ -684,7 +684,7 @@ Log messages are constructed using lazy stream evaluation. It means that if a lo
 LOGD << /* the following statements will be executed only when the logger severity is debug or higher */ ...
 ```
 
-##Stream improvements over `std::ostream`
+##Stream improvements over std::ostream
 Stream output in plog has several improvements over the standard `std::ostream`:
 
 - handles wide chars/strings: `wchar_t`, `wchar_t*`, `std::wstring`
