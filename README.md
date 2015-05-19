@@ -33,6 +33,7 @@ Portable and simple log for C++ [![Build Status](https://travis-ci.org/SergiusTh
     - [AndroidAppender](#androidappender)
 - [Miscellaneous notes](#miscellaneous-notes)
   - [Lazy stream evaluation](#lazy-stream-evaluation)
+  - [Stream improvements over `std::ostream`](#stream-improvements-over-stdostream)
   - [Automatic 'this' pointer capture](#automatic-this-pointer-capture)
   - [Headers to include](#headers-to-include)
   - [Unicode](#unicode)
@@ -682,6 +683,14 @@ Log messages are constructed using lazy stream evaluation. It means that if a lo
 ```cpp
 LOGD << /* the following statements will be executed only when the logger severity is debug or higher */ ...
 ```
+
+##Stream improvements over `std::ostream`
+Stream output in plog has several improvements over the standard `std::ostream`:
+
+- handles wide chars/strings: `wchar_t`, `wchar_t*`, `std::wstring`
+- handles `NULL` values for C-strings: `char*` and `wchar_t*`
+- implicitly casts objects to: `std::string` and `std::wstring` (if they have an appropriate cast operator)
+
 ##Automatic 'this' pointer capture
 'This' pointer is captured automatically to log data and can be printed by [CsvFormatter](#csvformatter). Unfortunately this feature is supported only on msvc 2010 and higher.
 
