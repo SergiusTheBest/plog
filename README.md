@@ -546,6 +546,8 @@ public:
 };
 ```
 
+*See [Stream improvements over std::ostream](#stream-improvements-over-stdostream).*
+
 *Refer to [Demo](samples/Demo) sample to see what can be written to the log stream.*
 
 ##Formatter
