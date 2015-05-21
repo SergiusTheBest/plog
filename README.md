@@ -870,6 +870,9 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 - [Log4cplus](http://sourceforge.net/projects/log4cplus/)
 - [Log4cpp](http://log4cpp.sourceforge.net/)
 - [Log4cxx](http://logging.apache.org/log4cxx/)
+- [Pantheios](http://pantheios.sourceforge.net/)
+- [spdlog](https://github.com/gabime/spdlog/)
+- [reckless](https://github.com/mattiasflodin/reckless)
 
 ##Tools and useful info
 
