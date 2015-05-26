@@ -1,4 +1,5 @@
 #pragma once
+#include "Util.h"
 
 namespace plog
 {
@@ -12,25 +13,25 @@ namespace plog
         debug = 5,
         verbose = 6
     };
-        
-    inline const char* getSeverityName(Severity severity)
-    {
-        switch (severity)
-        {
-        case fatal:
-            return "FATAL";
-        case error:
-            return "ERROR";
-        case warning:
-            return "WARN";
-        case info:
-            return "INFO";
-        case debug:
-            return "DEBUG";
-        case verbose:
-            return "VERB";
-        default:
-            return "NONE";
-        }
-    }
+
+	inline util::nstring::const_pointer getSeverityName(Severity severity)
+	{
+		switch (severity)
+		{
+		case fatal:
+			return PLOG_NSTR("FATAL");
+		case error:
+			return PLOG_NSTR("ERROR");
+		case warning:
+			return PLOG_NSTR("WARN");
+		case info:
+			return PLOG_NSTR("INFO");
+		case debug:
+			return PLOG_NSTR("DEBUG");
+		case verbose:
+			return PLOG_NSTR("VERB");
+		default:
+			return PLOG_NSTR("NONE");
+		}
+	}
 }
