@@ -20,7 +20,7 @@ namespace plog
 
         virtual void write(const Record& record)
         {
-			const std::string line = Converter::convert(Formatter::format(record));
+            const std::string line = Converter::convert(Formatter::format(record));
             util::MutexLock lock(m_mutex);
 
             if (m_firstWrite)
