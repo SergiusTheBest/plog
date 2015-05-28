@@ -18,7 +18,7 @@ namespace plog
             util::localtime_s(&t, &record.getTime().time);
 
 			char timeBuffer[32];
-			strftime(timeBuffer, _countof(timeBuffer), "%Y-%m-%d %T", &t);
+			strftime(timeBuffer, sizeof(timeBuffer), "%Y-%m-%d %T", &t);
 
             util::nstringstream ss;
 			ss << timeBuffer << PLOG_NSTR('.') << std::setfill(PLOG_NSTR('0')) << std::setw(3) 
