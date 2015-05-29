@@ -7,6 +7,7 @@ compiler:
 env:
   - BUILD_TYPE=Debug
   - BUILD_TYPE=Release
+  - CXXFLAGS="${CXXFLAGS} -pthread"
 
 install:
   # Prerequisites
