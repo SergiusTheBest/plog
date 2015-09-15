@@ -10,6 +10,7 @@
 #   include <time.h>
 #   include <sys/timeb.h>
 #   include <io.h>
+#   include <share.h>
 #else
 #   include <unistd.h>
 #   include <sys/syscall.h>
