@@ -644,7 +644,7 @@ public:
 This appender outputs log data to a file with rolling behaviour. As template parameters it accepts both [Formatter](#formatter) and [Converter](#converter).
 
 ```cpp
-RollingFileAppender<Formatter, Converter>::RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0);
+RollingFileAppender<Formatter, Converter>::RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
 
 - `fileName` - a log file name
@@ -729,15 +729,17 @@ Also `char` is treated as:
 - active code page - on Windows
 - UTF-8 - on all other systems
 
-Internally plog uses `nstring` and `nstringstream` ('n' for native) that are defined as:
+Internally plog uses `nstring`, `nstringstream` and `nchar` ('n' for native) that are defined as:
 
 ```cpp
 #ifdef _WIN32
     typedef std::wstring nstring;
     typedef std::wstringstream nstringstream;
+    typedef wchar_t nchar;
 #else
     typedef std::string nstring;
     typedef std::stringstream nstringstream;
+    typedef char nchar;
 #endif
 ```
 
