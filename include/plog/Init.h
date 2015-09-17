@@ -3,6 +3,7 @@
 #include <plog/Logger.h>
 #include <plog/Formatters/CsvFormatter.h>
 #include <plog/Formatters/TxtFormatter.h>
+#include <plog/Formatters/ColoredTxtFormatter.h>
 #include <plog/Appenders/RollingFileAppender.h>
 
 namespace plog
