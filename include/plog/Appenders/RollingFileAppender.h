@@ -9,7 +9,7 @@ namespace plog
     class RollingFileAppender : public IAppender
     {
     public:
-        RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0) 
+        RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
             : m_fileSize()
             , m_maxFileSize((std::max)(maxFileSize, static_cast<size_t>(1000))) // set a lower limit for the maxFileSize
             , m_lastFileNumber((std::max)(maxFiles - 1, 0))
@@ -45,13 +45,13 @@ namespace plog
         {
             m_file.close();
 
-            std::string lastFileName = buildFileName(m_lastFileNumber);
+            util::nstring lastFileName = buildFileName(m_lastFileNumber);
             util::File::unlink(lastFileName.c_str());
 
             for (int fileNumber = m_lastFileNumber - 1; fileNumber >= 0; --fileNumber)
             {
-                std::string currentFileName = buildFileName(fileNumber);
-                std::string nextFileName = buildFileName(fileNumber + 1);
+                util::nstring currentFileName = buildFileName(fileNumber);
+                util::nstring nextFileName = buildFileName(fileNumber + 1);
 
                 util::File::rename(currentFileName.c_str(), nextFileName.c_str());
             }
@@ -61,7 +61,7 @@ namespace plog
 
         void openLogFile()
         {
-            std::string fileName = buildFileName();
+            util::nstring fileName = buildFileName();
             m_fileSize = m_file.open(fileName.c_str());
 
             if (0 == m_fileSize)
@@ -75,9 +75,9 @@ namespace plog
             }
         }
 
-        std::string buildFileName(int fileNumber = 0)
+        util::nstring buildFileName(int fileNumber = 0)
         {
-            std::stringstream ss;
+            util::nstringstream ss;
             ss << m_fileNameNoExt;
             
             if (fileNumber > 0)
@@ -99,8 +99,8 @@ namespace plog
         size_t          m_fileSize;
         const size_t    m_maxFileSize;
         const int       m_lastFileNumber;
-        std::string     m_fileExt;
-        std::string     m_fileNameNoExt;
+        util::nstring   m_fileExt;
+        util::nstring   m_fileNameNoExt;
         bool            m_firstWrite;
     };
 }

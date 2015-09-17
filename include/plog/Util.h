@@ -34,9 +34,11 @@ namespace plog
 #ifdef _WIN32
         typedef std::wstring nstring;
         typedef std::wstringstream nstringstream;
+        typedef wchar_t nchar;
 #else
         typedef std::string nstring;
         typedef std::stringstream nstringstream;
+        typedef char nchar;
 #endif
 
         inline void localtime_s(struct tm* t, const time_t* time)
@@ -83,7 +85,7 @@ namespace plog
 #endif
         }
 
-#ifndef __ANDROID__
+#if !defined(__ANDROID__) && !defined(_WIN32)
         inline std::string toNarrow(const wchar_t* wstr)
         {
             size_t wlen = ::wcslen(wstr);
@@ -91,9 +93,6 @@ namespace plog
 
             if (!str.empty())
             {
-#ifdef _WIN32
-                int len = ::WideCharToMultiByte(CP_ACP, 0, wstr, static_cast<int>(wlen), &str[0], static_cast<int>(str.size()), 0, 0);
-#else
                 const char* in = reinterpret_cast<const char*>(&wstr[0]);
                 char* out = &str[0];
                 size_t inBytes = wlen * sizeof(wchar_t);
@@ -102,9 +101,8 @@ namespace plog
                 iconv_t cd = ::iconv_open("UTF-8", "WCHAR_T");
                 ::iconv(cd, const_cast<char**>(&in), &inBytes, &out, &outBytes);
                 ::iconv_close(cd); 
-                size_t len = str.size() - outBytes;
-#endif
-                str.resize(len);
+
+                str.resize(str.size() - outBytes);
             }
 
             return str;
@@ -161,9 +159,18 @@ namespace plog
 #endif
         }
 
-        inline void splitFileName(const char* fileName, std::string& fileNameNoExt, std::string& fileExt)
+        inline const nchar* findExtensionDot(const nchar* fileName)
         {
-            const char* dot = std::strrchr(fileName, '.');
+#ifdef _WIN32
+            return std::wcsrchr(fileName, L'.');
+#else
+            return std::strrchr(fileName, '.');
+#endif
+        }
+
+        inline void splitFileName(const nchar* fileName, nstring& fileNameNoExt, nstring& fileExt)
+        {
+            const nchar* dot = findExtensionDot(fileName);
 
             if (dot)
             {
@@ -196,7 +203,7 @@ namespace plog
             {
             }
 
-            File(const char* fileName) : m_file(-1)
+            File(const nchar* fileName) : m_file(-1)
             {
                 open(fileName);
             }
@@ -206,10 +213,10 @@ namespace plog
                 close();
             }
 
-            off_t open(const char* fileName)
+            off_t open(const nchar* fileName)
             {
 #ifdef _WIN32
-                ::_sopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
+                ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #else
                 m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
@@ -253,18 +260,22 @@ namespace plog
                 }
             }
 
-            static int unlink(const char* fileName)
+            static int unlink(const nchar* fileName)
             {
 #ifdef _WIN32
-                return ::_unlink(fileName);
+                return ::_wunlink(fileName);
 #else
                 return ::unlink(fileName);
 #endif
             }
 
-            static int rename(const char* oldFilename, const char* newFilename)
+            static int rename(const nchar* oldFilename, const nchar* newFilename)
             {
+#ifdef _WIN32
+                return ::_wrename(oldFilename, newFilename);
+#else
                 return ::rename(oldFilename, newFilename);
+#endif
             }
 
         private:
