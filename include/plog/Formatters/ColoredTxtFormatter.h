@@ -3,7 +3,7 @@
 #include <plog/Util.h>
 #define COLOR_RESET          "\x1B[0m"
 #define COLOR_RED            "\x1B[31m"
-#define COLOR_RED_BACKG      "\e[97m\e[41m"
+#define COLOR_RED_BACKG      "\x[97m\x[41m"
 #define COLOR_YELLOW         "\x1B[33m"
 #define COLOR_LIGHT_BLUE     "\x1B[94m"
 #define COLOR_LIGHT_CYAN     "\x1B[96m"
