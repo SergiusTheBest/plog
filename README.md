@@ -87,7 +87,7 @@ And its output:
 - Easy to use
 - Headers only
 - No 3rd-party dependencies
-- Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc)
+- Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc, mingw-w64)
 - Thread and type safe
 - Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter)
 - Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [Android](#androidappender)
