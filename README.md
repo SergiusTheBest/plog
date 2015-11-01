@@ -30,6 +30,7 @@ Pretty powerful log in less than 1000 lines of code [![Build Status](https://tra
   - [Appender](#appender)
     - [RollingFileAppender](#rollingfileappender)
     - [ConsoleAppender](#consoleappender)
+    - [ColorConsoleAppender](#colorconsoleappender)
     - [AndroidAppender](#androidappender)
 - [Miscellaneous notes](#miscellaneous-notes)
   - [Lazy stream evaluation](#lazy-stream-evaluation)
@@ -90,7 +91,7 @@ And its output:
 - Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc, mingw-w64)
 - Thread and type safe
 - Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter)
-- Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [Android](#androidappender)
+- Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender)
 - [Automatic 'this' pointer capture](#automatic-this-pointer-capture) (supported only on msvc)
 - [Lazy stream evaluation](#lazy-stream-evaluation)
 - [Unicode aware](#unicode), files are stored in UTF8
@@ -387,7 +388,7 @@ int main()
 ##Overview
 Plog is designed to be small but flexible, so it prefers templates to interface inheritance. All main entities are shown on the following UML diagram:
 
-![Plog class diagram](http://gravizo.com/g?@startuml;interface%20IAppender%20{;%20%20%20%20+write%28%29;};class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};class%20RollingFileAppender<Formatter,%20Converter>;class%20ConsoleAppender<Formatter>;class%20AndroidAppender<Formatter>;IAppender%20<|-u-%20Logger;IAppender%20<|--%20RollingFileAppender;IAppender%20<|--%20ConsoleAppender;IAppender%20<|--%20AndroidAppender;Logger%20"1"%20o--%20"0..n"%20IAppender;class%20CsvFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20TxtFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20FuncMessageFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20UTF8Converter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20convert%28%29;};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
+![Plog class diagram](http://gravizo.com/g?@startuml;interface%20IAppender%20{;%20%20%20%20+write%28%29;};class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};class%20RollingFileAppender<Formatter,%20Converter>;class%20ConsoleAppender<Formatter>;class%20ColorConsoleAppender<Formatter>;class%20AndroidAppender<Formatter>;ConsoleAppender%20<|--%20ColorConsoleAppender;IAppender%20<|-u-%20Logger;IAppender%20<|--%20RollingFileAppender;IAppender%20<|--%20ConsoleAppender;IAppender%20<|--%20AndroidAppender;Logger%20"1"%20o--%20"0..n"%20IAppender;class%20CsvFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20TxtFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20FuncMessageFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20UTF8Converter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20convert%28%29;};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
 <!-- 
 @startuml
 interface IAppender {
@@ -405,8 +406,10 @@ class Logger<int instance> <<singleton>> {
 
 class RollingFileAppender<Formatter, Converter>
 class ConsoleAppender<Formatter>
+class ColorConsoleAppender<Formatter>
 class AndroidAppender<Formatter>
 
+ConsoleAppender <|-- ColorConsoleAppender
 IAppender <|-u- Logger
 IAppender <|-- RollingFileAppender
 IAppender <|-- ConsoleAppender
@@ -670,6 +673,13 @@ This appender outputs log data to `stdout`.  As a template parameter it accepts 
 ConsoleAppender<Formatter>::ConsoleAppender();
 ```
 
+###ColorConsoleAppender
+This appender outputs log data to `stdout` using colors that depends on a log message severity level.  As a template parameter it accepts [Formatter](#formatter).
+
+```cpp
+ColorConsoleAppender<Formatter>::ColorConsoleAppender();
+```
+
 ###AndroidAppender
 [AndroidAppender](#androidappender) uses Android logging system to output log data. It can be viewed with [logcat](http://developer.android.com/tools/help/logcat.html) or in a log window of Android IDEs. As a template parameter this appender accepts [Formatter](#formatter) (usually [FuncMessageFormatter](#funcmessageformatter)).
 
@@ -699,19 +709,20 @@ Stream output in plog has several improvements over the standard `std::ostream`:
 ##Headers to include
 The core plog functionality is provided by inclusion of `plog/Log.h` file. Extra components require inclusion of corresponding extra headers after `plog/Log.h`.
 
-![Plog core and extra components](http://gravizo.com/g?@startuml;package%20"Plog%20extra\\n%28requires%20additional%20include%29"%20<<Rect>>%20{;%20%20class%20FuncMessageFormatter;%20%20class%20ConsoleAppender;%20%20class%20AndroidAppender;};package%20"Plog%20core\\n%28no%20additional%20include,%20just%20plog/Log.h%29"%20<<Rect>>%20{;%20%20class%20TxtFormatter;%20%20class%20CsvFormatter;%20%20class%20UTF8Converter;%20%20class%20RollingFileAppender;};hide%20empty%20members;hide%20empty%20fields;@enduml)
+![Plog core and extra components](http://gravizo.com/g?@startuml;package%20"Plog%20core\\n%28no%20additional%20include,%20just%20plog/Log.h%29"%20{;%20%20class%20TxtFormatter;%20%20class%20CsvFormatter;%20%20class%20UTF8Converter;%20%20class%20RollingFileAppender;};package%20"Plog%20extra\\n%28requires%20additional%20include%29"%20{;%20%20class%20FuncMessageFormatter;%20%20class%20ConsoleAppender;%20%20class%20ColorConsoleAppender;%20%20class%20AndroidAppender;};hide%20empty%20members;hide%20empty%20fields;@enduml)
 <!--
 @startuml
-package "Plog extra\n(requires additional include)" <<Rect>> {
-  class FuncMessageFormatter
-  class ConsoleAppender
-  class AndroidAppender
-}
-package "Plog core\n(no additional include, just plog/Log.h)" <<Rect>> {
+package "Plog core\n(no additional include, just plog/Log.h)" {
   class TxtFormatter
   class CsvFormatter
   class UTF8Converter
   class RollingFileAppender
+}
+package "Plog extra\n(requires additional include)" {
+  class FuncMessageFormatter
+  class ConsoleAppender
+  class ColorConsoleAppender
+  class AndroidAppender
 }
 hide empty members
 hide empty fields
@@ -854,6 +865,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
 |[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
 |[Demo](samples/Demo)|Demonstrates log stream abilities, prints various types of messages.|
+|[ColorConsole](samples/ColorConsole)|Shows how to use a color console appender.|
 |[CustomAppender](samples/CustomAppender)|Shows how to implement a custom appender that stores log messages in memory.|
 |[CustomFormatter](samples/CustomFormatter)|Shows how to implement a custom formatter.|
 |[CustomConverter](samples/CustomConverter)|Shows how to implement a custom converter that encrypts log messages.|
