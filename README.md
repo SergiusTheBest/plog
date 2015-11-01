@@ -49,6 +49,7 @@ Pretty powerful log in less than 1000 lines of code [![Build Status](https://tra
   - [Competing C++ log libraries](#competing-c-log-libraries)
   - [Tools and useful info](#tools-and-useful-info)
 - [License](#license)
+- [Version history](#version-history)
 
 #Introduction
 
@@ -899,3 +900,15 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 
 #License
 Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
+
+#Version history
+
+##Version 1.0.1 (01 Nov 2015)
+- New: Added ColorConsoleAppender
+- Fixed #6: Compatibility with [Mingw-w64](http://mingw-w64.org/)
+- Fixed #7: Log file not created if file name contains Unicode characters in Windows
+- Fixed #4: Flush stdout
+- Fixed #3: IntelliSense error: expected an identifier
+
+##Version 1.0.0 (19 May 2015)
+- Initial public release
