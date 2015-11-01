@@ -61,19 +61,16 @@ namespace plog
                     break;
 
                 case error:
-                    std::cout << "\x1B[31m"; // red
+                    std::cout << "\x1B[91m"; // red
                     break;
 
                 case warning:
-                    std::cout << "\x1B[33m"; // yellow
+                    std::cout << "\x1B[93m"; // yellow
                     break;
 
                 case debug:
-                    std::cout << "\x1B[94m"; // light blue
-                    break;
-
                 case verbose:
-                    std::cout << "\x1B[96m"; // light cyan
+                    std::cout << "\x1B[96m"; // cyan
                     break;
 #endif
                 default:
@@ -89,7 +86,7 @@ namespace plog
 #ifdef _WIN32
                 ::SetConsoleTextAttribute(m_stdoutHandle, m_originalAttr);
 #else
-                std::cout << "\x1B[0m";
+                std::cout << "\x1B[0m\x1B[0K";
 #endif
             }
         }
