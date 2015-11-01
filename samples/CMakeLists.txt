@@ -95,3 +95,6 @@ target_link_libraries(LibraryApp LibraryLib)
 
 add_library(LibraryLib STATIC Library/LibraryLib/Lib.cpp) 
 set_target_properties(LibraryLib PROPERTIES FOLDER Samples/Library)
+
+add_executable(ColorConsole ColorConsole/Main.cpp) 
+set_target_properties(ColorConsole PROPERTIES FOLDER Samples)
