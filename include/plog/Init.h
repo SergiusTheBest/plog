@@ -49,7 +49,7 @@ namespace plog
     template<class Formatter>
     inline Logger<PLOG_DEFAULT_INSTANCE>& init(Severity maxSeverity, const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
     {
-        return init<Formatter, 0>(maxSeverity, fileName, maxFileSize, maxFiles);
+        return init<Formatter, PLOG_DEFAULT_INSTANCE>(maxSeverity, fileName, maxFileSize, maxFiles);
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ namespace plog
     template<class Formatter>
     inline Logger<PLOG_DEFAULT_INSTANCE>& init(Severity maxSeverity, const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
     {
-        return init<Formatter, 0>(maxSeverity, fileName, maxFileSize, maxFiles);
+        return init<Formatter, PLOG_DEFAULT_INSTANCE>(maxSeverity, fileName, maxFileSize, maxFiles);
     }
 
     template<int instance>

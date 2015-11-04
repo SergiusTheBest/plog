@@ -23,13 +23,13 @@ namespace plog
     template<class CharType>
     inline void init_csv(const CharType* fileName, Severity maxSeverity)
     {
-        init<CsvFormatter, 0>(maxSeverity, fileName);
+        init<CsvFormatter, PLOG_DEFAULT_INSTANCE>(maxSeverity, fileName);
     }
 
     template<class CharType>
     inline void init_txt(const CharType* fileName, Severity maxSeverity)
     {
-        init<TxtFormatter, 0>(maxSeverity, fileName);
+        init<TxtFormatter, PLOG_DEFAULT_INSTANCE>(maxSeverity, fileName);
     }
 
     template<int instance, class CharType>
