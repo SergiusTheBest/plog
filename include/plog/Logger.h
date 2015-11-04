@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <plog/Default.h>
 #include <plog/Appenders/IAppender.h>
 #include <plog/Util.h>
 
@@ -62,8 +63,8 @@ namespace plog
         return Logger<instance>::getInstance();
     }
 
-    inline Logger<0>* get()
+    inline Logger<PLOG_DEFAULT_INSTANCE>* get()
     {
-        return Logger<0>::getInstance();
+        return Logger<PLOG_DEFAULT_INSTANCE>::getInstance();
     }
 }

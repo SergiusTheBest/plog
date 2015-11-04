@@ -1,4 +1,5 @@
 #pragma once
+#include <plog/Default.h>
 
 //////////////////////////////////////////////////////////////////////////
 // This file provides backward compatibility with the old version of plog.
@@ -38,8 +39,8 @@ namespace plog
     }
 
     template<class CharType>
-    inline Logger<0>& init(const CharType* fileName, Severity maxSeverity, size_t maxFileSize = 0, int maxFiles = 0)
+    inline Logger<PLOG_DEFAULT_INSTANCE>& init(const CharType* fileName, Severity maxSeverity, size_t maxFileSize = 0, int maxFiles = 0)
     {
-        return init<0>(maxSeverity, fileName, maxFileSize, maxFiles);
+        return init<PLOG_DEFAULT_INSTANCE>(maxSeverity, fileName, maxFileSize, maxFiles);
     }
 }

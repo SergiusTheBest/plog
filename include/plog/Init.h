@@ -1,5 +1,6 @@
 #pragma once
 #include <cstring>
+#include <plog/Default.h>
 #include <plog/Logger.h>
 #include <plog/Formatters/CsvFormatter.h>
 #include <plog/Formatters/TxtFormatter.h>
@@ -30,9 +31,9 @@ namespace plog
         return appender ? logger.addAppender(appender) : logger;
     }
 
-    inline Logger<0>& init(Severity maxSeverity = none, IAppender* appender = NULL)
+    inline Logger<PLOG_DEFAULT_INSTANCE>& init(Severity maxSeverity = none, IAppender* appender = NULL)
     {
-        return init<0>(maxSeverity, appender);
+        return init<PLOG_DEFAULT_INSTANCE>(maxSeverity, appender);
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -46,7 +47,7 @@ namespace plog
     }
 
     template<class Formatter>
-    inline Logger<0>& init(Severity maxSeverity, const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
+    inline Logger<PLOG_DEFAULT_INSTANCE>& init(Severity maxSeverity, const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
     {
         return init<Formatter, 0>(maxSeverity, fileName, maxFileSize, maxFiles);
     }
@@ -60,9 +61,9 @@ namespace plog
         return isCsv(fileName) ? init<CsvFormatter, instance>(maxSeverity, fileName, maxFileSize, maxFiles) : init<TxtFormatter, instance>(maxSeverity, fileName, maxFileSize, maxFiles);
     }
 
-    inline Logger<0>& init(Severity maxSeverity, const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
+    inline Logger<PLOG_DEFAULT_INSTANCE>& init(Severity maxSeverity, const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
     {
-        return init<0>(maxSeverity, fileName, maxFileSize, maxFiles);
+        return init<PLOG_DEFAULT_INSTANCE>(maxSeverity, fileName, maxFileSize, maxFiles);
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -76,7 +77,7 @@ namespace plog
     }
 
     template<class Formatter>
-    inline Logger<0>& init(Severity maxSeverity, const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
+    inline Logger<PLOG_DEFAULT_INSTANCE>& init(Severity maxSeverity, const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
     {
         return init<Formatter, 0>(maxSeverity, fileName, maxFileSize, maxFiles);
     }
@@ -87,9 +88,9 @@ namespace plog
         return init<instance>(maxSeverity, util::toWide(fileName).c_str(), maxFileSize, maxFiles);
     }
 
-    inline Logger<0>& init(Severity maxSeverity, const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
+    inline Logger<PLOG_DEFAULT_INSTANCE>& init(Severity maxSeverity, const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
     {
-        return init<0>(maxSeverity, fileName, maxFileSize, maxFiles);
+        return init<PLOG_DEFAULT_INSTANCE>(maxSeverity, fileName, maxFileSize, maxFiles);
     }
 #endif
 }

@@ -4,6 +4,7 @@
 //  License: MPL 2.0, http://mozilla.org/MPL/2.0/
 
 #pragma once
+#include <plog/Default.h>
 #include <plog/Record.h>
 #include <plog/Logger.h>
 #include <plog/Init.h>
@@ -28,13 +29,13 @@
 // Log severity level checker
 
 #define IF_LOG_(instance, severity)     if (plog::get<instance>() && plog::get<instance>()->checkSeverity(severity))
-#define IF_LOG(severity)                IF_LOG_(0, severity)
+#define IF_LOG(severity)                IF_LOG_(PLOG_DEFAULT_INSTANCE, severity)
 
 //////////////////////////////////////////////////////////////////////////
 // Main logging macros
 
 #define LOG_(instance, severity)        IF_LOG_(instance, severity) (*plog::get<instance>()) += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_THIS())
-#define LOG(severity)                   LOG_(0, severity)
+#define LOG(severity)                   LOG_(PLOG_DEFAULT_INSTANCE, severity)
 
 #define LOG_VERBOSE                     LOG(plog::verbose)
 #define LOG_DEBUG                       LOG(plog::debug)
@@ -68,7 +69,7 @@
 // Conditional logging macros
 
 #define LOG_IF_(instance, severity, condition)  if (condition) LOG_(instance, severity)
-#define LOG_IF(severity, condition)             LOG_IF_(0, severity, condition)
+#define LOG_IF(severity, condition)             LOG_IF_(PLOG_DEFAULT_INSTANCE, severity, condition)
 
 #define LOG_VERBOSE_IF(condition)               LOG_IF(plog::verbose, condition)
 #define LOG_DEBUG_IF(condition)                 LOG_IF(plog::debug, condition)
