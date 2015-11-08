@@ -7,7 +7,6 @@
 #include <plog/Record.h>
 #include <plog/Logger.h>
 #include <plog/Init.h>
-#include <plog/Compatibility.h>
 
 //////////////////////////////////////////////////////////////////////////
 // Helper macros that get context info
