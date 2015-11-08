@@ -1,6 +1,5 @@
 #pragma once
 #include <cstring>
-#include <plog/Default.h>
 #include <plog/Logger.h>
 #include <plog/Formatters/CsvFormatter.h>
 #include <plog/Formatters/TxtFormatter.h>

@@ -1,5 +1,4 @@
 #pragma once
-#include <plog/Default.h>
 
 //////////////////////////////////////////////////////////////////////////
 // This file provides backward compatibility with the old version of plog.

@@ -1,8 +1,11 @@
 #pragma once
 #include <vector>
-#include <plog/Default.h>
 #include <plog/Appenders/IAppender.h>
 #include <plog/Util.h>
+
+#ifndef PLOG_DEFAULT_INSTANCE
+#   define PLOG_DEFAULT_INSTANCE 0
+#endif
 
 namespace plog
 {

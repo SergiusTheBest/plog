@@ -4,7 +4,6 @@
 //  License: MPL 2.0, http://mozilla.org/MPL/2.0/
 
 #pragma once
-#include <plog/Default.h>
 #include <plog/Record.h>
 #include <plog/Logger.h>
 #include <plog/Init.h>
