@@ -31,6 +31,7 @@ namespace plog
 
         virtual void write(const Record& record)
         {
+            const std::string line = Converter::convert(Formatter::format(record));
             util::MutexLock lock(m_mutex);
 
             if (m_firstWrite)
@@ -43,7 +44,7 @@ namespace plog
                 rollLogFiles();
             }
 
-            int bytesWritten = m_file.write(Converter::convert(Formatter::format(record)));
+            int bytesWritten = m_file.write(line);
 
             if (bytesWritten > 0)
             {

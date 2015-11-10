@@ -307,12 +307,19 @@ namespace plog
             friend class MutexLock;
 
         private:
+            enum { PTHREAD_SPINLOCK_COUNT = 500 };
+
             void lock()
             {
 #ifdef _WIN32
                 ::EnterCriticalSection(&m_sync);
 #else
-                ::pthread_mutex_lock(&m_sync);
+                bool isLocked = false;
+                for (unsigned i=0; i<PTHREAD_SPINLOCK_COUNT && !isLocked; ++i,pthread_yield())
+                    isLocked = ::pthread_mutex_trylock(&m_sync) == 0;
+
+                if (!isLocked)
+                    ::pthread_mutex_lock(&m_sync);
 #endif
             }
 
