@@ -8,7 +8,7 @@ namespace plog
     {
     public:
 #ifdef _WIN32
-        ColorConsoleAppender() : m_isatty(!!::_isatty(::_fileno(stdout))), m_stdoutHandle(), m_originalAttr()
+        ColorConsoleAppender() : m_isatty(!!_isatty(::_fileno(stdout))), m_stdoutHandle(), m_originalAttr()
         {
             if (m_isatty)
             {
@@ -22,6 +22,10 @@ namespace plog
         }
 #else
         ColorConsoleAppender() : m_isatty(!!::isatty(::fileno(stdout))) {}
+#endif
+
+#ifdef __BORLANDC__
+        static int _isatty(int fd) { return ::isatty(fd); }
 #endif
 
         virtual void write(const Record& record)

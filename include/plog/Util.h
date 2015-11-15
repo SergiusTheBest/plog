@@ -44,7 +44,9 @@ namespace plog
 
         inline void localtime_s(struct tm* t, const time_t* time)
         {
-#ifdef _WIN32
+#if defined(_WIN32) && defined(__BORLANDC__)
+            ::localtime_s(time, t);
+#elif defined(_WIN32)
             ::localtime_s(t, time);
 #else
             ::localtime_r(time, t);
@@ -216,7 +218,9 @@ namespace plog
 
             off_t open(const nchar* fileName)
             {
-#ifdef _WIN32
+#if defined(_WIN32) && defined(__BORLANDC__)
+                m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY, SH_DENYWR, _S_IREAD | _S_IWRITE);
+#elif defined(_WIN32) 
                 ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #else
                 m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);

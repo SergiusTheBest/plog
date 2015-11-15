@@ -11,16 +11,18 @@
 //////////////////////////////////////////////////////////////////////////
 // Helper macros that get context info
 
-#ifdef _MSC_BUILD
-#   if _MSC_VER >= 1600 && !defined(__INTELLISENSE__) // >= Visual Studio 2010 and skip IntelliSense
-#       define PLOG_GET_THIS()      __if_exists(this) { this } __if_not_exists(this) { 0 } 
-#   else
-#       define PLOG_GET_THIS()      0
-#   endif
-#   define PLOG_GET_FUNC()          __FUNCTION__
+#if _MSC_VER >= 1600 && !defined(__INTELLISENSE__) // >= Visual Studio 2010 and skip IntelliSense
+#   define PLOG_GET_THIS()      __if_exists(this) { this } __if_not_exists(this) { 0 } 
 #else
-#   define PLOG_GET_THIS()          0
-#   define PLOG_GET_FUNC()          __PRETTY_FUNCTION__
+#   define PLOG_GET_THIS()      0
+#endif
+
+#ifdef _MSC_BUILD
+#   define PLOG_GET_FUNC()      __FUNCTION__
+#elif defined(__BORLANDC__)
+#   define PLOG_GET_FUNC()      __FUNC__
+#else
+#   define PLOG_GET_FUNC()      __PRETTY_FUNCTION__
 #endif
 
 //////////////////////////////////////////////////////////////////////////
