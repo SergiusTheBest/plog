@@ -143,6 +143,9 @@ namespace plog
 
         inline std::string processFuncName(const char* func)
         {
+#if (defined(_WIN32) && !defined(__MINGW32__)) || defined(__OBJC__)
+            return std::string(func);
+#else
             const char* funcBegin = func;
             const char* funcEnd = ::strchr(funcBegin, '(');
 
@@ -151,7 +154,7 @@ namespace plog
                 return std::string(func);
             }
 
-            for (const char* i = funcEnd - 1; i >= funcBegin; --i)
+            for (const char* i = funcEnd - 1; i >= funcBegin; --i) // search backwards for the first space char
             {
                 if (*i == ' ')
                 {
@@ -161,6 +164,7 @@ namespace plog
             }
 
             return std::string(funcBegin, funcEnd);
+#endif
         }
 
         inline const nchar* findExtensionDot(const nchar* fileName)
