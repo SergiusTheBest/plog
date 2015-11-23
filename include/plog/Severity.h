@@ -13,7 +13,7 @@ namespace plog
         verbose = 6
     };
         
-    inline const char* getSeverityName(Severity severity)
+    inline const char* severityToString(Severity severity)
     {
         switch (severity)
         {
@@ -32,5 +32,18 @@ namespace plog
         default:
             return "NONE";
         }
+    }
+
+    inline Severity severityFromString(const char* str)
+    {
+        for (Severity severity = fatal; severity <= verbose; severity = static_cast<Severity>(severity + 1))
+        {
+            if (severityToString(severity)[0] == str[0])
+            {
+                return severity;
+            }
+        }
+
+        return none;
     }
 }
