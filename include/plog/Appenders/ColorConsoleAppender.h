@@ -8,7 +8,7 @@ namespace plog
     {
     public:
 #ifdef _WIN32
-        ColorConsoleAppender() : m_isatty(!!_isatty(::_fileno(stdout))), m_stdoutHandle(), m_originalAttr()
+        ColorConsoleAppender() : m_isatty(!!_isatty(_fileno(stdout))), m_stdoutHandle(), m_originalAttr()
         {
             if (m_isatty)
             {

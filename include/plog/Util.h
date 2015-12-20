@@ -46,6 +46,8 @@ namespace plog
         {
 #if defined(_WIN32) && defined(__BORLANDC__)
             ::localtime_s(time, t);
+#elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+            *t = *::localtime(time);
 #elif defined(_WIN32)
             ::localtime_s(t, time);
 #else
@@ -223,7 +225,7 @@ namespace plog
 
             off_t open(const nchar* fileName)
             {
-#if defined(_WIN32) && defined(__BORLANDC__)
+#if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
                 m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY, SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif defined(_WIN32) 
                 ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
@@ -282,7 +284,7 @@ namespace plog
             static int rename(const nchar* oldFilename, const nchar* newFilename)
             {
 #ifdef _WIN32
-                return ::_wrename(oldFilename, newFilename);
+                return ::MoveFileW(oldFilename, newFilename);
 #else
                 return ::rename(oldFilename, newFilename);
 #endif
