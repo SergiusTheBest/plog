@@ -8,7 +8,7 @@ matrix:
 shallow_clone: true
 
 before_build:
-- cmd: cmake -Hsamples -Bbuild -G%CMAKE_GENERATOR%
+- cmd: cmake -Hsamples -Bbuild -G"%CMAKE_GENERATOR%"
 
 build:
   project: build\Samples.sln
