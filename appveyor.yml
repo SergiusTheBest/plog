@@ -1,0 +1,15 @@
+environment:
+  matrix:
+    - CMAKE_GENERATOR: "Visual Studio 14 2015"
+
+matrix:
+  fast_finish: true
+  
+shallow_clone: true
+
+before_build:
+- cmd: cmake -Hsamples -Bbuild -G%CMAKE_GENERATOR%
+
+build:
+  project: build\Samples.sln
+  verbosity: minimal
