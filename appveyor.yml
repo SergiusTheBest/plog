@@ -1,6 +1,13 @@
+configuration:
+- Debug
+- Release
+
 environment:
   matrix:
     - CMAKE_GENERATOR: "Visual Studio 14 2015"
+    - CMAKE_GENERATOR: "Visual Studio 14 2015 Win64"
+    - CMAKE_GENERATOR: "Visual Studio 10 2010"
+    - CMAKE_GENERATOR: "Visual Studio 10 2010 Win64"
 
 matrix:
   fast_finish: true
