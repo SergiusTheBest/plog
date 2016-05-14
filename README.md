@@ -522,9 +522,9 @@ public:
 - function name
 - message
 
-Also [Record](#record) has a number of overloaded stream output operators to construct a message.
+*Note: Source file name isn't captured by default. To enable it define PLOG_CAPTURE_FILE.*
 
-*Source file name isn't captured by default. To enable it define PLOG_CAPTURE_FILE.*
+Also [Record](#record) has a number of overloaded stream output operators to construct a message.
 
 ```cpp
 class Record
