@@ -84,7 +84,7 @@ namespace plog
 #ifdef _WIN32
             return ::GetCurrentThreadId();
 #elif defined(__unix__)
-            return ::syscall(__NR_gettid);
+            return static_cast<unsigned int>(::syscall(__NR_gettid));
 #elif defined(__APPLE__)
             return static_cast<unsigned int>(::syscall(SYS_thread_selfid));
 #endif
