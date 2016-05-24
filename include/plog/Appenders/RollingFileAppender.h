@@ -90,12 +90,12 @@ namespace plog
         {
             util::nstringstream ss;
             ss << m_fileNameNoExt;
-            
+
             if (fileNumber > 0)
             {
                 ss << '.' << fileNumber;
             }
-            
+
             if (!m_fileExt.empty())
             {
                 ss << '.' << m_fileExt;
