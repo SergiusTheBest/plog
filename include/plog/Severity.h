@@ -12,7 +12,7 @@ namespace plog
         debug = 5,
         verbose = 6
     };
-        
+
     inline const char* severityToString(Severity severity)
     {
         switch (severity)
