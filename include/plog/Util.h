@@ -105,7 +105,7 @@ namespace plog
 
                 iconv_t cd = ::iconv_open("UTF-8", "WCHAR_T");
                 ::iconv(cd, const_cast<char**>(&in), &inBytes, &out, &outBytes);
-                ::iconv_close(cd); 
+                ::iconv_close(cd);
 
                 str.resize(str.size() - outBytes);
             }
@@ -227,7 +227,7 @@ namespace plog
             {
 #if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
                 m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY, SH_DENYWR, _S_IREAD | _S_IWRITE);
-#elif defined(_WIN32) 
+#elif defined(_WIN32)
                 ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #else
                 m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -361,7 +361,7 @@ namespace plog
             Mutex& m_mutex;
         };
 
-        template<class T> 
+        template<class T>
         class Singleton : NonCopyable
         {
         public:
@@ -386,7 +386,7 @@ namespace plog
             static T* m_instance;
         };
 
-        template<class T> 
+        template<class T>
         T* Singleton<T>::m_instance = NULL;
     }
 }

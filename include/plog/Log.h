@@ -12,7 +12,7 @@
 // Helper macros that get context info
 
 #if _MSC_VER >= 1600 && !defined(__INTELLISENSE__) // >= Visual Studio 2010 and skip IntelliSense
-#   define PLOG_GET_THIS()      __if_exists(this) { this } __if_not_exists(this) { 0 } 
+#   define PLOG_GET_THIS()      __if_exists(this) { this } __if_not_exists(this) { 0 }
 #else
 #   define PLOG_GET_THIS()      0
 #endif
