@@ -18,7 +18,7 @@ namespace plog
             stream << util::toWide(data);
 #elif defined(_WIN32)
             std::operator<<(stream, util::toWide(data));
-#else            
+#else
             std::operator<<(stream, data);
 #endif
         }
