@@ -28,73 +28,73 @@
 //////////////////////////////////////////////////////////////////////////
 // Log severity level checker
 
-#define IF_LOG_(instance, severity)     if (plog::get<instance>() && plog::get<instance>()->checkSeverity(severity))
-#define IF_LOG(severity)                IF_LOG_(PLOG_DEFAULT_INSTANCE, severity)
+#define PLOG_IF_LOG_(instance, severity)     if (plog::get<instance>() && plog::get<instance>()->checkSeverity(severity))
+#define PLOG_IF_LOG(severity)                PLOG_IF_LOG_(PLOG_DEFAULT_INSTANCE, severity)
 
 //////////////////////////////////////////////////////////////////////////
 // Main logging macros
 
-#define LOG_(instance, severity)        IF_LOG_(instance, severity) (*plog::get<instance>()) += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_THIS())
-#define LOG(severity)                   LOG_(PLOG_DEFAULT_INSTANCE, severity)
+#define PLOG_LOG_(instance, severity)        PLOG_IF_LOG_(instance, severity) (*plog::get<instance>()) += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_THIS())
+#define PLOG_LOG(severity)                   PLOG_LOG_(PLOG_DEFAULT_INSTANCE, severity)
 
-#define LOG_VERBOSE                     LOG(plog::verbose)
-#define LOG_DEBUG                       LOG(plog::debug)
-#define LOG_INFO                        LOG(plog::info)
-#define LOG_WARNING                     LOG(plog::warning)
-#define LOG_ERROR                       LOG(plog::error)
-#define LOG_FATAL                       LOG(plog::fatal)
+#define PLOG_LOG_VERBOSE                     PLOG_LOG(plog::verbose)
+#define PLOG_LOG_DEBUG                       PLOG_LOG(plog::debug)
+#define PLOG_LOG_INFO                        PLOG_LOG(plog::info)
+#define PLOG_LOG_WARNING                     PLOG_LOG(plog::warning)
+#define PLOG_LOG_ERROR                       PLOG_LOG(plog::error)
+#define PLOG_LOG_FATAL                       PLOG_LOG(plog::fatal)
 
-#define LOG_VERBOSE_(instance)          LOG_(instance, plog::verbose)
-#define LOG_DEBUG_(instance)            LOG_(instance, plog::debug)
-#define LOG_INFO_(instance)             LOG_(instance, plog::info)
-#define LOG_WARNING_(instance)          LOG_(instance, plog::warning)
-#define LOG_ERROR_(instance)            LOG_(instance, plog::error)
-#define LOG_FATAL_(instance)            LOG_(instance, plog::fatal)
+#define PLOG_LOG_VERBOSE_(instance)          PLOG_LOG_(instance, plog::verbose)
+#define PLOG_LOG_DEBUG_(instance)            PLOG_LOG_(instance, plog::debug)
+#define PLOG_LOG_INFO_(instance)             PLOG_LOG_(instance, plog::info)
+#define PLOG_LOG_WARNING_(instance)          PLOG_LOG_(instance, plog::warning)
+#define PLOG_LOG_ERROR_(instance)            PLOG_LOG_(instance, plog::error)
+#define PLOG_LOG_FATAL_(instance)            PLOG_LOG_(instance, plog::fatal)
 
-#define LOGV                            LOG_VERBOSE
-#define LOGD                            LOG_DEBUG
-#define LOGI                            LOG_INFO
-#define LOGW                            LOG_WARNING
-#define LOGE                            LOG_ERROR
-#define LOGF                            LOG_FATAL
+#define PLOG_LOGV                            PLOG_LOG_VERBOSE
+#define PLOG_LOGD                            PLOG_LOG_DEBUG
+#define PLOG_LOGI                            PLOG_LOG_INFO
+#define PLOG_LOGW                            PLOG_LOG_WARNING
+#define PLOG_LOGE                            PLOG_LOG_ERROR
+#define PLOG_LOGF                            PLOG_LOG_FATAL
 
-#define LOGV_(instance)                 LOG_VERBOSE_(instance)
-#define LOGD_(instance)                 LOG_DEBUG_(instance)
-#define LOGI_(instance)                 LOG_INFO_(instance)
-#define LOGW_(instance)                 LOG_WARNING_(instance)
-#define LOGE_(instance)                 LOG_ERROR_(instance)
-#define LOGF_(instance)                 LOG_FATAL_(instance)
+#define PLOG_LOGV_(instance)                 PLOG_LOG_VERBOSE_(instance)
+#define PLOG_LOGD_(instance)                 PLOG_LOG_DEBUG_(instance)
+#define PLOG_LOGI_(instance)                 PLOG_LOG_INFO_(instance)
+#define PLOG_LOGW_(instance)                 PLOG_LOG_WARNING_(instance)
+#define PLOG_LOGE_(instance)                 PLOG_LOG_ERROR_(instance)
+#define PLOG_LOGF_(instance)                 PLOG_LOG_FATAL_(instance)
 
 //////////////////////////////////////////////////////////////////////////
 // Conditional logging macros
 
-#define LOG_IF_(instance, severity, condition)  if (condition) LOG_(instance, severity)
-#define LOG_IF(severity, condition)             LOG_IF_(PLOG_DEFAULT_INSTANCE, severity, condition)
+#define PLOG_LOG_IF_(instance, severity, condition)  if (condition) PLOG_LOG_(instance, severity)
+#define PLOG_LOG_IF(severity, condition)             PLOG_LOG_IF_(PLOG_DEFAULT_INSTANCE, severity, condition)
 
-#define LOG_VERBOSE_IF(condition)               LOG_IF(plog::verbose, condition)
-#define LOG_DEBUG_IF(condition)                 LOG_IF(plog::debug, condition)
-#define LOG_INFO_IF(condition)                  LOG_IF(plog::info, condition)
-#define LOG_WARNING_IF(condition)               LOG_IF(plog::warning, condition)
-#define LOG_ERROR_IF(condition)                 LOG_IF(plog::error, condition)
-#define LOG_FATAL_IF(condition)                 LOG_IF(plog::fatal, condition)
+#define PLOG_LOG_VERBOSE_IF(condition)               PLOG_LOG_IF(plog::verbose, condition)
+#define PLOG_LOG_DEBUG_IF(condition)                 PLOG_LOG_IF(plog::debug, condition)
+#define PLOG_LOG_INFO_IF(condition)                  PLOG_LOG_IF(plog::info, condition)
+#define PLOG_LOG_WARNING_IF(condition)               PLOG_LOG_IF(plog::warning, condition)
+#define PLOG_LOG_ERROR_IF(condition)                 PLOG_LOG_IF(plog::error, condition)
+#define PLOG_LOG_FATAL_IF(condition)                 PLOG_LOG_IF(plog::fatal, condition)
 
-#define LOG_VERBOSE_IF_(instance, condition)    LOG_IF_(instance, plog::verbose, condition)
-#define LOG_DEBUG_IF_(instance, condition)      LOG_IF_(instance, plog::debug, condition)
-#define LOG_INFO_IF_(instance, condition)       LOG_IF_(instance, plog::info, condition)
-#define LOG_WARNING_IF_(instance, condition)    LOG_IF_(instance, plog::warning, condition)
-#define LOG_ERROR_IF_(instance, condition)      LOG_IF_(instance, plog::error, condition)
-#define LOG_FATAL_IF_(instance, condition)      LOG_IF_(instance, plog::fatal, condition)
+#define PLOG_LOG_VERBOSE_IF_(instance, condition)    PLOG_LOG_IF_(instance, plog::verbose, condition)
+#define PLOG_LOG_DEBUG_IF_(instance, condition)      PLOG_LOG_IF_(instance, plog::debug, condition)
+#define PLOG_LOG_INFO_IF_(instance, condition)       PLOG_LOG_IF_(instance, plog::info, condition)
+#define PLOG_LOG_WARNING_IF_(instance, condition)    PLOG_LOG_IF_(instance, plog::warning, condition)
+#define PLOG_LOG_ERROR_IF_(instance, condition)      PLOG_LOG_IF_(instance, plog::error, condition)
+#define PLOG_LOG_FATAL_IF_(instance, condition)      PLOG_LOG_IF_(instance, plog::fatal, condition)
 
-#define LOGV_IF(condition)                      LOG_VERBOSE_IF(condition)
-#define LOGD_IF(condition)                      LOG_DEBUG_IF(condition)
-#define LOGI_IF(condition)                      LOG_INFO_IF(condition)
-#define LOGW_IF(condition)                      LOG_WARNING_IF(condition)
-#define LOGE_IF(condition)                      LOG_ERROR_IF(condition)
-#define LOGF_IF(condition)                      LOG_FATAL_IF(condition)
+#define PLOG_LOGV_IF(condition)                      PLOG_LOG_VERBOSE_IF(condition)
+#define PLOG_LOGD_IF(condition)                      PLOG_LOG_DEBUG_IF(condition)
+#define PLOG_LOGI_IF(condition)                      PLOG_LOG_INFO_IF(condition)
+#define PLOG_LOGW_IF(condition)                      PLOG_LOG_WARNING_IF(condition)
+#define PLOG_LOGE_IF(condition)                      PLOG_LOG_ERROR_IF(condition)
+#define PLOG_LOGF_IF(condition)                      PLOG_LOG_FATAL_IF(condition)
 
-#define LOGV_IF_(instance, condition)           LOG_VERBOSE_IF_(instance, condition)
-#define LOGD_IF_(instance, condition)           LOG_DEBUG_IF_(instance, condition)
-#define LOGI_IF_(instance, condition)           LOG_INFO_IF_(instance, condition)
-#define LOGW_IF_(instance, condition)           LOG_WARNING_IF_(instance, condition)
-#define LOGE_IF_(instance, condition)           LOG_ERROR_IF_(instance, condition)
-#define LOGF_IF_(instance, condition)           LOG_FATAL_IF_(instance, condition)
+#define PLOG_LOGV_IF_(instance, condition)           PLOG_LOG_VERBOSE_IF_(instance, condition)
+#define PLOG_LOGD_IF_(instance, condition)           PLOG_LOG_DEBUG_IF_(instance, condition)
+#define PLOG_LOGI_IF_(instance, condition)           PLOG_LOG_INFO_IF_(instance, condition)
+#define PLOG_LOGW_IF_(instance, condition)           PLOG_LOG_WARNING_IF_(instance, condition)
+#define PLOG_LOGE_IF_(instance, condition)           PLOG_LOG_ERROR_IF_(instance, condition)
+#define PLOG_LOGF_IF_(instance, condition)           PLOG_LOG_FATAL_IF_(instance, condition)
