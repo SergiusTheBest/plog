@@ -37,6 +37,10 @@
 #define PLOG_LOG_(instance, severity)        PLOG_IF_LOG_(instance, severity) (*plog::get<instance>()) += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_THIS())
 #define PLOG_LOG(severity)                   PLOG_LOG_(PLOG_DEFAULT_INSTANCE, severity)
 
+#define PLOG_LOG_WHERE_(instance, severity, function, line)  PLOG_IF_LOG_(instance, severity) (*plog::get<instance>()) += plog::Record(severity, function, line, PLOG_GET_THIS())
+
+#define PLOG_LOG_WHERE(severity, function, line)  PLOG_LOG_WHERE_(PLOG_DEFAULT_INSTANCE, severity, function, line)
+
 #define PLOG_LOG_VERBOSE                     PLOG_LOG(plog::verbose)
 #define PLOG_LOG_DEBUG                       PLOG_LOG(plog::debug)
 #define PLOG_LOG_INFO                        PLOG_LOG(plog::info)
