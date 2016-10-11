@@ -1,5 +1,5 @@
 #pragma once
-#include "ConsoleAppender.h"
+#include <plog/Appenders/ConsoleAppender.h>
 
 namespace plog
 {
@@ -30,8 +30,11 @@ namespace plog
 
         virtual void write(const Record& record)
         {
+            util::nstring str = Formatter::format(record);
+            util::MutexLock lock(this->m_mutex);
+
             setColor(record.getSeverity());
-            ConsoleAppender<Formatter>::write(record);
+            this->writestr(str);
             resetColor();
         }
 
