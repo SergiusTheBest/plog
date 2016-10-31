@@ -32,6 +32,7 @@ Pretty powerful log in less than 1000 lines of code [![Build Status](https://tra
     - [ConsoleAppender](#consoleappender)
     - [ColorConsoleAppender](#colorconsoleappender)
     - [AndroidAppender](#androidappender)
+    - [WinEventLogAppender](#wineventlogappender)
 - [Miscellaneous notes](#miscellaneous-notes)
   - [Lazy stream evaluation](#lazy-stream-evaluation)
   - [Stream improvements over std::ostream](#stream-improvements-over-stdostream)
@@ -415,6 +416,7 @@ IAppender <|-u- Logger
 IAppender <|-- RollingFileAppender
 IAppender <|-- ConsoleAppender
 IAppender <|-- AndroidAppender
+IAppender <|-- WinEventLogAppender
 
 Logger "1" o-- "0..n" IAppender
 
@@ -686,6 +688,13 @@ ColorConsoleAppender<Formatter>::ColorConsoleAppender();
 
 ```cpp
 AndroidAppender<Formatter>::AndroidAppender(const char* tag);
+```
+###WinEventLogAppender
+This appender outputs log data to the windows event log. It can be viewed with the windows event log viewer.  As a template parameter it accepts [Formatter](#formatter).
+The constructor parameters are the event source name (module name) and the applictation name to identifiy the logentries in the windows event log.
+
+```cpp
+WinEventLogAppender<Formatter>::WinEventLogAppender(const util::nstring& sourceName, const util::nstring& applicationName);
 ```
 
 #Miscellaneous notes
