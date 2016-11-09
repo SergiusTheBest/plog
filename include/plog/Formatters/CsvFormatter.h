@@ -24,7 +24,7 @@ namespace plog
             ss << severityToString(record.getSeverity()) << ";";
             ss << record.getTid() << ";";
             ss << record.getObject() << ";";
-            ss << record.getFunc().c_str() << "@" << record.getLine() << ";";
+            ss << record.getFunc() << "@" << record.getLine() << ";";
 
             util::nstring message = record.getMessage();
 

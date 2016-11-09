@@ -15,8 +15,8 @@ namespace plog
         static util::nstring format(const Record& record)
         {
             util::nstringstream ss;
-            ss << record.getFunc().c_str() << "@" << record.getLine() << ": ";
-            ss << record.getMessage().c_str() << "\n";
+            ss << record.getFunc() << "@" << record.getLine() << ": ";
+            ss << record.getMessage() << "\n";
 
             return ss.str();
         }

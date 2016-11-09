@@ -51,7 +51,7 @@ namespace plog
     {
     public:
         Record(Severity severity, const char* func, size_t line, const void* object)
-            : m_severity(severity), m_tid(util::gettid()), m_object(object), m_line(line), m_func(func)
+            : m_severity(severity), m_tid(util::gettid()), m_object(object), m_line(line), m_func(func), m_file()
         {
             util::ftime(&m_time);
         }
@@ -87,48 +87,58 @@ namespace plog
         //////////////////////////////////////////////////////////////////////////
         // Getters
 
-        const util::Time& getTime() const
+        virtual const util::Time& getTime() const
         {
             return m_time;
         }
 
-        Severity getSeverity() const
+        virtual Severity getSeverity() const
         {
             return m_severity;
         }
 
-        unsigned int getTid() const
+        virtual unsigned int getTid() const
         {
             return m_tid;
         }
 
-        const void* getObject() const
+        virtual const void* getObject() const
         {
             return m_object;
         }
 
-        size_t getLine() const
+        virtual size_t getLine() const
         {
             return m_line;
         }
 
-        const util::nstring getMessage() const
+        virtual const util::nchar* getMessage() const
         {
-            return m_message.str();
+            m_messageStr = m_message.str();
+            return m_messageStr.c_str();
         }
 
-        std::string getFunc() const
+        virtual const char* getFunc() const
         {
-            return util::processFuncName(m_func);
+            m_funcStr = util::processFuncName(m_func);
+            return m_funcStr.c_str();
+        }
+
+        virtual const char* getFile() const
+        {
+            return m_file;
         }
 
     private:
-        util::Time          m_time;
-        const Severity      m_severity;
-        const unsigned int  m_tid;
-        const void* const   m_object;
-        const size_t        m_line;
-        util::nstringstream m_message;
-        const char* const   m_func;
+        util::Time              m_time;
+        const Severity          m_severity;
+        const unsigned int      m_tid;
+        const void* const       m_object;
+        const size_t            m_line;
+        util::nstringstream     m_message;
+        const char* const       m_func;
+        const char* const       m_file;
+        mutable std::string     m_funcStr;
+        mutable util::nstring   m_messageStr;
     };
 }

@@ -22,8 +22,8 @@ namespace plog
             ss << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_hour << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_min << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_sec << "." << std::setfill(PLOG_NSTR('0')) << std::setw(3) << record.getTime().millitm << " ";
             ss << std::setfill(PLOG_NSTR(' ')) << std::setw(5) << std::left << severityToString(record.getSeverity()) << " ";
             ss << "[" << record.getTid() << "] ";
-            ss << "[" << record.getFunc().c_str() << "@" << record.getLine() << "] ";
-            ss << record.getMessage().c_str() << "\n";
+            ss << "[" << record.getFunc() << "@" << record.getLine() << "] ";
+            ss << record.getMessage() << "\n";
 
             return ss.str();
         }
