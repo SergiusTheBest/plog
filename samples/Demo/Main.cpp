@@ -51,7 +51,7 @@ int main()
     LOG_DEBUG << L'ы';
 
     // Multiline.
-    LOG_INFO << "This\nis\na\nmultiline message!";
+    LOG_INFO << "This\nis\na" << std::endl << "multiline\nmessage!";
 
     // Quotes.
     LOG_INFO << "This is a message with \"quotes\"!";

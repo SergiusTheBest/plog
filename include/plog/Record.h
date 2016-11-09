@@ -75,6 +75,16 @@ namespace plog
         }
 #endif
 
+#ifdef _WIN32
+        Record& operator<<(std::wostream& (*data)(std::wostream&))
+#else
+        Record& operator<<(std::ostream& (*data)(std::ostream&))
+#endif
+        {
+            m_message << data;
+            return *this;
+        }
+
         template<typename T>
         Record& operator<<(const T& data)
         {
