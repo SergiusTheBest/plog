@@ -62,16 +62,14 @@ namespace plog
         Record& operator<<(char data)
         {
             char str[] = { data, 0 };
-            *this << str;
-            return *this;
+            return *this << str;
         }
 
 #ifndef __ANDROID__
         Record& operator<<(wchar_t data)
         {
             wchar_t str[] = { data, 0 };
-            *this << str;
-            return *this;
+            return *this << str;
         }
 #endif
 
