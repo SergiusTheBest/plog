@@ -25,6 +25,12 @@
 #   define PLOG_GET_FUNC()      __PRETTY_FUNCTION__
 #endif
 
+#if PLOG_CAPTURE_FILE
+#   define PLOG_GET_FILE()      __FILE__
+#else
+#   define PLOG_GET_FILE()      ""
+#endif
+
 //////////////////////////////////////////////////////////////////////////
 // Log severity level checker
 
@@ -34,7 +40,7 @@
 //////////////////////////////////////////////////////////////////////////
 // Main logging macros
 
-#define LOG_(instance, severity)        IF_LOG_(instance, severity) (*plog::get<instance>()) += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_THIS())
+#define LOG_(instance, severity)        IF_LOG_(instance, severity) (*plog::get<instance>()) += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_FILE(), PLOG_GET_THIS())
 #define LOG(severity)                   LOG_(PLOG_DEFAULT_INSTANCE, severity)
 
 #define LOG_VERBOSE                     LOG(plog::verbose)

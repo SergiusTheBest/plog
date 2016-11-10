@@ -389,7 +389,7 @@ int main()
 ##Overview
 Plog is designed to be small but flexible, so it prefers templates to interface inheritance. All main entities are shown on the following UML diagram:
 
-![Plog class diagram](http://gravizo.com/g?@startuml;interface%20IAppender%20{;%20%20%20%20+write%28%29;};class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};class%20RollingFileAppender<Formatter,%20Converter>;class%20ConsoleAppender<Formatter>;class%20ColorConsoleAppender<Formatter>;class%20AndroidAppender<Formatter>;ConsoleAppender%20<|--%20ColorConsoleAppender;IAppender%20<|-u-%20Logger;IAppender%20<|--%20RollingFileAppender;IAppender%20<|--%20ConsoleAppender;IAppender%20<|--%20AndroidAppender;Logger%20"1"%20o--%20"0..n"%20IAppender;class%20CsvFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20TxtFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20FuncMessageFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20UTF8Converter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20convert%28%29;};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
+![Plog class diagram](http://gravizo.com/g?@startuml;interface%20IAppender%20{;%20%20%20%20+write%28%29;};class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};class%20RollingFileAppender<Formatter,%20Converter>;class%20ConsoleAppender<Formatter>;class%20ColorConsoleAppender<Formatter>;class%20AndroidAppender<Formatter>;ConsoleAppender%20<|--%20ColorConsoleAppender;IAppender%20<|-u-%20Logger;IAppender%20<|--%20RollingFileAppender;IAppender%20<|--%20ConsoleAppender;IAppender%20<|--%20AndroidAppender;Logger%20"1"%20o--%20"0..n"%20IAppender;class%20CsvFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20TxtFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20FuncMessageFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20UTF8Converter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20convert%28%29;};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-file;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
 <!-- 
 @startuml
 interface IAppender {
@@ -455,6 +455,7 @@ class Record {
     -tid;
     -object;
     -line;
+    -file;
     -message;
     -func;
 }
@@ -517,8 +518,11 @@ public:
 - thread id
 - 'this' pointer (if a log message is written from within an object)
 - source line
+- source file name
 - function name
 - message
+
+*Note: Source file name isn't captured by default. To enable it define PLOG_CAPTURE_FILE.*
 
 Also [Record](#record) has a number of overloaded stream output operators to construct a message.
 
@@ -526,7 +530,7 @@ Also [Record](#record) has a number of overloaded stream output operators to con
 class Record
 {
 public:
-    Record(Severity severity, const char* func, size_t line, const void* object);
+    Record(Severity severity, const char* func, size_t line, const char* file, const void* object);
     
     //////////////////////////////////////////////////////////////////////////
     // Stream output operators
@@ -545,6 +549,7 @@ public:
     unsigned int getTid() const;
     const void* getObject() const;
     size_t getLine() const;
+    const char* getFile() const;
     const util::nstring getMessage() const;
     std::string getFunc() const;
 };

@@ -50,8 +50,8 @@ namespace plog
     class Record
     {
     public:
-        Record(Severity severity, const char* func, size_t line, const void* object)
-            : m_severity(severity), m_tid(util::gettid()), m_object(object), m_line(line), m_func(func)
+        Record(Severity severity, const char* func, size_t line, const char* file, const void* object)
+            : m_severity(severity), m_tid(util::gettid()), m_object(object), m_line(line), m_func(func), m_file(file)
         {
             util::ftime(&m_time);
         }
@@ -130,6 +130,11 @@ namespace plog
             return util::processFuncName(m_func);
         }
 
+        const char* getFile() const
+        {
+            return m_file;
+        }
+
     private:
         util::Time          m_time;
         const Severity      m_severity;
@@ -138,5 +143,6 @@ namespace plog
         const size_t        m_line;
         util::nstringstream m_message;
         const char* const   m_func;
+        const char* const   m_file;
     };
 }
