@@ -17,7 +17,7 @@
 #   define PLOG_GET_THIS()      0
 #endif
 
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
 #   define PLOG_GET_FUNC()      __FUNCTION__
 #elif defined(__BORLANDC__)
 #   define PLOG_GET_FUNC()      __FUNC__
