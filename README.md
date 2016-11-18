@@ -706,7 +706,7 @@ The constructor parameter is the event source name - typically it is the name of
 EventLogAppender<Formatter>::EventLogAppender(const wchar_t* sourceName);
 ```
 
-EventLogAppender(#eventlogappender) must be registered in the windows registry before use (before calling the constructor). There is a helper class for that:
+[EventLogAppender](#eventlogappender) must be registered in the windows registry before use (before calling the constructor). There is a helper class for that:
 
 ```cpp
 EventLogAppenderRegistry::add(const wchar_t* sourceName, const wchar_t* logName = L"Application");
