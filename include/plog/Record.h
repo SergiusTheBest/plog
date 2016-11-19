@@ -83,6 +83,17 @@ namespace plog
             return *this;
         }
 
+#ifdef QT_VERSION
+        Record& operator<<(const QString& data)
+        {
+#ifdef _WIN32
+            return *this << data.toStdWString();
+#else
+            return *this << data.toStdString();
+#endif
+        }
+#endif
+
         template<typename T>
         Record& operator<<(const T& data)
         {
