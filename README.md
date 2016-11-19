@@ -737,6 +737,7 @@ Stream output in plog has several improvements over the standard `std::ostream`:
 - handles wide chars/strings: `wchar_t`, `wchar_t*`, `std::wstring`
 - handles `NULL` values for C-strings: `char*` and `wchar_t*`
 - implicitly casts objects to: `std::string` and `std::wstring` (if they have an appropriate cast operator)
+- supports QString (you need to include Qt headers before plog)
 
 ##Automatic 'this' pointer capture
 'This' pointer is captured automatically to log data and can be printed by [CsvFormatter](#csvformatter). Unfortunately this feature is supported only on msvc 2010 and higher.
