@@ -91,7 +91,7 @@ And its output:
 - Easy to use
 - Headers only
 - No 3rd-party dependencies
-- Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc, mingw, mingw-w64)
+- Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc, mingw, mingw-w64, c++builder)
 - Thread and type safe
 - Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter)
 - Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender), [EventLog](#eventlogappender), [DebugOutput](#debugoutputappender)
@@ -938,8 +938,23 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 
 #Version history
 
+##Version 1.0.2 (19 Nov 2016)
+- New #11: Default instance can be set via PLOG_DEFAULT_INSTANCE
+- New #30: Support for QString
+- New: Support for C++Builder
+- New #15: `severityFromString` function
+- New #21: Capture source file name (disabled by default)
+- New #33: Add [DebugOutputAppender](#debugoutputappender)
+- New #32: Add [EventLogAppender](#eventlogappender)
+- Fixed #12: Crash on processing Obj-C function name
+- Fixed #17: Compatibility with [MinGW](http://www.mingw.org/)
+- Fixed #27: IF_LOG_ macro in if/else leads to miss else branch
+- Fixed #18, #29: Thread safety for [ConsoleAppender](#consoleappender)/[ColorConsoleAppender](#colorconsoleappender)
+- Fixed #31: Support for stream manipulators like std::endl
+- Fixed: Compatibility with old Visual Studio versions
+
 ##Version 1.0.1 (01 Nov 2015)
-- New: Added ColorConsoleAppender
+- New: Add ColorConsoleAppender
 - Fixed #6: Compatibility with [Mingw-w64](http://mingw-w64.org/)
 - Fixed #7: Log file not created if file name contains Unicode characters in Windows
 - Fixed #4: Flush stdout
