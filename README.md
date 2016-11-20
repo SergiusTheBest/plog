@@ -550,14 +550,14 @@ public:
     //////////////////////////////////////////////////////////////////////////
     // Getters
     
-    const util::Time& getTime() const;
-    Severity getSeverity() const;
-    unsigned int getTid() const;
-    const void* getObject() const;
-    size_t getLine() const;
-    const char* getFile() const;
-    const util::nstring getMessage() const;
-    std::string getFunc() const;
+    virtual const util::Time& getTime() const;
+    virtual Severity getSeverity() const;
+    virtual unsigned int getTid() const;
+    virtual const void* getObject() const;
+    virtual size_t getLine() const;
+    virtual const util::nchar* getMessage() const
+    virtual const char* getFunc() const
+    virtual const char* getFile() const
 };
 ```
 
@@ -745,7 +745,7 @@ Stream output in plog has several improvements over the standard `std::ostream`:
 ##Headers to include
 The core plog functionality is provided by inclusion of `plog/Log.h` file. Extra components require inclusion of corresponding extra headers after `plog/Log.h`.
 
-![Plog core and extra components](http://gravizo.com/g?@startuml;package%20"Plog%20core\\n%28no%20additional%20include,%20just%20plog/Log.h%29"%20{;%20%20class%20TxtFormatter;%20%20class%20CsvFormatter;%20%20class%20UTF8Converter;%20%20class%20RollingFileAppender;};package%20"Plog%20extra\\n%28requires%20additional%20include%29"%20{;%20%20class%20FuncMessageFormatter;%20%20class%20ConsoleAppender;%20%20class%20ColorConsoleAppender;%20%20class%20AndroidAppender;};hide%20empty%20members;hide%20empty%20fields;@enduml)
+![Plog core and extra components](http://gravizo.com/g?@startuml;package%20"Plog%20core\n%28no%20additional%20include,%20just%20plog/Log.h%29"%20{;%20%20class%20TxtFormatter;%20%20class%20CsvFormatter;%20%20class%20UTF8Converter;%20%20class%20RollingFileAppender;};package%20"Plog%20extra\n%28requires%20additional%20include%29"%20{;%20%20class%20FuncMessageFormatter;%20%20class%20ConsoleAppender;%20%20class%20ColorConsoleAppender;%20%20class%20AndroidAppender;%20%20class%20DebugOutputAppender;%20%20class%20EventLogAppender;};hide%20empty%20members;hide%20empty%20fields;@enduml)
 <!--
 @startuml
 package "Plog core\n(no additional include, just plog/Log.h)" {
@@ -759,6 +759,8 @@ package "Plog extra\n(requires additional include)" {
   class ConsoleAppender
   class ColorConsoleAppender
   class AndroidAppender
+  class DebugOutputAppender
+  class EventLogAppender
 }
 hide empty members
 hide empty fields
@@ -937,6 +939,9 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
 
 #Version history
+
+##Version 1.1.0 (20 Nov 2016)
+- Fix #34: Introduce binary compatible interface to Record (WARNING: this is not compatible with 1.0.x version in [Chained mode](#chained-loggers), so don't mix 1.1.x and 1.0.x)
 
 ##Version 1.0.2 (19 Nov 2016)
 - New #11: Default instance can be set via PLOG_DEFAULT_INSTANCE
