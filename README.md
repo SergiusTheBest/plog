@@ -745,7 +745,7 @@ Stream output in plog has several improvements over the standard `std::ostream`:
 ##Headers to include
 The core plog functionality is provided by inclusion of `plog/Log.h` file. Extra components require inclusion of corresponding extra headers after `plog/Log.h`.
 
-![Plog core and extra components](http://gravizo.com/g?@startuml;package%20"Plog%20core\n%28no%20additional%20include,%20just%20plog/Log.h%29"%20{;%20%20class%20TxtFormatter;%20%20class%20CsvFormatter;%20%20class%20UTF8Converter;%20%20class%20RollingFileAppender;};package%20"Plog%20extra\n%28requires%20additional%20include%29"%20{;%20%20class%20FuncMessageFormatter;%20%20class%20ConsoleAppender;%20%20class%20ColorConsoleAppender;%20%20class%20AndroidAppender;%20%20class%20DebugOutputAppender;%20%20class%20EventLogAppender;};hide%20empty%20members;hide%20empty%20fields;@enduml)
+![Plog core and extra components](http://gravizo.com/g?@startuml;package%20"Plog%20core\\n%28no%20additional%20include,%20just%20plog/Log.h%29"%20{;%20%20class%20TxtFormatter;%20%20class%20CsvFormatter;%20%20class%20UTF8Converter;%20%20class%20RollingFileAppender;};package%20"Plog%20extra\\n%28requires%20additional%20include%29"%20{;%20%20class%20FuncMessageFormatter;%20%20class%20ConsoleAppender;%20%20class%20ColorConsoleAppender;%20%20class%20AndroidAppender;%20%20class%20DebugOutputAppender;%20%20class%20EventLogAppender;};hide%20empty%20members;hide%20empty%20fields;@enduml)
 <!--
 @startuml
 package "Plog core\n(no additional include, just plog/Log.h)" {
