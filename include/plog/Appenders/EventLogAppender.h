@@ -63,10 +63,28 @@ namespace plog
             ::RegSetValueExW(sourceKey, L"TypesSupported", 0, REG_DWORD, reinterpret_cast<const BYTE*>(&kTypesSupported), sizeof(DWORD));
 
             const wchar_t kEventMessageFile[] = L"%windir%\\Microsoft.NET\\Framework\\v4.0.30319\\EventLogMessages.dll;%windir%\\Microsoft.NET\\Framework\\v2.0.50727\\EventLogMessages.dll";
-            ::RegSetValueExW(sourceKey, L"EventMessageFile", 0, REG_EXPAND_SZ, reinterpret_cast<const BYTE*>(kEventMessageFile), ::wcslen(kEventMessageFile) * sizeof(wchar_t));
+            ::RegSetValueExW(sourceKey, L"EventMessageFile", 0, REG_EXPAND_SZ, reinterpret_cast<const BYTE*>(kEventMessageFile), static_cast<DWORD>(::wcslen(kEventMessageFile) * sizeof(wchar_t)));
 
             ::RegCloseKey(sourceKey);
         }
+
+		static bool exist(const wchar_t* sourceName, const wchar_t* logName = L"Application")
+		{
+			bool logexist = false;
+			std::wstring logKeyName;
+			std::wstring sourceKeyName;
+			getKeyNames(sourceName, logName, sourceKeyName, logKeyName);
+			HKEY hKey;
+
+			LONG lResult = ::RegOpenKeyExW(HKEY_LOCAL_MACHINE, sourceKeyName.c_str(), 0, KEY_READ, &hKey);
+
+			if (ERROR_SUCCESS == lResult)
+			{
+				logexist = true;
+			}
+
+			return logexist;
+		}
 
         static void remove(const wchar_t* sourceName, const wchar_t* logName = L"Application")
         {
