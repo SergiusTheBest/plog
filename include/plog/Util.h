@@ -209,11 +209,11 @@ namespace plog
         class File : NonCopyable
         {
         public:
-            File() : m_file(-1)
+            File(bool binary = false) : m_file(-1), m_binary(binary)
             {
             }
 
-            File(const nchar* fileName) : m_file(-1)
+            File(const nchar* fileName, bool binary = false) : m_file(-1), m_binary(binary)
             {
                 open(fileName);
             }
@@ -226,9 +226,9 @@ namespace plog
             off_t open(const nchar* fileName)
             {
 #if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
-                m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY, SH_DENYWR, _S_IREAD | _S_IWRITE);
+                m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | (m_binary ? _O_BINARY: 0), SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif defined(_WIN32)
-                ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
+                ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | (m_binary ? _O_BINARY : 0), _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #else
                 m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
@@ -292,6 +292,7 @@ namespace plog
 
         private:
             int m_file;
+            bool m_binary;
         };
 
         class Mutex : NonCopyable
