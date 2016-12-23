@@ -709,8 +709,9 @@ EventLogAppender<Formatter>::EventLogAppender(const wchar_t* sourceName);
 [EventLogAppender](#eventlogappender) must be registered in the windows registry before use (before calling the constructor). There is a helper class for that:
 
 ```cpp
-EventLogAppenderRegistry::add(const wchar_t* sourceName, const wchar_t* logName = L"Application");
-EventLogAppenderRegistry::remove(const wchar_t* sourceName, const wchar_t* logName = L"Application");
+bool EventLogAppenderRegistry::add(const wchar_t* sourceName, const wchar_t* logName = L"Application");
+bool EventLogAppenderRegistry::exists(const wchar_t* sourceName, const wchar_t* logName = L"Application")
+void EventLogAppenderRegistry::remove(const wchar_t* sourceName, const wchar_t* logName = L"Application");
 ```
 
 Registry operations are system-wide and require administrator rights. Also they are persistent so can be performed only once (when the application is installed/uninstalled).
@@ -939,6 +940,9 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
 
 #Version history
+
+##Version 1.1.1 (TBD)
+- New #36: Ability to check whether event log registry entry exists
 
 ##Version 1.1.0 (20 Nov 2016)
 - Fix #34: Introduce binary compatible interface to Record (WARNING: this is not compatible with 1.0.x version in [Chained mode](#chained-loggers), so don't mix 1.1.x and 1.0.x)
