@@ -710,7 +710,7 @@ EventLogAppender<Formatter>::EventLogAppender(const wchar_t* sourceName);
 
 ```cpp
 bool EventLogAppenderRegistry::add(const wchar_t* sourceName, const wchar_t* logName = L"Application");
-bool EventLogAppenderRegistry::exists(const wchar_t* sourceName, const wchar_t* logName = L"Application")
+bool EventLogAppenderRegistry::exists(const wchar_t* sourceName, const wchar_t* logName = L"Application");
 void EventLogAppenderRegistry::remove(const wchar_t* sourceName, const wchar_t* logName = L"Application");
 ```
 
