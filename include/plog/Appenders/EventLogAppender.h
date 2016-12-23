@@ -50,14 +50,17 @@ namespace plog
     class EventLogAppenderRegistry
     {
     public:
-        static void add(const wchar_t* sourceName, const wchar_t* logName = L"Application")
+        static bool add(const wchar_t* sourceName, const wchar_t* logName = L"Application")
         {
             std::wstring logKeyName;
             std::wstring sourceKeyName;
             getKeyNames(sourceName, logName, sourceKeyName, logKeyName);
 
             HKEY sourceKey;
-            ::RegCreateKeyExW(HKEY_LOCAL_MACHINE, sourceKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL, &sourceKey, NULL);
+            if (NO_ERROR != ::RegCreateKeyExW(HKEY_LOCAL_MACHINE, sourceKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL, &sourceKey, NULL))
+            {
+                return false;
+            }
 
             const DWORD kTypesSupported = EVENTLOG_ERROR_TYPE | EVENTLOG_WARNING_TYPE | EVENTLOG_INFORMATION_TYPE;
             ::RegSetValueExW(sourceKey, L"TypesSupported", 0, REG_DWORD, reinterpret_cast<const BYTE*>(&kTypesSupported), sizeof(DWORD));
@@ -66,25 +69,24 @@ namespace plog
             ::RegSetValueExW(sourceKey, L"EventMessageFile", 0, REG_EXPAND_SZ, reinterpret_cast<const BYTE*>(kEventMessageFile), static_cast<DWORD>(::wcslen(kEventMessageFile) * sizeof(wchar_t)));
 
             ::RegCloseKey(sourceKey);
+            return true;
         }
 
-		static bool exist(const wchar_t* sourceName, const wchar_t* logName = L"Application")
-		{
-			bool logexist = false;
-			std::wstring logKeyName;
-			std::wstring sourceKeyName;
-			getKeyNames(sourceName, logName, sourceKeyName, logKeyName);
-			HKEY hKey;
+        static bool exists(const wchar_t* sourceName, const wchar_t* logName = L"Application")
+        {
+            std::wstring logKeyName;
+            std::wstring sourceKeyName;
+            getKeyNames(sourceName, logName, sourceKeyName, logKeyName);
 
-			LONG lResult = ::RegOpenKeyExW(HKEY_LOCAL_MACHINE, sourceKeyName.c_str(), 0, KEY_READ, &hKey);
+            HKEY sourceKey;
+            if (NO_ERROR != ::RegOpenKeyExW(HKEY_LOCAL_MACHINE, sourceKeyName.c_str(), 0, KEY_READ, &sourceKey))
+            {
+                return false;
+            }
 
-			if (ERROR_SUCCESS == lResult)
-			{
-				logexist = true;
-			}
-
-			return logexist;
-		}
+            ::RegCloseKey(sourceKey);
+            return true;
+        }
 
         static void remove(const wchar_t* sourceName, const wchar_t* logName = L"Application")
         {
