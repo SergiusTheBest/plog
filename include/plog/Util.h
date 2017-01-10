@@ -93,9 +93,6 @@ namespace plog
 #else
             return static_cast<unsigned int>(::syscall(SYS_thread_selfid));
 #endif
-
-
-
 #endif
         }
 
