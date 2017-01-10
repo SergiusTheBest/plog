@@ -86,7 +86,9 @@ namespace plog
 #elif defined(__unix__)
             return static_cast<unsigned int>(::syscall(__NR_gettid));
 #elif defined(__APPLE__)
-            return static_cast<unsigned int>(::syscall(SYS_thread_selfid));
+            uint64_t tid64;
+            pthread_threadid_np(NULL, &tid64);
+            return static_cast<unsigned int>(tid64);
 #endif
         }
 
