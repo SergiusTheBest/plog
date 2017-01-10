@@ -86,7 +86,18 @@ namespace plog
 #elif defined(__unix__)
             return static_cast<unsigned int>(::syscall(__NR_gettid));
 #elif defined(__APPLE__)
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_12
+            //pid_t tid = 0;
+            uint64_t tid64;
+            pthread_threadid_np(NULL, &tid64);
+            //tid = (pid_t)tid64;
+            return static_cast<unsigned int>(tid64);
+#else
             return static_cast<unsigned int>(::syscall(SYS_thread_selfid));
+#endif
+
+
+
 #endif
         }
 
