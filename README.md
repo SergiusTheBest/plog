@@ -87,7 +87,7 @@ And its output:
 ```
 
 ##Features
-- Very small (slighly more than 1000 LOC)
+- Very small (slightly more than 1000 LOC)
 - Easy to use
 - Headers only
 - No 3rd-party dependencies
