@@ -1,5 +1,5 @@
-#Plog - portable and simple log for C++
-Pretty powerful log in about 1000 lines of code [![Build Status](https://travis-ci.org/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.org/SergiusTheBest/plog) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master)
+#Plog - portable, simple and extensible C++ logging library
+Pretty powerful logging library in about 1000 lines of code [![Build Status](https://travis-ci.org/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.org/SergiusTheBest/plog) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master)
 
 - [Introduction](#introduction)
   - [Hello log!](#hello-log)
@@ -87,7 +87,7 @@ And its output:
 ```
 
 ##Features
-- Very small (less than 1000 LOC)
+- Very small (slighly more than 1000 LOC)
 - Easy to use
 - Headers only
 - No 3rd-party dependencies
@@ -926,6 +926,8 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 - [Pantheios](http://pantheios.sourceforge.net/)
 - [spdlog](https://github.com/gabime/spdlog/)
 - [reckless](https://github.com/mattiasflodin/reckless)
+- [loguru](https://github.com/emilk/loguru)
+- [blackhole](https://github.com/3Hren/blackhole)
 
 ##Tools and useful info
 
@@ -942,6 +944,7 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 #Version history
 
 ##Version 1.1.1 (TBD)
+- Fixed #39: Build warning on macOS 10.12 Sierra
 - New #36: Ability to check whether event log registry entry exists
 
 ##Version 1.1.0 (20 Nov 2016)
