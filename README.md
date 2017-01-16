@@ -919,6 +919,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 - [Boost::Log](http://www.boost.org/doc/libs/release/libs/log/)
 - [EasyLogging++](https://github.com/easylogging/easyloggingpp)
 - [g2log](http://www.codeproject.com/Articles/288827/g-log-An-efficient-asynchronous-logger-using-Cplus)
+- [g3log](https://github.com/KjellKod/g3log)
 - [glog](https://code.google.com/p/google-glog/)
 - [Log4cplus](http://sourceforge.net/projects/log4cplus/)
 - [Log4cpp](http://log4cpp.sourceforge.net/)
