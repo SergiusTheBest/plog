@@ -11,7 +11,7 @@ namespace plog
     public:
         RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
             : m_fileSize()
-            , m_maxFileSize((std::max)(maxFileSize, static_cast<size_t>(1000))) // set a lower limit for the maxFileSize
+            , m_maxFileSize((std::max)(static_cast<off_t>(maxFileSize), static_cast<off_t>(1000))) // set a lower limit for the maxFileSize
             , m_lastFileNumber((std::max)(maxFiles - 1, 0))
             , m_firstWrite(true)
         {
@@ -21,7 +21,7 @@ namespace plog
 #ifdef _WIN32
         RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
             : m_fileSize()
-            , m_maxFileSize((std::max)(maxFileSize, static_cast<size_t>(1000))) // set a lower limit for the maxFileSize
+            , m_maxFileSize((std::max)(static_cast<off_t>(maxFileSize), static_cast<off_t>(1000))) // set a lower limit for the maxFileSize
             , m_lastFileNumber((std::max)(maxFiles - 1, 0))
             , m_firstWrite(true)
         {
@@ -38,7 +38,7 @@ namespace plog
                 openLogFile();
                 m_firstWrite = false;
             }
-            else if (m_lastFileNumber > 0 && m_fileSize > m_maxFileSize && static_cast<size_t>(-1) != m_fileSize)
+            else if (m_lastFileNumber > 0 && m_fileSize > m_maxFileSize && -1 != m_fileSize)
             {
                 rollLogFiles();
             }
@@ -107,8 +107,8 @@ namespace plog
     private:
         util::Mutex     m_mutex;
         util::File      m_file;
-        size_t          m_fileSize;
-        const size_t    m_maxFileSize;
+        off_t           m_fileSize;
+        const off_t     m_maxFileSize;
         const int       m_lastFileNumber;
         util::nstring   m_fileExt;
         util::nstring   m_fileNameNoExt;
