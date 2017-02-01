@@ -37,7 +37,7 @@ int main()
 
     time_t timeDiff = (finishTime.millitm - startTime.millitm) + (finishTime.time - startTime.time) * 1000;
 
-    LOGI_(Console) << "Test finished: " << timeDiff * 1000. / kCount << " microsec per call";
+    LOGI_(Console) << "Test finished: " << static_cast<double>(timeDiff) * 1000 / kCount << " microsec per call";
 
     return 0;
 }
