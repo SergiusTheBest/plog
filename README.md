@@ -107,7 +107,7 @@ To start using plog you need to make 3 simple steps.
 ##Step 1: Adding includes
 At first your project needs to know about plog. For that you have to:
 
-1. Add `plog/inlcude` to the project include paths
+1. Add `plog/include` to the project include paths
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
 ##Step 2: Initialization
