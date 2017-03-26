@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 
 #ifdef _WIN32
+#   include <plog/WinApi.h>
 #   include <time.h>
 #   include <sys/timeb.h>
 #   include <io.h>
@@ -29,87 +30,6 @@
 
 namespace plog
 {
-#ifdef _WIN32
-    namespace winapi
-    {
-        typedef unsigned long DWORD;
-        typedef unsigned short WORD;
-        typedef unsigned int UINT;
-        typedef char* LPSTR;
-        typedef wchar_t* LPWSTR;
-        typedef const char* LPCSTR;
-        typedef const wchar_t* LPCWSTR;
-        typedef void* HANDLE;
-        typedef int BOOL;
-        typedef size_t ULONG_PTR;
-
-        const UINT kActiveCodePage = 0;
-        const UINT kUTF8CodePage = 65001;
-
-        struct CRITICAL_SECTION
-        {
-            void* DebugInfo;
-            long LockCount;
-            long RecursionCount;
-            HANDLE OwningThread;
-            HANDLE LockSemaphore;
-            ULONG_PTR SpinCount;
-        };
-
-        struct COORD
-        {
-            short X;
-            short Y;
-        };
-
-        struct SMALL_RECT
-        {
-            short Left;
-            short Top;
-            short Right;
-            short Bottom;
-        };
-
-        struct CONSOLE_SCREEN_BUFFER_INFO
-        {
-            COORD dwSize;
-            COORD dwCursorPosition;
-            WORD  wAttributes;
-            SMALL_RECT srWindow;
-            COORD dwMaximumWindowSize;
-        };
-
-        const DWORD kStdOutputHandle = static_cast<DWORD>(-11);
-
-        enum
-        {
-            kForegroundBlue = 0x0001,
-            kForegroundGreen = 0x0002,
-            kForegroundRed = 0x0004,
-            kForegroundIntensity = 0x0008,
-            kBackgroundBlue = 0x0010,
-            kBackgroundGreen = 0x0020,
-            kBackgroundRed = 0x0040,
-            kBackgroundIntensity = 0x0080
-        };
-
-        extern "C"
-        {
-            __declspec(dllimport) int __stdcall MultiByteToWideChar(UINT CodePage, DWORD dwFlags, LPCSTR lpMultiByteStr, int cbMultiByte, LPWSTR lpWideCharStr, int cchWideChar);
-            __declspec(dllimport) int __stdcall WideCharToMultiByte(UINT CodePage, DWORD dwFlags, LPCWSTR lpWideCharStr, int cchWideChar, LPSTR lpMultiByteStr, int cbMultiByte, const char* lpDefaultChar, BOOL* lpUsedDefaultChar);
-            __declspec(dllimport) DWORD __stdcall GetCurrentThreadId();
-            __declspec(dllimport) BOOL __stdcall MoveFileW(LPCWSTR lpExistingFileName, LPCWSTR lpNewFileName);
-            __declspec(dllimport) void __stdcall InitializeCriticalSection(CRITICAL_SECTION* lpCriticalSection);
-            __declspec(dllimport) void __stdcall EnterCriticalSection(CRITICAL_SECTION* lpCriticalSection);
-            __declspec(dllimport) void __stdcall LeaveCriticalSection(CRITICAL_SECTION* lpCriticalSection);
-            __declspec(dllimport) void __stdcall DeleteCriticalSection(CRITICAL_SECTION* lpCriticalSection);
-            __declspec(dllimport) HANDLE __stdcall GetStdHandle(DWORD nStdHandle);
-            __declspec(dllimport) BOOL __stdcall GetConsoleScreenBufferInfo(HANDLE hConsoleOutput, CONSOLE_SCREEN_BUFFER_INFO* lpConsoleScreenBufferInfo);
-            __declspec(dllimport) BOOL __stdcall SetConsoleTextAttribute(HANDLE hConsoleOutput, WORD wAttributes);
-        }
-    }
-#endif
-
     namespace util
     {
 #ifdef _WIN32
@@ -162,7 +82,7 @@ namespace plog
         inline unsigned int gettid()
         {
 #ifdef _WIN32
-            return winapi::GetCurrentThreadId();
+            return GetCurrentThreadId();
 #elif defined(__unix__)
             return static_cast<unsigned int>(::syscall(__NR_gettid));
 #elif defined(__APPLE__)
@@ -204,7 +124,7 @@ namespace plog
 
             if (!wstr.empty())
             {
-                int wlen = winapi::MultiByteToWideChar(winapi::kActiveCodePage, 0, str, static_cast<int>(len), &wstr[0], static_cast<int>(wstr.size()));
+                int wlen = MultiByteToWideChar(codePage::kActive, 0, str, static_cast<int>(len), &wstr[0], static_cast<int>(wstr.size()));
                 wstr.resize(wlen);
             }
 
@@ -217,7 +137,7 @@ namespace plog
 
             if (!str.empty())
             {
-                int len = winapi::WideCharToMultiByte(winapi::kUTF8CodePage, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], static_cast<int>(str.size()), 0, 0);
+                int len = WideCharToMultiByte(codePage::kUTF8, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], static_cast<int>(str.size()), 0, 0);
                 str.resize(len);
             }
 
@@ -366,7 +286,7 @@ namespace plog
             static int rename(const nchar* oldFilename, const nchar* newFilename)
             {
 #ifdef _WIN32
-                return winapi::MoveFileW(oldFilename, newFilename);
+                return MoveFileW(oldFilename, newFilename);
 #else
                 return ::rename(oldFilename, newFilename);
 #endif
@@ -382,7 +302,7 @@ namespace plog
             Mutex()
             {
 #ifdef _WIN32
-                winapi::InitializeCriticalSection(&m_sync);
+                InitializeCriticalSection(&m_sync);
 #else
                 ::pthread_mutex_init(&m_sync, 0);
 #endif
@@ -391,7 +311,7 @@ namespace plog
             ~Mutex()
             {
 #ifdef _WIN32
-                winapi::DeleteCriticalSection(&m_sync);
+                DeleteCriticalSection(&m_sync);
 #else
                 ::pthread_mutex_destroy(&m_sync);
 #endif
@@ -403,7 +323,7 @@ namespace plog
             void lock()
             {
 #ifdef _WIN32
-                winapi::EnterCriticalSection(&m_sync);
+                EnterCriticalSection(&m_sync);
 #else
                 ::pthread_mutex_lock(&m_sync);
 #endif
@@ -412,7 +332,7 @@ namespace plog
             void unlock()
             {
 #ifdef _WIN32
-                winapi::LeaveCriticalSection(&m_sync);
+                LeaveCriticalSection(&m_sync);
 #else
                 ::pthread_mutex_unlock(&m_sync);
 #endif
@@ -420,7 +340,7 @@ namespace plog
 
         private:
 #ifdef _WIN32
-            winapi::CRITICAL_SECTION m_sync;
+            CRITICAL_SECTION m_sync;
 #else
             pthread_mutex_t m_sync;
 #endif

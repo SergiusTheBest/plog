@@ -1,5 +1,6 @@
 #pragma once
 #include <plog/Appenders/ConsoleAppender.h>
+#include <plog/WinApi.h>
 
 namespace plog
 {
@@ -12,10 +13,10 @@ namespace plog
         {
             if (m_isatty)
             {
-                m_stdoutHandle = winapi::GetStdHandle(winapi::kStdOutputHandle);
+                m_stdoutHandle = GetStdHandle(stdHandle::kOutput);
 
-                winapi::CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
-                winapi::GetConsoleScreenBufferInfo(m_stdoutHandle, &csbiInfo);
+                CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
+                GetConsoleScreenBufferInfo(m_stdoutHandle, &csbiInfo);
 
                 m_originalAttr = csbiInfo.wAttributes;
             }
@@ -47,20 +48,20 @@ namespace plog
                 {
 #ifdef _WIN32
                 case fatal:
-                    winapi::SetConsoleTextAttribute(m_stdoutHandle, winapi::kForegroundRed | winapi::kForegroundGreen | winapi::kForegroundBlue | winapi::kForegroundIntensity | winapi::kBackgroundRed); // white on red background
+                    SetConsoleTextAttribute(m_stdoutHandle, foreground::kRed | foreground::kGreen | foreground::kBlue | foreground::kIntensity | background::kRed); // white on red background
                     break;
 
                 case error:
-                    winapi::SetConsoleTextAttribute(m_stdoutHandle, winapi::kForegroundRed | winapi::kForegroundIntensity | (m_originalAttr & 0xf0)); // red
+                    SetConsoleTextAttribute(m_stdoutHandle, foreground::kRed | foreground::kIntensity | (m_originalAttr & 0xf0)); // red
                     break;
 
                 case warning:
-                    winapi::SetConsoleTextAttribute(m_stdoutHandle, winapi::kForegroundRed | winapi::kForegroundGreen | winapi::kForegroundIntensity | (m_originalAttr & 0xf0)); // yellow
+                    SetConsoleTextAttribute(m_stdoutHandle, foreground::kRed | foreground::kGreen | foreground::kIntensity | (m_originalAttr & 0xf0)); // yellow
                     break;
 
                 case debug:
                 case verbose:
-                    winapi::SetConsoleTextAttribute(m_stdoutHandle, winapi::kForegroundGreen | winapi::kForegroundBlue | winapi::kForegroundIntensity | (m_originalAttr & 0xf0)); // cyan
+                    SetConsoleTextAttribute(m_stdoutHandle, foreground::kGreen | foreground::kBlue | foreground::kIntensity | (m_originalAttr & 0xf0)); // cyan
                     break;
 #else
                 case fatal:
@@ -91,7 +92,7 @@ namespace plog
             if (m_isatty)
             {
 #ifdef _WIN32
-                winapi::SetConsoleTextAttribute(m_stdoutHandle, m_originalAttr);
+                SetConsoleTextAttribute(m_stdoutHandle, m_originalAttr);
 #else
                 std::cout << "\x1B[0m\x1B[0K";
 #endif
@@ -101,8 +102,8 @@ namespace plog
     private:
         bool m_isatty;
 #ifdef _WIN32
-        winapi::HANDLE m_stdoutHandle;
-        winapi::WORD   m_originalAttr;
+        HANDLE m_stdoutHandle;
+        WORD   m_originalAttr;
 #endif
     };
 }
