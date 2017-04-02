@@ -52,16 +52,16 @@ namespace plog
                     break;
 
                 case error:
-                    SetConsoleTextAttribute(m_stdoutHandle, foreground::kRed | foreground::kIntensity | (m_originalAttr & 0xf0)); // red
+                    SetConsoleTextAttribute(m_stdoutHandle, static_cast<WORD>(foreground::kRed | foreground::kIntensity | (m_originalAttr & 0xf0))); // red
                     break;
 
                 case warning:
-                    SetConsoleTextAttribute(m_stdoutHandle, foreground::kRed | foreground::kGreen | foreground::kIntensity | (m_originalAttr & 0xf0)); // yellow
+                    SetConsoleTextAttribute(m_stdoutHandle, static_cast<WORD>(foreground::kRed | foreground::kGreen | foreground::kIntensity | (m_originalAttr & 0xf0))); // yellow
                     break;
 
                 case debug:
                 case verbose:
-                    SetConsoleTextAttribute(m_stdoutHandle, foreground::kGreen | foreground::kBlue | foreground::kIntensity | (m_originalAttr & 0xf0)); // cyan
+                    SetConsoleTextAttribute(m_stdoutHandle, static_cast<WORD>(foreground::kGreen | foreground::kBlue | foreground::kIntensity | (m_originalAttr & 0xf0))); // cyan
                     break;
 #else
                 case fatal:
