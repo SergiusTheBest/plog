@@ -1,13 +1,17 @@
 configuration:
-- Debug
-- Release
+  - Debug
+  - Release
 
 environment:
   matrix:
-    - CMAKE_GENERATOR: "Visual Studio 14 2015"
-    - CMAKE_GENERATOR: "Visual Studio 14 2015 Win64"
-    - CMAKE_GENERATOR: "Visual Studio 10 2010"
-    - CMAKE_GENERATOR: "Visual Studio 10 2010 Win64"
+    - generator: "Visual Studio 14 2015"
+    - generator: "Visual Studio 14 2015 Win64"
+    - generator: "Visual Studio 10 2010"
+    - generator: "Visual Studio 10 2010 Win64"
+    - generator: "MinGW Makefiles"
+      dialect: mingw
+    - generator: "MinGW Makefiles"
+      dialect: mingw-w64
 
 matrix:
   fast_finish: true
@@ -15,8 +19,13 @@ matrix:
 shallow_clone: true
 
 before_build:
-- cmd: cmake -Hsamples -Bbuild -G"%CMAKE_GENERATOR%"
+  # Workaround for CMake not wanting sh.exe on PATH for MinGW
+  - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
+  - if "%dialect%"=="mingw" set PATH=c:\MinGW\bin;%PATH%
+  - if "%dialect%"=="mingw-w64" set PATH=c:\msys64\mingw64\bin;%PATH%
+  - cmake -Hsamples -Bbuild -G"%generator%" -DCMAKE_BUILD_TYPE=%configuration%
 
-build:
-  project: build\Samples.sln
-  verbosity: minimal
+build_script:
+  - if "%generator:~0,6%"=="Visual" set CMAKE_BUILD_FLAGS=--config %configuration% -- /m /v:m
+  - if "%generator:~0,5%"=="MinGW" set CMAKE_BUILD_FLAGS=-- -j%NUMBER_OF_PROCESSORS%
+  - cmake --build build %CMAKE_BUILD_FLAGS%
