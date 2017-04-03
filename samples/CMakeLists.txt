@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
+if(POLICY CMP0063) #Honor visibility properties for all target types
+    cmake_policy(SET CMP0063 NEW)
+endif()
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 macro(checkObjCXX)
