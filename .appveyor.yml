@@ -27,5 +27,5 @@ before_build:
 
 build_script:
   - if "%generator:~0,6%"=="Visual" set CMAKE_BUILD_FLAGS=--config %configuration% -- /m /v:m
-  - if "%generator:~0,5%"=="MinGW" set CMAKE_BUILD_FLAGS=-- -j%NUMBER_OF_PROCESSORS%
+  - if "%generator:~0,5%"=="MinGW" set CMAKE_BUILD_FLAGS=-- -j
   - cmake --build build %CMAKE_BUILD_FLAGS%
