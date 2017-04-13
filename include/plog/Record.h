@@ -1,7 +1,6 @@
 #pragma once
-#include <sstream>
-#include <plog/Util.h>
 #include <plog/Severity.h>
+#include <plog/Util.h>
 
 namespace plog
 {

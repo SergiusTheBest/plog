@@ -1,6 +1,7 @@
 #pragma once
-#include <iostream>
+#include <plog/Appenders/IAppender.h>
 #include <plog/Util.h>
+#include <iostream>
 
 namespace plog
 {

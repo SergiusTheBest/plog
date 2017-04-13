@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cstring>
 #include <cstdio>
+#include <sstream>
 #include <fcntl.h>
 #include <sys/stat.h>
 
