@@ -945,7 +945,12 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 
 # Version history
 
-## Version 1.1.1 (TBD)
+## Version 1.1.2 (TBD)
+
+## Version 1.1.1 (17 Apr 2017)
+- Fixed #47: Update includes
+- Fixed #45, #13: Get rid of `windows.h` dependency
+- Fixed #40: Signed unsigned assignment warning
 - Fixed #39: Build warning on macOS 10.12 Sierra
 - New #36: Ability to check whether event log registry entry exists
 
