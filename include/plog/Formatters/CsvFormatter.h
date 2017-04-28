@@ -19,12 +19,12 @@ namespace plog
             util::localtime_s(&t, &record.getTime().time);
 
             util::nstringstream ss;
-            ss << t.tm_year + 1900 << "/" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mon + 1 << "/" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mday << ";";
-            ss << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_hour << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_min << ":" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_sec << "." << std::setfill(PLOG_NSTR('0')) << std::setw(3) << record.getTime().millitm << ";";
-            ss << severityToString(record.getSeverity()) << ";";
-            ss << record.getTid() << ";";
-            ss << record.getObject() << ";";
-            ss << record.getFunc() << "@" << record.getLine() << ";";
+            ss << t.tm_year + 1900 << PLOG_NSTR("/") << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mon + 1 << PLOG_NSTR("/") << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mday << PLOG_NSTR(";");
+            ss << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_hour << PLOG_NSTR(":") << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_min << PLOG_NSTR(":") << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_sec << PLOG_NSTR(".") << std::setfill(PLOG_NSTR('0')) << std::setw(3) << record.getTime().millitm << PLOG_NSTR(";");
+            ss << severityToString(record.getSeverity()) << PLOG_NSTR(";");
+            ss << record.getTid() << PLOG_NSTR(";");
+            ss << record.getObject() << PLOG_NSTR(";");
+            ss << record.getFunc() << PLOG_NSTR("@") << record.getLine() << PLOG_NSTR(";");
 
             util::nstring message = record.getMessage();
 
@@ -40,10 +40,10 @@ namespace plog
             while (!split.eof())
             {
                 std::getline(split, token, PLOG_NSTR('"'));
-                ss << "\"" << token << "\"";
+                ss << PLOG_NSTR("\"") << token << PLOG_NSTR("\"");
             }
 
-            ss << "\n";
+            ss << PLOG_NSTR("\n");
 
             return ss.str();
         }
