@@ -4,7 +4,7 @@
 
 #include <plog/Log.h>
 #include <plog/Appenders/EventLogAppender.h>
-#include <plog/Formatters/FuncMessageFormatter.h>
+#include <plog/Formatters/MessageOnlyFormatter.h>
 #include <iostream>
 
 using namespace std;
@@ -46,7 +46,7 @@ int main(int argc, const char* argv[])
     // Note: eventlog source must be registered prior to creating its appender.
     //
 
-    static plog::EventLogAppender<plog::FuncMessageFormatter> eventLogAppender(kEventSourceName);
+    static plog::EventLogAppender<plog::MessageOnlyFormatter> eventLogAppender(kEventSourceName);
     plog::init(plog::verbose, &eventLogAppender);
 
     LOG_VERBOSE << "This is a VERBOSE message";
