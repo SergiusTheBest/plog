@@ -990,9 +990,12 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 
 # Version history
 
-## Version 1.1.2 (TBD)
+## Version 1.1.3 (TBD)
+
+## Version 1.1.2 (02 May 2017)
 - New: Add [NativeEOLConverter](#nativeeolconverter)
 - New: Add [MessageOnlyFormatter](#messageonlyformatter)
+- New: Slightly increase log perfomance on Windows (about 9%).
 
 ## Version 1.1.1 (17 Apr 2017)
 - Fixed #47: Update includes
@@ -1020,7 +1023,7 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 - Fixed: Compatibility with old Visual Studio versions
 
 ## Version 1.0.1 (01 Nov 2015)
-- New: Add ColorConsoleAppender
+- New: Add [ColorConsoleAppender](#colorconsoleappender)
 - Fixed #6: Compatibility with [Mingw-w64](http://mingw-w64.org/)
 - Fixed #7: Log file not created if file name contains Unicode characters in Windows
 - Fixed #4: Flush stdout
