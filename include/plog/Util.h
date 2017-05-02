@@ -212,11 +212,11 @@ namespace plog
         class File : NonCopyable
         {
         public:
-            File() : m_file(-1)
+            File(bool binary = false) : m_file(NULL), m_binary(binary)
             {
             }
 
-            File(const nchar* fileName) : m_file(-1)
+            File(const nchar* fileName, bool binary = false) : m_file(NULL), m_binary(binary)
             {
                 open(fileName);
             }
@@ -228,23 +228,33 @@ namespace plog
 
             off_t open(const nchar* fileName)
             {
-#if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
-                m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY, SH_DENYWR, _S_IREAD | _S_IWRITE);
-#elif defined(_WIN32)
-                ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
+#if defined (_WIN32)
+				const nchar* mode = m_binary ? L"ab" : L"a";
 #else
-                m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+				const nchar* mode = m_binary ? "ab" : "a";
+#endif
+#if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
+                m_file = fopen(fileName, mode);
+#elif defined(_WIN32)
+                m_file = _wfsopen(fileName, mode, _SH_DENYNO);
+#else
+                m_file = fopen(fileName, mode);
 #endif
                 return seek(0, SEEK_END);
             }
 
             int write(const void* buf, size_t count)
             {
-#ifdef _WIN32
-                return m_file != -1 ? ::_write(m_file, buf, static_cast<unsigned int>(count)) : -1;
-#else
-                return m_file != -1 ? static_cast<int>(::write(m_file, buf, count)) : -1;
-#endif
+                if (m_file != NULL)
+                {
+                    size_t bytes_written = fwrite(buf, 1, static_cast<unsigned int>(count), m_file);
+                    fflush(m_file);
+                    return static_cast<int>(bytes_written);
+                }
+                else
+                {
+                    return -1;
+                }
             }
 
             template<class CharType>
@@ -255,23 +265,15 @@ namespace plog
 
             off_t seek(off_t offset, int whence)
             {
-#ifdef _WIN32
-                return m_file != -1 ? ::_lseek(m_file, offset, whence) : -1;
-#else
-                return m_file != -1 ? ::lseek(m_file, offset, whence) : -1;
-#endif
+                return m_file != NULL ? fseek(m_file, offset, whence) : -1;
             }
 
             void close()
             {
-                if (m_file != -1)
+                if (m_file != NULL)
                 {
-#ifdef _WIN32
-                    ::_close(m_file);
-#else
-                    ::close(m_file);
-#endif
-                    m_file = -1;
+                    fclose(m_file);
+                    m_file = NULL;
                 }
             }
 
@@ -294,7 +296,8 @@ namespace plog
             }
 
         private:
-            int m_file;
+            FILE* m_file;
+            bool m_binary;
         };
 
         class Mutex : NonCopyable
