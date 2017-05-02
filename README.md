@@ -674,7 +674,7 @@ public:
 [UTF8Converter](#utf8converter) is a default converter in plog. It converts string data to UTF-8 with BOM. 
 
 ### NativeEOLConverter
-This converter converts <LF> line endings to <CRLF> on Windows and do nothing on everything else. As a template parameter it accepts another converter that is called next (by default [UTF8Converter](#utf8converter)).
+This converter converts `<LF>` line endings to `<CRLF>` on Windows and do nothing on everything else. As a template parameter it accepts another converter that is called next (by default [UTF8Converter](#utf8converter)).
 
 ```cpp
 static plog::RollingFileAppender<plog::TxtFormatter, plog::NativeEOLConverter<> > fileAppender("NativeEOL.log", 8000, 3);
