@@ -25,6 +25,7 @@ Pretty powerful logging library in about 1000 lines of code [![Build Status](htt
     - [TxtFormatter](#txtformatter)
     - [CsvFormatter](#csvformatter)
     - [FuncMessageFormatter](#funcmessageformatter)
+    - [MessageOnlyFormatter](#messageonlyformatter)
   - [Converter](#converter)
     - [UTF8Converter](#utf8converter)
   - [Appender](#appender)
@@ -189,7 +190,7 @@ LOGF << "fatal";
 LOG(severity) << "msg";
 ```
 
-###  Conditional logging macros
+### Conditional logging macros
 These macros are used to do a conditional logging. They accept a condition as a parameter and perform logging if the condition is true.
 
 #### Long macros:
@@ -261,7 +262,7 @@ Sample:
 plog::get()->setMaxSeverity(plog::debug);
 ```
 
-##Custom initialization
+## Custom initialization
 Non-typical log cases require the use of custom initialization. It is done by the following `plog::init` function:
 
 ```cpp
@@ -298,7 +299,7 @@ Here the logger is initialized in the way when log messages are written to both 
 
 *Refer to [MultiAppender](samples/MultiAppender) for a complete sample.*
 
-##Multiple loggers
+## Multiple loggers
 Multiple [Loggers](#logger) can be used simultaneously each with their own separate configuration. The [Loggers](#logger) differ by their instance number (that is implemented as a template parameter). The default instance is zero. Initialization is done by the appropriate template `plog::init` functions:
 
 ```cpp
@@ -392,12 +393,10 @@ int main()
 ## Overview
 Plog is designed to be small but flexible, so it prefers templates to interface inheritance. All main entities are shown on the following UML diagram:
 
-![Plog class diagram](http://gravizo.com/g?@startuml;interface%20IAppender%20{;%20%20%20%20+write%28%29;};class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};class%20RollingFileAppender<Formatter,%20Converter>;class%20ConsoleAppender<Formatter>;class%20ColorConsoleAppender<Formatter>;class%20AndroidAppender<Formatter>;class%20EventLogAppender<Formatter>;class%20DebugOutputAppender<Formatter>;ConsoleAppender%20<|--%20ColorConsoleAppender;IAppender%20<|-u-%20Logger;IAppender%20<|--%20RollingFileAppender;IAppender%20<|--%20ConsoleAppender;IAppender%20<|--%20AndroidAppender;IAppender%20<|--%20EventLogAppender;IAppender%20<|--%20DebugOutputAppender;Logger%20"1"%20o--%20"0..n"%20IAppender;class%20CsvFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20TxtFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20FuncMessageFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20UTF8Converter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20convert%28%29;};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-file;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
+![Plog class diagram](http://gravizo.com/svg?@startuml;class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};package%20Appenders%20<<Frame>>%20{;%20%20%20%20interface%20IAppender%20{;%20%20%20%20%20%20%20%20+write%28%29;%20%20%20%20};%20%20%20%20;%20%20%20%20class%20RollingFileAppender<Formatter,%20Converter>;%20%20%20%20class%20ConsoleAppender<Formatter>;%20%20%20%20class%20ColorConsoleAppender<Formatter>;%20%20%20%20class%20AndroidAppender<Formatter>;%20%20%20%20class%20EventLogAppender<Formatter>;%20%20%20%20class%20DebugOutputAppender<Formatter>;%20%20%20%20ConsoleAppender%20<|--%20ColorConsoleAppender;%20%20%20%20IAppender%20<|-u-%20Logger;%20%20%20%20IAppender%20<|--%20RollingFileAppender;%20%20%20%20IAppender%20<|--%20ConsoleAppender;%20%20%20%20IAppender%20<|--%20AndroidAppender;%20%20%20%20IAppender%20<|--%20EventLogAppender;%20%20%20%20IAppender%20<|--%20DebugOutputAppender;%20%20%20%20;%20%20%20%20Logger%20"1"%20o--%20"0..n"%20IAppender;};package%20Formatters%20<<Frame>>%20{;%20%20%20%20class%20CsvFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};%20%20%20%20class%20TxtFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};%20%20%20%20class%20FuncMessageFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};%20%20%20%20class%20MessageOnlyFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};};package%20Converters%20<<Frame>>%20{;%20%20%20%20class%20UTF8Converter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20convert%28%29;%20%20%20%20};};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-file;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
 <!-- 
 @startuml
-interface IAppender {
-    +write();
-}
+@startuml
 
 class Logger<int instance> <<singleton>> {
     +addAppender();
@@ -408,41 +407,56 @@ class Logger<int instance> <<singleton>> {
     -appenders;
 }
 
-class RollingFileAppender<Formatter, Converter>
-class ConsoleAppender<Formatter>
-class ColorConsoleAppender<Formatter>
-class AndroidAppender<Formatter>
-class EventLogAppender<Formatter>
-class DebugOutputAppender<Formatter>
+package Appenders <<Frame>> {
+    interface IAppender {
+        +write();
+    }
+    
+    class RollingFileAppender<Formatter, Converter>
+    class ConsoleAppender<Formatter>
+    class ColorConsoleAppender<Formatter>
+    class AndroidAppender<Formatter>
+    class EventLogAppender<Formatter>
+    class DebugOutputAppender<Formatter>
 
-ConsoleAppender <|-- ColorConsoleAppender
-IAppender <|-u- Logger
-IAppender <|-- RollingFileAppender
-IAppender <|-- ConsoleAppender
-IAppender <|-- AndroidAppender
-IAppender <|-- EventLogAppender
-IAppender <|-- DebugOutputAppender
-
-Logger "1" o-- "0..n" IAppender
-
-class CsvFormatter {
-    {static} header();
-    {static} format();
+    ConsoleAppender <|-- ColorConsoleAppender
+    IAppender <|-u- Logger
+    IAppender <|-- RollingFileAppender
+    IAppender <|-- ConsoleAppender
+    IAppender <|-- AndroidAppender
+    IAppender <|-- EventLogAppender
+    IAppender <|-- DebugOutputAppender
+    
+    Logger "1" o-- "0..n" IAppender
 }
 
-class TxtFormatter {
-    {static} header();
-    {static} format();
+package Formatters <<Frame>> {
+    class CsvFormatter {
+        {static} header();
+        {static} format();
+    }
+
+    class TxtFormatter {
+        {static} header();
+        {static} format();
+    }
+
+    class FuncMessageFormatter {
+        {static} header();
+        {static} format();
+    }
+
+    class MessageOnlyFormatter {
+        {static} header();
+        {static} format();
+    }
 }
 
-class FuncMessageFormatter {
-    {static} header();
-    {static} format();
-}
-
-class UTF8Converter {
-    {static} header();
-    {static} convert();
+package Converters <<Frame>> {
+    class UTF8Converter {
+        {static} header();
+        {static} convert();
+    }
 }
 
 enum Severity {
@@ -496,7 +510,7 @@ The log data flow is shown below:
 @enduml
 -->
 
-##Logger
+## Logger
 [Logger](#logger) is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. [Logger](#logger) can act as [Appender](#appender) for another [Logger](#logger) because it implements `IAppender` interface. Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
 
 ```cpp
@@ -625,6 +639,18 @@ Object::Object@8:
 Object::~Object@13: 
 ```
 
+### MessageOnlyFormatter
+Use this formatter when you're interested only in a log message. 
+
+```
+fatal
+error
+info
+warning
+debug
+This is a message with "quotes"!
+```
+
 ## Converter
 [Converter](#converter) is responsible for conversion of [Formatter](#formatter) output data to a raw buffer (represented as `std::string`). It is used by [RollingFileAppender](#rollingfileappender) to perform a conversion before writing to a file. There is no base class for converters, they are implemented as classes with static functions `convert` and `header`: 
 
@@ -642,7 +668,7 @@ public:
 ### UTF8Converter
 [UTF8Converter](#utf8converter) is the only converter available in plog out of the box. It converts string data to UTF-8 with BOM. 
 
-##Appender
+## Appender
 [Appender](#appender) uses [Formatter](#formatter) and [Converter](#converter) to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must implement `IAppender` interface (the only interface in plog):
 
 ```cpp
@@ -946,6 +972,7 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 # Version history
 
 ## Version 1.1.2 (TBD)
+- New: Add [MessageOnlyFormatter](#messageonlyformatter)
 
 ## Version 1.1.1 (17 Apr 2017)
 - Fixed #47: Update includes
