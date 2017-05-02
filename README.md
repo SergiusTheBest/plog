@@ -937,20 +937,23 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 
 |Sample|Description|
 |------|-----------|
-|[Android](samples/Android)|Shows how to use the android-specific appender.|
+|[Android](samples/Android)|Shows how to use [AndroidAppender](#androidappender).|
 |[Chained](samples/Chained)|Shows how to chain a logger in a shared library with the main logger (route messages).|
-|[Library](samples/Library)|Shows plog usage in static libraries.|
-|[Hello](samples/Hello)|A minimal introduction sample, shows the basic 3 steps to start using plog.|
-|[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
-|[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
-|[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
-|[Demo](samples/Demo)|Demonstrates log stream abilities, prints various types of messages.|
-|[ColorConsole](samples/ColorConsole)|Shows how to use a color console appender.|
+|[ColorConsole](samples/ColorConsole)|Shows how to use [ColorConsoleAppender](#colorconsoleappender).|
 |[CustomAppender](samples/CustomAppender)|Shows how to implement a custom appender that stores log messages in memory.|
 |[CustomFormatter](samples/CustomFormatter)|Shows how to implement a custom formatter.|
 |[CustomConverter](samples/CustomConverter)|Shows how to implement a custom converter that encrypts log messages.|
 |[CustomType](samples/CustomType)|Shows how to print a custom type to the log stream.|
+|[DebugOutput](samples/DebugOutput)|Shows how to use [DebugOutputAppender](#debugoutputappender) to write to the windows debug output.|
+|[Demo](samples/Demo)|Demonstrates log stream abilities, prints various types of messages.|
+|[EventLog](samples/EventLog)|Shows how to use [EventLogAppender](#eventlogappender) to write to the windows event log.|
 |[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple logger instances (useful for big projects).|
+|[Hello](samples/Hello)|A minimal introduction sample, shows the basic 3 steps to start using plog.|
+|[Library](samples/Library)|Shows plog usage in static libraries.|
+|[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
+|[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
+|[NativeEOL](samples/NativeEOL)|Shows how to use [NativeEOLConverter](#nativeeolconverter).|
+|[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
 |[Performance](samples/Performance)|Measures time per a log call.|
 
 # References
