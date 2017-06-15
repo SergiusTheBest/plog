@@ -13,7 +13,7 @@ namespace plog
             return std::string(kBOM) + convert(str);
         }
 
-#ifdef WIN32
+#ifdef _WIN32
         static std::string convert(const util::nstring& str)
         {
             return util::toUTF8(str);
