@@ -51,9 +51,9 @@ int main()
 #endif
 
 #if PLOG_ENABLE_WCHAR_INPUT
-    LOG_DEBUG << L"wchar: Cat - котэ";
-    LOG_DEBUG << std::wstring(L"wchar: test - тест");
-    LOG_DEBUG << L'wchar: ы';
+    LOG_DEBUG << L"Cat - котэ";
+    LOG_DEBUG << std::wstring(L"test - тест");
+    LOG_DEBUG << L'ы';
 #endif
 
     // Multiline.
