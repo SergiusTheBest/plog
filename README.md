@@ -841,7 +841,7 @@ By default all log files are stored in UTF-8 with BOM thanks to [UTF8Converter](
 
 ## Wide string support
 
-Whether `wchar_t`, `wchar_t*`, `std::wstring` can be streamed to log messages or not is controlled by PLOG_ENABLE_WCHAR_INPUT macro. Set it to a non-zero value to enable wide string support. By default wide string support is enabled for Windows and disabled for all non-Windows systems.
+Whether `wchar_t`, `wchar_t*`, `std::wstring` can be streamed to log messages or not is controlled by `PLOG_ENABLE_WCHAR_INPUT` macro. Set it to a non-zero value to enable wide string support. By default wide string support is enabled for Windows and disabled for all non-Windows systems.
 
 *Note: wide string support requires linking to `iconv` on macOS.*
 
