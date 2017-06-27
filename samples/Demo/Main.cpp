@@ -37,18 +37,24 @@ int main()
 
     // Null strings are safe.
     LOG_DEBUG << static_cast<char*>(NULL);
-    LOG_DEBUG << static_cast<wchar_t*>(NULL);
     LOG_DEBUG << static_cast<const char*>(NULL);
+
+#if PLOG_ENABLE_WCHAR_INPUT
+    LOG_DEBUG << static_cast<wchar_t*>(NULL);
     LOG_DEBUG << static_cast<const wchar_t*>(NULL);
+#endif
 
     // Plog handles unicode and std::string/wstring.
 #ifndef _WIN32 // On Windows the following code produces a warning C4566 if the codepage is not Cyrillic.
     LOG_DEBUG << "Cat - котэ";
     LOG_DEBUG << std::string("test - тест");
 #endif
-    LOG_DEBUG << L"Cat - котэ";
-    LOG_DEBUG << std::wstring(L"test - тест");
-    LOG_DEBUG << L'ы';
+
+#if PLOG_ENABLE_WCHAR_INPUT
+    LOG_DEBUG << L"wchar: Cat - котэ";
+    LOG_DEBUG << std::wstring(L"wchar: test - тест");
+    LOG_DEBUG << L'wchar: ы';
+#endif
 
     // Multiline.
     LOG_INFO << "This\nis\na" << std::endl << "multiline\nmessage!";

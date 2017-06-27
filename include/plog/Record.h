@@ -27,7 +27,7 @@ namespace plog
             plog::detail::operator<<(stream, data.c_str());
         }
 
-#ifndef __ANDROID__
+#if PLOG_ENABLE_WCHAR_INPUT
         inline void operator<<(util::nstringstream& stream, const wchar_t* data)
         {
             data = data ? data : L"(null)";
@@ -64,7 +64,7 @@ namespace plog
             return *this << str;
         }
 
-#ifndef __ANDROID__
+#if PLOG_ENABLE_WCHAR_INPUT
         Record& operator<<(wchar_t data)
         {
             wchar_t str[] = { data, 0 };

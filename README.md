@@ -42,6 +42,7 @@ Pretty powerful logging library in about 1000 lines of code [![Build Status](htt
   - [Automatic 'this' pointer capture](#automatic-this-pointer-capture)
   - [Headers to include](#headers-to-include)
   - [Unicode](#unicode)
+  - [Wide string support](#wide-string-support)
   - [Performance](#performance)
 - [Extending](#extending)
   - [Custom data type](#custom-data-type)
@@ -838,7 +839,11 @@ Internally plog uses `nstring`, `nstringstream` and `nchar` ('n' for native) tha
 
 By default all log files are stored in UTF-8 with BOM thanks to [UTF8Converter](#utf8converter).
 
-*Note: on Android wide string support in plog is disabled.*
+## Wide string support
+
+Whether `wchar_t`, `wchar_t*`, `std::wstring` can be streamed to log messages or not is controlled by PLOG_ENABLE_WCHAR_INPUT macro. Set it to a non-zero value to enable wide string support. By default wide string support is enabled for Windows and disabled for all non-Windows systems.
+
+*Note: wide string support requires linking to `iconv` on macOS.*
 
 ## Performance
 Plog is not using any asynchronous techniques so it may slow down your application on large volumes of log messages. 
@@ -995,7 +1000,7 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 ## Version 1.1.2 (02 May 2017)
 - New: Add [NativeEOLConverter](#nativeeolconverter)
 - New: Add [MessageOnlyFormatter](#messageonlyformatter)
-- New: Slightly increase log perfomance on Windows (about 9%).
+- New: Slightly increase log performance on Windows (about 9%).
 
 ## Version 1.1.1 (17 Apr 2017)
 - Fixed #47: Update includes

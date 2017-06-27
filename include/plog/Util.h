@@ -6,6 +6,14 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#ifndef PLOG_ENABLE_WCHAR_INPUT
+#   ifdef _WIN32
+#       define PLOG_ENABLE_WCHAR_INPUT 1
+#   else
+#       define PLOG_ENABLE_WCHAR_INPUT 0
+#   endif
+#endif
+
 #ifdef _WIN32
 #   include <plog/WinApi.h>
 #   include <time.h>
@@ -17,7 +25,7 @@
 #   include <sys/syscall.h>
 #   include <sys/time.h>
 #   include <pthread.h>
-#   ifndef __ANDROID__
+#   if PLOG_ENABLE_WCHAR_INPUT
 #       include <iconv.h>
 #   endif
 #endif
@@ -93,7 +101,7 @@ namespace plog
 #endif
         }
 
-#if !defined(__ANDROID__) && !defined(_WIN32)
+#if PLOG_ENABLE_WCHAR_INPUT && !defined(_WIN32)
         inline std::string toNarrow(const wchar_t* wstr)
         {
             size_t wlen = ::wcslen(wstr);

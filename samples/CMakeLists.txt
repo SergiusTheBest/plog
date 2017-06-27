@@ -48,6 +48,15 @@ set_target_properties(plog PROPERTIES FOLDER Include)
 add_executable(Demo Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp)
 set_target_properties(Demo PROPERTIES FOLDER Samples)
 
+if(NOT WIN32)
+    add_executable(DemoWchar Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp)
+    set_target_properties(DemoWchar PROPERTIES FOLDER Samples)
+    set_target_properties(DemoWchar PROPERTIES COMPILE_FLAGS "-DPLOG_ENABLE_WCHAR_INPUT=1")
+    if(APPLE)
+        target_link_libraries(DemoWchar -liconv)
+    endif()
+endif()
+
 add_executable(MultiAppender MultiAppender/Main.cpp)
 set_target_properties(MultiAppender PROPERTIES FOLDER Samples)
 
