@@ -140,13 +140,13 @@ namespace plog
             return wstr;
         }
 
-        inline std::string toUTF8(const std::wstring& wstr)
+        inline std::string toNarrow(const std::wstring& wstr, long page)
         {
             std::string str(wstr.size() * sizeof(wchar_t), 0);
 
             if (!str.empty())
             {
-                int len = WideCharToMultiByte(codePage::kUTF8, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], static_cast<int>(str.size()), 0, 0);
+                int len = WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], static_cast<int>(str.size()), 0, 0);
                 str.resize(len);
             }
 

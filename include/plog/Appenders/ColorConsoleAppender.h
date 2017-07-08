@@ -9,24 +9,18 @@ namespace plog
     {
     public:
 #ifdef _WIN32
-        ColorConsoleAppender() : m_isatty(!!_isatty(_fileno(stdout))), m_stdoutHandle(), m_originalAttr()
+        ColorConsoleAppender() : m_originalAttr()
         {
-            if (m_isatty)
+            if (this->m_isatty)
             {
-                m_stdoutHandle = GetStdHandle(stdHandle::kOutput);
-
                 CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
-                GetConsoleScreenBufferInfo(m_stdoutHandle, &csbiInfo);
+                GetConsoleScreenBufferInfo(this->m_stdoutHandle, &csbiInfo);
 
                 m_originalAttr = csbiInfo.wAttributes;
             }
         }
 #else
-        ColorConsoleAppender() : m_isatty(!!::isatty(::fileno(stdout))) {}
-#endif
-
-#ifdef __BORLANDC__
-        static int _isatty(int fd) { return ::isatty(fd); }
+        ColorConsoleAppender() {}
 #endif
 
         virtual void write(const Record& record)
@@ -42,26 +36,26 @@ namespace plog
     private:
         void setColor(Severity severity)
         {
-            if (m_isatty)
+            if (this->m_isatty)
             {
                 switch (severity)
                 {
 #ifdef _WIN32
                 case fatal:
-                    SetConsoleTextAttribute(m_stdoutHandle, foreground::kRed | foreground::kGreen | foreground::kBlue | foreground::kIntensity | background::kRed); // white on red background
+                    SetConsoleTextAttribute(this->m_stdoutHandle, foreground::kRed | foreground::kGreen | foreground::kBlue | foreground::kIntensity | background::kRed); // white on red background
                     break;
 
                 case error:
-                    SetConsoleTextAttribute(m_stdoutHandle, static_cast<WORD>(foreground::kRed | foreground::kIntensity | (m_originalAttr & 0xf0))); // red
+                    SetConsoleTextAttribute(this->m_stdoutHandle, static_cast<WORD>(foreground::kRed | foreground::kIntensity | (m_originalAttr & 0xf0))); // red
                     break;
 
                 case warning:
-                    SetConsoleTextAttribute(m_stdoutHandle, static_cast<WORD>(foreground::kRed | foreground::kGreen | foreground::kIntensity | (m_originalAttr & 0xf0))); // yellow
+                    SetConsoleTextAttribute(this->m_stdoutHandle, static_cast<WORD>(foreground::kRed | foreground::kGreen | foreground::kIntensity | (m_originalAttr & 0xf0))); // yellow
                     break;
 
                 case debug:
                 case verbose:
-                    SetConsoleTextAttribute(m_stdoutHandle, static_cast<WORD>(foreground::kGreen | foreground::kBlue | foreground::kIntensity | (m_originalAttr & 0xf0))); // cyan
+                    SetConsoleTextAttribute(this->m_stdoutHandle, static_cast<WORD>(foreground::kGreen | foreground::kBlue | foreground::kIntensity | (m_originalAttr & 0xf0))); // cyan
                     break;
 #else
                 case fatal:
@@ -89,10 +83,10 @@ namespace plog
 
         void resetColor()
         {
-            if (m_isatty)
+            if (this->m_isatty)
             {
 #ifdef _WIN32
-                SetConsoleTextAttribute(m_stdoutHandle, m_originalAttr);
+                SetConsoleTextAttribute(this->m_stdoutHandle, m_originalAttr);
 #else
                 std::cout << "\x1B[0m\x1B[0K";
 #endif
@@ -100,9 +94,7 @@ namespace plog
         }
 
     private:
-        bool m_isatty;
 #ifdef _WIN32
-        HANDLE m_stdoutHandle;
         WORD   m_originalAttr;
 #endif
     };
