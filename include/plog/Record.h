@@ -2,6 +2,10 @@
 #include <plog/Severity.h>
 #include <plog/Util.h>
 
+#ifdef __cplusplus_cli
+#include <vcclr.h>  // For PtrToStringChars
+#endif
+
 namespace plog
 {
     namespace detail
@@ -90,6 +94,14 @@ namespace plog
 #else
             return *this << data.toStdString();
 #endif
+        }
+#endif
+
+#ifdef __cplusplus_cli
+        Record& operator<<(System::String^ data)
+        {
+            cli::pin_ptr<const System::Char> ptr = PtrToStringChars(data);
+            return *this << static_cast<const wchar_t*>(ptr);
         }
 #endif
 

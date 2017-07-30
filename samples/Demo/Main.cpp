@@ -35,6 +35,12 @@ int main()
     LOG_INFO << "This is a float: " << 1.2345f;
     LOG_INFO << "This is a double: " << std::setprecision(15) << 1.234512345;
 
+    // Managed string.
+#ifdef __cplusplus_cli
+    System::String^ managedStr = "This is a managed string";
+    LOG_INFO << managedStr;
+#endif
+
     // Null strings are safe.
     LOG_DEBUG << static_cast<char*>(NULL);
     LOG_DEBUG << static_cast<const char*>(NULL);

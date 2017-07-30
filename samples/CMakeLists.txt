@@ -31,6 +31,7 @@ endif ()
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX")
+    string(REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 elseif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wconversion -pedantic -Werror")
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -47,6 +48,12 @@ set_target_properties(plog PROPERTIES FOLDER Include)
 
 add_executable(Demo Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp)
 set_target_properties(Demo PROPERTIES FOLDER Samples)
+
+if(MSVC)
+    add_executable(DemoManaged Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp)
+    set_target_properties(DemoManaged PROPERTIES FOLDER Samples)
+    set_property(TARGET DemoManaged PROPERTY COMPILE_FLAGS "/clr /EHa")
+endif()
 
 if(NOT WIN32)
     add_executable(DemoWchar Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp)
