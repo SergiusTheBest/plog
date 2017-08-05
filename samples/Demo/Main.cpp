@@ -73,6 +73,16 @@ int main()
     LOG_DEBUG_IF(var != 0) << "You shouldn't see this message";
     LOG_DEBUG_IF(var == 0) << "This is a conditional log message";
 
+    // Executed only on log level >= debug.
+    IF_LOG(plog::debug) var = 5; // one line
+    IF_LOG(plog::debug) // block
+    {
+        var++;
+    }
+
+    // Log macros don't break then-else clause without braces.
+    if (var == 0) LOGI << "then clause (condition is false, so it is skipped)"; else LOGI << "else clase (should be visible)";
+
     // Log in a class (capture this pointer, c++ function names).
     MyClass obj;
     obj.method();
