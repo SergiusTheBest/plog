@@ -49,7 +49,7 @@ set_target_properties(plog PROPERTIES FOLDER Include)
 add_executable(Demo Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp)
 set_target_properties(Demo PROPERTIES FOLDER Samples)
 
-if(MSVC)
+if(MSVC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 17.0) # Visual Studio 2012 and higher
     add_executable(DemoManaged Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp)
     set_target_properties(DemoManaged PROPERTIES FOLDER Samples)
     set_property(TARGET DemoManaged PROPERTY COMPILE_FLAGS "/clr /EHa")
