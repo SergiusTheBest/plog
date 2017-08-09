@@ -136,6 +136,8 @@ enum Severity
 };
 ```
 
+*Note: messages with severity level `none` will be always printed.*
+
 The log format is determined automatically by `fileName` file extension:
 
 - .csv => [CSV format](#csvformatter)
@@ -173,6 +175,7 @@ LOG_INFO << "info";
 LOG_WARNING << "warning";
 LOG_ERROR << "error";
 LOG_FATAL << "fatal";
+LOG_NONE << "none";
 ```
 
 #### Short macros:
@@ -184,6 +187,7 @@ LOGI << "info";
 LOGW << "warning";
 LOGE << "error";
 LOGF << "fatal";
+LOGN << "none";
 ```
 
 #### Function-style macros:
@@ -204,6 +208,7 @@ LOG_INFO_IF(cond) << "info";
 LOG_WARNING_IF(cond) << "warning";
 LOG_ERROR_IF(cond) << "error";
 LOG_FATAL_IF(cond) << "fatal";
+LOG_NONE_IF(cond) << "none";
 ```
 
 #### Short macros:
@@ -215,6 +220,7 @@ LOGI_IF(cond) << "info";
 LOGW_IF(cond) << "warning";
 LOGE_IF(cond) << "error";
 LOGF_IF(cond) << "fatal";
+LOGN_IF(cond) << "none";
 ```
 
 #### Function-style macros:
@@ -782,7 +788,8 @@ Stream output in plog has several improvements over the standard `std::ostream`:
 - handles wide chars/strings: `wchar_t`, `wchar_t*`, `std::wstring`
 - handles `NULL` values for C-strings: `char*` and `wchar_t*`
 - implicitly casts objects to: `std::string` and `std::wstring` (if they have an appropriate cast operator)
-- supports QString (you need to include Qt headers before plog)
+- supports `QString` (you need to include Qt headers before plog)
+- supports managed C++ `System::String^`
 
 ## Automatic 'this' pointer capture
 'This' pointer is captured automatically to log data and can be printed by [CsvFormatter](#csvformatter). Unfortunately this feature is supported only on msvc 2010 and higher.
@@ -994,15 +1001,17 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
 
 # Version history
+
+## Version 1.1.4 (TBD)
+
+## Version 1.1.3 (09 Aug 2017)
 - New: Introduce `PLOG_ENABLE_WCHAR_INPUT` macro to control wide string support
-- New #63: Add support for managed `System::String^`
+- New #63: Add support for managed C++ `System::String^`
 - New #61: Add missing macros for logging with severity NONE
 - Fix #59: Unable to build [NativeEOLConverter](#nativeeolconverter)/[UTF8Converter](#utf8converter) using Visual Studio
 - Fix #58: Use WriteConsoleW instead of global setlocale for writing unicode into windows console
 - Fix #55: Mention about linking to `iconv` on macOS
 - Fix: `IF_LOG` macro didn't work for curly braces blocks
-
-## Version 1.1.3 (TBD)
 
 ## Version 1.1.2 (02 May 2017)
 - New: Add [NativeEOLConverter](#nativeeolconverter)
@@ -1020,8 +1029,8 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 - Fix #34: Introduce binary compatible interface to Record (WARNING: this is not compatible with 1.0.x version in [Chained mode](#chained-loggers), so don't mix 1.1.x and 1.0.x)
 
 ## Version 1.0.2 (19 Nov 2016)
-- New #11: Default instance can be set via PLOG_DEFAULT_INSTANCE
-- New #30: Support for QString
+- New #11: Default instance can be set via `PLOG_DEFAULT_INSTANCE`
+- New #30: Support for `QString`
 - New: Support for C++Builder
 - New #15: `severityFromString` function
 - New #21: Capture source file name (disabled by default)
