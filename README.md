@@ -994,6 +994,13 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
 
 # Version history
+- New: Introduce `PLOG_ENABLE_WCHAR_INPUT` macro to control wide string support
+- New #63: Add support for managed `System::String^`
+- New #61: Add missing macros for logging with severity NONE
+- Fix #59: Unable to build [NativeEOLConverter](#nativeeolconverter)/[UTF8Converter](#utf8converter) using Visual Studio
+- Fix #58: Use WriteConsoleW instead of global setlocale for writing unicode into windows console
+- Fix #55: Mention about linking to `iconv` on macOS
+- Fix: `IF_LOG` macro didn't work for curly braces blocks
 
 ## Version 1.1.3 (TBD)
 
@@ -1003,10 +1010,10 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 - New: Slightly increase log performance on Windows (about 9%).
 
 ## Version 1.1.1 (17 Apr 2017)
-- Fixed #47: Update includes
-- Fixed #45, #13: Get rid of `windows.h` dependency
-- Fixed #40: Signed unsigned assignment warning
-- Fixed #39: Build warning on macOS 10.12 Sierra
+- Fix #47: Update includes
+- Fix #45, #13: Get rid of `windows.h` dependency
+- Fix #40: Signed unsigned assignment warning
+- Fix #39: Build warning on macOS 10.12 Sierra
 - New #36: Ability to check whether event log registry entry exists
 
 ## Version 1.1.0 (20 Nov 2016)
@@ -1020,19 +1027,19 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 - New #21: Capture source file name (disabled by default)
 - New #33: Add [DebugOutputAppender](#debugoutputappender)
 - New #32: Add [EventLogAppender](#eventlogappender)
-- Fixed #12: Crash on processing Obj-C function name
-- Fixed #17: Compatibility with [MinGW](http://www.mingw.org/)
-- Fixed #27: IF_LOG_ macro in if/else leads to miss else branch
-- Fixed #18, #29: Thread safety for [ConsoleAppender](#consoleappender)/[ColorConsoleAppender](#colorconsoleappender)
-- Fixed #31: Support for stream manipulators like std::endl
-- Fixed: Compatibility with old Visual Studio versions
+- Fix #12: Crash on processing Obj-C function name
+- Fix #17: Compatibility with [MinGW](http://www.mingw.org/)
+- Fix #27: `IF_LOG_` macro in if/else leads to miss else branch
+- Fix #18, #29: Thread safety for [ConsoleAppender](#consoleappender)/[ColorConsoleAppender](#colorconsoleappender)
+- Fix #31: Support for stream manipulators like std::endl
+- Fix: Compatibility with old Visual Studio versions
 
 ## Version 1.0.1 (01 Nov 2015)
 - New: Add [ColorConsoleAppender](#colorconsoleappender)
-- Fixed #6: Compatibility with [Mingw-w64](http://mingw-w64.org/)
-- Fixed #7: Log file not created if file name contains Unicode characters in Windows
-- Fixed #4: Flush stdout
-- Fixed #3: IntelliSense error: expected an identifier
+- Fix #6: Compatibility with [Mingw-w64](http://mingw-w64.org/)
+- Fix #7: Log file not created if file name contains Unicode characters in Windows
+- Fix #4: Flush stdout
+- Fix #3: IntelliSense error: expected an identifier
 
 ## Version 1.0.0 (19 May 2015)
 - Initial public release
