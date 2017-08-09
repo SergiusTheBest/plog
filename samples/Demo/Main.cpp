@@ -21,6 +21,7 @@ int main()
     LOG_WARNING << "This is a WARNING message";
     LOG_ERROR << "This is an ERROR message";
     LOG_FATAL << "This is a FATAL message";
+    LOG_NONE << "This is a NONE message";
 
     // Integers demo.
     LOG_INFO << "This is a bool: " << std::boolalpha << true;
