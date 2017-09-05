@@ -12,7 +12,7 @@ namespace plog
         bool isCsv(const util::nchar* fileName)
         {
             const util::nchar* dot = util::findExtensionDot(fileName);
-#ifdef _WIN32
+#if defined(_WIN32) && PLOG_ENABLE_WCHAR_INPUT
             return dot && 0 == std::wcscmp(dot, L".csv");
 #else
             return dot && 0 == std::strcmp(dot, ".csv");
@@ -68,7 +68,7 @@ namespace plog
     //////////////////////////////////////////////////////////////////////////
     // CHAR variants for Windows
 
-#ifdef _WIN32
+#if defined(_WIN32) && PLOG_ENABLE_WCHAR_INPUT
     template<class Formatter, int instance>
     inline Logger<instance>& init(Severity maxSeverity, const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
     {

@@ -33,7 +33,7 @@ namespace plog
     protected:
         void writestr(const util::nstring& str)
         {
-#ifdef _WIN32
+#if defined(_WIN32) && PLOG_ENABLE_WCHAR_INPUT
             if (m_isatty)
             {
                 WriteConsoleW(m_stdoutHandle, str.c_str(), static_cast<DWORD>(str.size()), NULL, NULL);
