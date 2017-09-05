@@ -13,7 +13,7 @@ namespace plog
         //////////////////////////////////////////////////////////////////////////
         // Stream output operators as free functions
 
-        inline void operator<<(util::nstringstream& stream, const char* data)
+        inline void operator<<(util::nostringstream& stream, const char* data)
         {
             data = data ? data : "(null)";
 
@@ -26,24 +26,24 @@ namespace plog
 #endif
         }
 
-        inline void operator<<(util::nstringstream& stream, const std::string& data)
+        inline void operator<<(util::nostringstream& stream, const std::string& data)
         {
             plog::detail::operator<<(stream, data.c_str());
         }
 
 #if PLOG_ENABLE_WCHAR_INPUT
-        inline void operator<<(util::nstringstream& stream, const wchar_t* data)
+        inline void operator<<(util::nostringstream& stream, const wchar_t* data)
         {
             data = data ? data : L"(null)";
 
-#ifdef _WIN32
+#   ifdef _WIN32
             std::operator<<(stream, data);
-#else
+#   else
             std::operator<<(stream, util::toNarrow(data));
-#endif
+#   endif
         }
 
-        inline void operator<<(util::nstringstream& stream, const std::wstring& data)
+        inline void operator<<(util::nostringstream& stream, const std::wstring& data)
         {
             plog::detail::operator<<(stream, data.c_str());
         }
@@ -165,7 +165,7 @@ namespace plog
         const unsigned int      m_tid;
         const void* const       m_object;
         const size_t            m_line;
-        util::nstringstream     m_message;
+        util::nostringstream    m_message;
         const char* const       m_func;
         const char* const       m_file;
         mutable std::string     m_funcStr;

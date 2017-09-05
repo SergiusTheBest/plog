@@ -16,7 +16,7 @@ namespace plog
 
         static util::nstring format(const Record& record) // This method returns a string from a record.
         {
-            util::nstringstream ss;
+            util::nostringstream ss;
             ss << record.getMessage() << "\n"; // Produce a simple string with a log message.
 
             return ss.str();

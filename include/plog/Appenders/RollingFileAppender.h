@@ -89,7 +89,7 @@ namespace plog
 
         util::nstring buildFileName(int fileNumber = 0)
         {
-            util::nstringstream ss;
+            util::nostringstream ss;
             ss << m_fileNameNoExt;
 
             if (fileNumber > 0)

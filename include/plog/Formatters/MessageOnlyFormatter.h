@@ -14,7 +14,7 @@ namespace plog
 
         static util::nstring format(const Record& record)
         {
-            util::nstringstream ss;
+            util::nostringstream ss;
             ss << record.getMessage() << PLOG_NSTR("\n");
 
             return ss.str();

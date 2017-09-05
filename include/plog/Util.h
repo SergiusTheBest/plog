@@ -43,11 +43,13 @@ namespace plog
     {
 #ifdef _WIN32
         typedef std::wstring nstring;
-        typedef std::wstringstream nstringstream;
+        typedef std::wostringstream nostringstream;
+        typedef std::wistringstream nistringstream;
         typedef wchar_t nchar;
 #else
         typedef std::string nstring;
-        typedef std::stringstream nstringstream;
+        typedef std::ostringstream nostringstream;
+        typedef std::istringstream nistringstream;
         typedef char nchar;
 #endif
 
