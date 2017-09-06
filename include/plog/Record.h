@@ -73,6 +73,12 @@ namespace plog
                 enum { value = false };
             };
 
+            template <class Stream, size_t N>
+            struct isStreamable<const wchar_t[N], Stream>
+            {
+                enum { value = false };
+            };
+
             template<bool B, class T = void>
             struct enableIf {};
 
