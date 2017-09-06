@@ -4,6 +4,7 @@
 
 #include <plog/Log.h>
 #include "MyClass.h"
+#include "Customer.h"
 
 int main()
 {
@@ -93,6 +94,10 @@ int main()
 
     // Implicit cast to string.
     LOG_INFO << obj;
+
+    // ostream operator<< (on Windows wostream operator<< has priority but not required)
+    Customer customer = { 10, "John" };
+    LOG_INFO << customer;
 
     return 0;
 }

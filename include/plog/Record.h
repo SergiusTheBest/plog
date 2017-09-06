@@ -8,6 +8,30 @@
 
 namespace plog
 {
+    namespace meta
+    {
+        template<class T, class Stream>
+        inline char operator<<(Stream&, const T&);
+
+        template <class T, class Stream>
+        struct isStreamable
+        {
+            enum { value = sizeof(operator<<(*reinterpret_cast<Stream*>(0), *reinterpret_cast<const T*>(0))) != sizeof(char) };
+        };
+
+        template <class Stream>
+        struct isStreamable<std::ios_base& (std::ios_base&), Stream>
+        {
+            enum { value = true };
+        };
+
+        template<bool B, class T = void>
+        struct enableIf {};
+
+        template<class T>
+        struct enableIf<true, T> { typedef T type; };
+    }
+
     namespace detail
     {
         //////////////////////////////////////////////////////////////////////////
@@ -48,6 +72,14 @@ namespace plog
             plog::detail::operator<<(stream, data.c_str());
         }
 #endif
+
+        template<class T>
+        inline typename meta::enableIf<meta::isStreamable<T, std::ostream>::value && !meta::isStreamable<T, std::wostream>::value, void>::type operator<<(std::wostringstream& stream, const T& data)
+        {
+            std::ostringstream ss;
+            ss << data;
+            stream << ss.str();
+        }
     }
 
     class Record

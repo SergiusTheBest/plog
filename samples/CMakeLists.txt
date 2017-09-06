@@ -46,17 +46,17 @@ add_library(plog STATIC ${PLOG_HEADERS})
 set_target_properties(plog PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(plog PROPERTIES FOLDER Include)
 
-add_executable(Demo Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp)
+add_executable(Demo Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp Demo/Customer.h)
 set_target_properties(Demo PROPERTIES FOLDER Samples)
 
 if(MSVC AND NOT (MSVC_VERSION LESS 1700)) # Visual Studio 2012 and higher
-    add_executable(DemoManaged Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp)
+    add_executable(DemoManaged Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp Demo/Customer.h)
     set_target_properties(DemoManaged PROPERTIES FOLDER Samples)
     set_property(TARGET DemoManaged PROPERTY COMPILE_FLAGS "/clr /EHa")
 endif()
 
 if(NOT WIN32)
-    add_executable(DemoWchar Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp)
+    add_executable(DemoWchar Demo/Main.cpp Demo/MyClass.h Demo/MyClass.cpp Demo/Customer.h)
     set_target_properties(DemoWchar PROPERTIES FOLDER Samples)
     set_target_properties(DemoWchar PROPERTIES COMPILE_FLAGS "-DPLOG_ENABLE_WCHAR_INPUT=1")
     if(APPLE)

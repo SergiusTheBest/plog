@@ -1,4 +1,5 @@
-﻿#include <plog/Log.h>
+﻿#pragma once
+#include <plog/Log.h>
 
 class MyClass
 {
