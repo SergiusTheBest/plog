@@ -8,30 +8,6 @@
 
 namespace plog
 {
-    namespace meta
-    {
-        template<class T, class Stream>
-        inline char operator<<(Stream&, const T&);
-
-        template <class T, class Stream>
-        struct isStreamable
-        {
-            enum { value = sizeof(operator<<(*reinterpret_cast<Stream*>(0), *reinterpret_cast<const T*>(0))) != sizeof(char) };
-        };
-
-        template <class Stream>
-        struct isStreamable<std::ios_base& (std::ios_base&), Stream>
-        {
-            enum { value = true };
-        };
-
-        template<bool B, class T = void>
-        struct enableIf {};
-
-        template<class T>
-        struct enableIf<true, T> { typedef T type; };
-    }
-
     namespace detail
     {
         //////////////////////////////////////////////////////////////////////////
@@ -73,6 +49,37 @@ namespace plog
         }
 #endif
 
+#ifdef _WIN32
+        namespace meta
+        {
+            template<class T, class Stream>
+            inline char operator<<(Stream&, const T&);
+
+            template <class T, class Stream>
+            struct isStreamable
+            {
+                enum { value = sizeof(operator<<(*reinterpret_cast<Stream*>(0), *reinterpret_cast<const T*>(0))) != sizeof(char) };
+            };
+
+            template <class Stream>
+            struct isStreamable<std::ios_base& (std::ios_base&), Stream>
+            {
+                enum { value = true };
+            };
+
+            template <class Stream, size_t N>
+            struct isStreamable<wchar_t[N], Stream>
+            {
+                enum { value = false };
+            };
+
+            template<bool B, class T = void>
+            struct enableIf {};
+
+            template<class T>
+            struct enableIf<true, T> { typedef T type; };
+        }
+
         template<class T>
         inline typename meta::enableIf<meta::isStreamable<T, std::ostream>::value && !meta::isStreamable<T, std::wostream>::value, void>::type operator<<(std::wostringstream& stream, const T& data)
         {
@@ -80,6 +87,7 @@ namespace plog
             ss << data;
             stream << ss.str();
         }
+#endif
     }
 
     class Record
