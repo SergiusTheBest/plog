@@ -19,7 +19,7 @@ namespace plog
             util::splitFileName(fileName, m_fileNameNoExt, m_fileExt);
         }
 
-#ifdef _WIN32
+#if defined(_WIN32) && PLOG_ENABLE_WCHAR_INPUT
         RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
             : m_fileSize()
             , m_maxFileSize((std::max)(static_cast<off_t>(maxFileSize), static_cast<off_t>(1000))) // set a lower limit for the maxFileSize

@@ -7,7 +7,7 @@ namespace plog
     template<class NextConverter = UTF8Converter>
     class NativeEOLConverter : public NextConverter
     {
-#ifdef _WIN32
+#if defined(_WIN32) && PLOG_ENABLE_WCHAR_INPUT
     public:
         static std::string header(const util::nstring& str)
         {

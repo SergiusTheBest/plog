@@ -17,9 +17,9 @@ namespace plog
         {
             data = data ? data : "(null)";
 
-#if defined(_WIN32) && defined(__BORLANDC__)
+#if defined(_WIN32) && defined(__BORLANDC__) && PLOG_ENABLE_WCHAR_INPUT
             stream << util::toWide(data);
-#elif defined(_WIN32)
+#elif defined(_WIN32) && PLOG_ENABLE_WCHAR_INPUT
             std::operator<<(stream, util::toWide(data));
 #else
             std::operator<<(stream, data);
@@ -122,7 +122,7 @@ namespace plog
         }
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32) && PLOG_ENABLE_WCHAR_INPUT
         Record& operator<<(std::wostream& (*data)(std::wostream&))
 #else
         Record& operator<<(std::ostream& (*data)(std::ostream&))
@@ -135,7 +135,7 @@ namespace plog
 #ifdef QT_VERSION
         Record& operator<<(const QString& data)
         {
-#ifdef _WIN32
+#if defined(_WIN32) && PLOG_ENABLE_WCHAR_INPUT
             return *this << data.toStdWString();
 #else
             return *this << data.toStdString();
