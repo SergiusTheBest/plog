@@ -205,6 +205,10 @@ namespace plog
             return m_file;
         }
 
+        virtual ~Record() // virtual destructor to satisfy -Wnon-virtual-dtor warning
+        {
+        }
+
     private:
         util::Time              m_time;
         const Severity          m_severity;
