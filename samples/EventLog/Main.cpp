@@ -9,7 +9,7 @@
 
 using namespace std;
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
     const wchar_t kEventSourceName[] = L"EventLogSample";
 
