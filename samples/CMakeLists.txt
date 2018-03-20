@@ -91,12 +91,15 @@ set_target_properties(CustomAppender PROPERTIES FOLDER Samples)
 add_executable(CustomType CustomType/Main.cpp)
 set_target_properties(CustomType PROPERTIES FOLDER Samples)
 
-add_executable(ChainedApp Chained/ChainedApp/Main.cpp)
-set_target_properties(ChainedApp PROPERTIES FOLDER Samples/Chained)
-target_link_libraries(ChainedApp ChainedLib)
+# some systems have no shared libraries support, so check it
+if(NOT DEFINED TARGET_SUPPORTS_SHARED_LIBS OR TARGET_SUPPORTS_SHARED_LIBS)
+    add_executable(ChainedApp Chained/ChainedApp/Main.cpp)
+    set_target_properties(ChainedApp PROPERTIES FOLDER Samples/Chained)
+    target_link_libraries(ChainedApp ChainedLib)
 
-add_library(ChainedLib SHARED Chained/ChainedLib/Main.cpp)
-set_target_properties(ChainedLib PROPERTIES FOLDER Samples/Chained)
+    add_library(ChainedLib SHARED Chained/ChainedLib/Main.cpp)
+    set_target_properties(ChainedLib PROPERTIES FOLDER Samples/Chained)
+endif()
 
 if(CMAKE_OBJCXX_AVAILABLE AND NOT CMAKE_COMPILER_IS_CLANGXX)
     add_executable(ObjectiveC ObjectiveC/Main.mm)
