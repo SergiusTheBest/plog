@@ -23,6 +23,9 @@
 #elif defined(__rtems__)
 #   include <unistd.h>
 #   include <rtems.h>
+#   if PLOG_ENABLE_WCHAR_INPUT
+#       include <iconv.h>
+#   endif
 #else
 #   include <unistd.h>
 #   include <sys/syscall.h>
