@@ -20,6 +20,9 @@
 #   include <sys/timeb.h>
 #   include <io.h>
 #   include <share.h>
+#elif defined(__rtems__)
+#   include <unistd.h>
+#   include <rtems.h>
 #else
 #   include <unistd.h>
 #   include <sys/syscall.h>
@@ -100,6 +103,8 @@ namespace plog
             long tid;
             syscall(SYS_thr_self, &tid);
             return static_cast<unsigned int>(tid);
+#elif defined(__rtems__)
+            return rtems_task_self();
 #elif defined(__APPLE__)
             uint64_t tid64;
             pthread_threadid_np(NULL, &tid64);
@@ -318,6 +323,11 @@ namespace plog
             {
 #ifdef _WIN32
                 InitializeCriticalSection(&m_sync);
+#elif defined(__rtems__)
+                rtems_semaphore_create(0, 1,
+                            RTEMS_PRIORITY |
+                            RTEMS_BINARY_SEMAPHORE |
+                            RTEMS_INHERIT_PRIORITY, 1, &m_sync);
 #else
                 ::pthread_mutex_init(&m_sync, 0);
 #endif
@@ -327,6 +337,8 @@ namespace plog
             {
 #ifdef _WIN32
                 DeleteCriticalSection(&m_sync);
+#elif defined(__rtems__)
+                rtems_semaphore_delete(m_sync);
 #else
                 ::pthread_mutex_destroy(&m_sync);
 #endif
@@ -339,6 +351,8 @@ namespace plog
             {
 #ifdef _WIN32
                 EnterCriticalSection(&m_sync);
+#elif defined(__rtems__)
+                rtems_semaphore_obtain(m_sync, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
 #else
                 ::pthread_mutex_lock(&m_sync);
 #endif
@@ -348,6 +362,8 @@ namespace plog
             {
 #ifdef _WIN32
                 LeaveCriticalSection(&m_sync);
+#elif defined(__rtems__)
+                rtems_semaphore_release(m_sync);
 #else
                 ::pthread_mutex_unlock(&m_sync);
 #endif
