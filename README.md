@@ -95,7 +95,7 @@ And its output:
 - Easy to use
 - Headers only
 - No 3rd-party dependencies
-- Cross-platform: Windows, Linux, Mac OS X, Android (gcc, clang, msvc, mingw, mingw-w64, icc, c++builder)
+- Cross-platform: Windows, Linux, FreeBSD, macOS, Android, RTEMS (gcc, clang, msvc, mingw, mingw-w64, icc, c++builder)
 - Thread and type safe
 - Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter)
 - Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender), [EventLog](#eventlogappender), [DebugOutput](#debugoutputappender)
@@ -1011,7 +1011,17 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 
 # Version history
 
-## Version 1.1.4 (TBD)
+## Version 1.1.5 (TBD)
+
+## Version 1.1.4 (26 Mar 2018)
+- New: Add `-Wundef` support
+- New #87: Add [RTEMS](https://www.rtems.org) support
+- New #84: Add Intel C++ Compiler support
+- New #83: Add FreeBSD support
+- New #79: Add `-Wnon-virtual-dtor` support
+- New #66: Support ostream operator<< on windows as well as wostream
+- Fix #68: Fix compilation for Android
+- Fix: Fix compiling with cmake 2.8
 
 ## Version 1.1.3 (09 Aug 2017)
 - New: Introduce `PLOG_ENABLE_WCHAR_INPUT` macro to control wide string support
