@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cstring>
 #include <cstdio>
+#include <iomanip>
 #include <sstream>
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -95,6 +96,23 @@ namespace plog
             t->millitm = static_cast<unsigned short>(tv.tv_usec / 1000);
         }
 #endif
+
+        inline void formatTime(const Time* time, nstring* date, nstring* timeofday)
+        {
+            struct tm t;
+            util::localtime_s(&t, &(time->time));
+
+            if (date != NULL) {
+                nostringstream ss;
+                ss << t.tm_year + 1900 << "-" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mon + 1 << PLOG_NSTR("-") << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mday;
+                *date = ss.str();
+            }
+            if (timeofday != NULL) {
+                nostringstream ss;
+                ss << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_hour << PLOG_NSTR(":") << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_min << PLOG_NSTR(":") << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_sec << PLOG_NSTR(".") << std::setfill(PLOG_NSTR('0')) << std::setw(3) << time->millitm;
+                *timeofday = ss.str();
+            }
+        }
 
         inline unsigned int gettid()
         {
