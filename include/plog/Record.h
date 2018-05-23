@@ -298,6 +298,10 @@ namespace plog
             return *this;
         }
 
+#if __cplusplus >= 201103L && defined(__cpp_rvalue_references)
+        Record(Record&&) = default;
+#endif
+
         //////////////////////////////////////////////////////////////////////////
         // Stream output operators
 
