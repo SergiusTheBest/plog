@@ -14,6 +14,18 @@
 #   endif
 #endif
 
+#if defined(_WIN32) || defined(_WIN64)
+#   if defined(PLOG_EXPORTS)
+#       define PLOG_DLL __declspec(dllexport)
+#   elif defined(PLOG_IMPORTS)
+#       define PLOG_DLL __declspec(dllimport)
+#   else
+#       define PLOG_DLL
+#   endif
+#else
+#   define PLOG_DLL 
+#endif
+
 #ifdef _WIN32
 #   include <plog/WinApi.h>
 #   include <time.h>
@@ -219,7 +231,7 @@ namespace plog
             }
         }
 
-        class NonCopyable
+        class PLOG_DLL NonCopyable
         {
         protected:
             NonCopyable()

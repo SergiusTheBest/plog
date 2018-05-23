@@ -10,7 +10,7 @@
 namespace plog
 {
     template<int instance>
-    class Logger : public util::Singleton<Logger<instance> >, public IAppender
+    class PLOG_DLL Logger : public util::Singleton<Logger<instance> >, public IAppender
     {
     public:
         Logger(Severity maxSeverity = none) : m_maxSeverity(maxSeverity)
