@@ -39,7 +39,7 @@
 //////////////////////////////////////////////////////////////////////////
 // Main logging macros
 
-#define LOG_(instance, severity)        IF_LOG_(instance, severity) (*plog::get<instance>()) += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_FILE(), PLOG_GET_THIS())
+#define LOG_(instance, severity)        IF_LOG_(instance, severity) (*plog::get<instance>()) += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_FILE(), PLOG_GET_THIS()).ref()
 #define LOG(severity)                   LOG_(PLOG_DEFAULT_INSTANCE, severity)
 
 #define LOG_VERBOSE                     LOG(plog::verbose)

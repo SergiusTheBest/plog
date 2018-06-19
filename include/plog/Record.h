@@ -108,6 +108,11 @@ namespace plog
             util::ftime(&m_time);
         }
 
+        Record& ref() 
+        { 
+            return *this; 
+        }
+
         //////////////////////////////////////////////////////////////////////////
         // Stream output operators
 
