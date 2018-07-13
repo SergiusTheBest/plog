@@ -212,6 +212,15 @@ namespace plog
         {
             return m_file;
         }
+        virtual const bool getLocalTime() const
+        {
+            return m_localTime;
+        }
+
+        void setLocalTime(bool localTime) 
+        {
+            m_localTime = localTime;
+        }
 
         virtual ~Record() // virtual destructor to satisfy -Wnon-virtual-dtor warning
         {
@@ -228,5 +237,6 @@ namespace plog
         const char* const       m_file;
         mutable std::string     m_funcStr;
         mutable util::nstring   m_messageStr;
+        bool                    m_localTime;
     };
 }

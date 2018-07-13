@@ -46,7 +46,9 @@ namespace plog
                 rollLogFiles();
             }
 
-            int bytesWritten = m_file.write(Converter::convert(Formatter::format(record,m_localTime)));
+            record.setLocalTime(m_localTime);
+
+            int bytesWritten = m_file.write(Converter::convert(Formatter::format(record)));
 
             if (bytesWritten > 0)
             {

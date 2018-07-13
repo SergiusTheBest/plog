@@ -13,10 +13,10 @@ namespace plog
             return util::nstring();
         }
 
-        static util::nstring format(const Record& record,const bool localTime = true)
+        static util::nstring format(const Record& record)
         {
             tm t;
-            if (localTime == true)
+            if (record.getLocalTime() == true)
             {
                 util::localtime_s(&t, &record.getTime().time);
             }

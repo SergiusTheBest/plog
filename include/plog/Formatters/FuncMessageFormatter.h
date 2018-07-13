@@ -12,7 +12,7 @@ namespace plog
             return util::nstring();
         }
 
-        static util::nstring format(const Record& record, const bool localTime = true)
+        static util::nstring format(const Record& record)
         {
 			localTime;
             util::nostringstream ss;
