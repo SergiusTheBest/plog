@@ -13,7 +13,7 @@ namespace plog
             return PLOG_NSTR("Date;Time;Severity;TID;This;Function;Message\n");
         }
 
-        static util::nstring format(const Record& record, const bool localTime)
+        static util::nstring format(const Record& record, const bool localTime = true)
         {
             tm t;
             if (localTime == true)
