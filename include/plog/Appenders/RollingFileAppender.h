@@ -10,21 +10,23 @@ namespace plog
     class RollingFileAppender : public IAppender
     {
     public:
-        RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
+        RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0, const bool localTime = true)
             : m_fileSize()
             , m_maxFileSize((std::max)(static_cast<off_t>(maxFileSize), static_cast<off_t>(1000))) // set a lower limit for the maxFileSize
             , m_lastFileNumber((std::max)(maxFiles - 1, 0))
             , m_firstWrite(true)
+            ,m_localTime(localTime)
         {
             util::splitFileName(fileName, m_fileNameNoExt, m_fileExt);
         }
 
 #ifdef _WIN32
-        RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
+        RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0, const bool localTime = true)
             : m_fileSize()
             , m_maxFileSize((std::max)(static_cast<off_t>(maxFileSize), static_cast<off_t>(1000))) // set a lower limit for the maxFileSize
             , m_lastFileNumber((std::max)(maxFiles - 1, 0))
             , m_firstWrite(true)
+            ,m_localTime(localTime)
         {
             util::splitFileName(util::toWide(fileName).c_str(), m_fileNameNoExt, m_fileExt);
         }
@@ -44,7 +46,7 @@ namespace plog
                 rollLogFiles();
             }
 
-            int bytesWritten = m_file.write(Converter::convert(Formatter::format(record)));
+            int bytesWritten = m_file.write(Converter::convert(Formatter::format(record,m_localTime)));
 
             if (bytesWritten > 0)
             {
@@ -114,5 +116,6 @@ namespace plog
         util::nstring   m_fileExt;
         util::nstring   m_fileNameNoExt;
         bool            m_firstWrite;
+        const bool      m_localTime;
     };
 }

@@ -72,6 +72,19 @@ namespace plog
 #endif
         }
 
+        inline void gmtime_s(struct tm* t, const time_t* time)
+        {
+#if defined(_WIN32) && defined(__BORLANDC__)
+            ::gmtime_s(time, t);
+#elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+            *t = *::gmtime(time);
+#elif defined(_WIN32)
+            ::gmtime_s(t, time);
+#else
+            ::gmtime_r(time, t);
+#endif
+        }
+
 #ifdef _WIN32
         typedef timeb Time;
 
@@ -328,9 +341,9 @@ namespace plog
                 InitializeCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_create(0, 1,
-                            RTEMS_PRIORITY |
-                            RTEMS_BINARY_SEMAPHORE |
-                            RTEMS_INHERIT_PRIORITY, 1, &m_sync);
+                    RTEMS_PRIORITY |
+                    RTEMS_BINARY_SEMAPHORE |
+                    RTEMS_INHERIT_PRIORITY, 1, &m_sync);
 #else
                 ::pthread_mutex_init(&m_sync, 0);
 #endif
@@ -394,7 +407,7 @@ namespace plog
             }
 
         private:
-            Mutex& m_mutex;
+            Mutex & m_mutex;
         };
 
         template<class T>
