@@ -52,7 +52,6 @@ namespace plog
             }
         }
 
-    private:
         void rollLogFiles()
         {
             m_file.close();
@@ -69,7 +68,11 @@ namespace plog
             }
 
             openLogFile();
+			
+            m_firstWrite = false;
         }
+		
+    private:
 
         void openLogFile()
         {
