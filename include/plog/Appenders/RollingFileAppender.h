@@ -68,12 +68,10 @@ namespace plog
             }
 
             openLogFile();
-			
             m_firstWrite = false;
         }
 		
     private:
-
         void openLogFile()
         {
             util::nstring fileName = buildFileName();
