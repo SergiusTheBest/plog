@@ -72,6 +72,19 @@ namespace plog
 #endif
         }
 
+        inline void gmtime_s(struct tm* t, const time_t* time)
+        {
+#if defined(_WIN32) && defined(__BORLANDC__)
+            ::gmtime_s(time, t);
+#elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+            *t = *::gmtime(time);
+#elif defined(_WIN32)
+            ::gmtime_s(t, time);
+#else
+            ::gmtime_r(time, t);
+#endif
+        }
+
 #ifdef _WIN32
         typedef timeb Time;
 

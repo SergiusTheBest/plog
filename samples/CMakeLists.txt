@@ -125,6 +125,9 @@ set_target_properties(ColorConsole PROPERTIES FOLDER Samples)
 add_executable(NativeEOL NativeEOL/Main.cpp)
 set_target_properties(NativeEOL PROPERTIES FOLDER Samples)
 
+add_executable(UtcTime UtcTime/Main.cpp)
+set_target_properties(UtcTime PROPERTIES FOLDER Samples)
+
 if(WIN32)
     add_executable(EventLog EventLog/Main.cpp)
     set_target_properties(EventLog PROPERTIES FOLDER Samples)
