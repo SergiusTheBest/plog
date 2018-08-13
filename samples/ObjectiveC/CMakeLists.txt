@@ -1,0 +1,7 @@
+if(CMAKE_OBJCXX_AVAILABLE AND NOT CMAKE_COMPILER_IS_CLANGXX)
+    add_executable(ObjectiveC Main.mm)
+    target_link_libraries(ObjectiveC objc plog)
+else()
+    add_custom_target(ObjectiveC SOURCES Main.mm)
+endif()
+set_target_properties(ObjectiveC PROPERTIES FOLDER Samples)

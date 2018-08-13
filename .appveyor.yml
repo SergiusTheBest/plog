@@ -23,7 +23,7 @@ before_build:
   - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
   - if "%dialect%"=="mingw" set PATH=c:\MinGW\bin;%PATH%
   - if "%dialect%"=="mingw-w64" set PATH=c:\msys64\mingw64\bin;%PATH%
-  - cmake -Hsamples -Bbuild -G"%generator%" -DCMAKE_BUILD_TYPE=%configuration%
+  - cmake -H. -Bbuild -G"%generator%" -DCMAKE_BUILD_TYPE=%configuration%
 
 build_script:
   - if "%generator:~0,6%"=="Visual" set CMAKE_BUILD_FLAGS=--config %configuration% -- /m /v:m

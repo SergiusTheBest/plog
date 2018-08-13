@@ -1,0 +1,5 @@
+if(WIN32)
+    add_executable(EventLog Main.cpp)
+    target_link_libraries(EventLog plog)
+    set_target_properties(EventLog PROPERTIES FOLDER Samples)    
+endif()

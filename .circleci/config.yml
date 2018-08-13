@@ -5,4 +5,4 @@ jobs:
       - image: sergiusthebest/rtems-arm-rasberrypi-ci:latest 
     steps:
       - checkout
-      - run: cmake -Hsamples -Bbuild -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE && cd build && make -j
+      - run: cmake -H. -Bbuild -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE && cd build && make -j

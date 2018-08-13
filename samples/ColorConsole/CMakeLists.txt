@@ -1,0 +1,3 @@
+add_executable(ColorConsole Main.cpp)
+target_link_libraries(ColorConsole plog)
+set_target_properties(ColorConsole PROPERTIES FOLDER Samples)
