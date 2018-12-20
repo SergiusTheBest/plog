@@ -51,7 +51,7 @@ namespace plog
         {
             for (std::vector<IAppender*>::iterator it = m_appenders.begin(); it != m_appenders.end(); ++it)
             {
-                (*it)->write(record);
+                (*it)->writeLog(record);
             }
         }
 
