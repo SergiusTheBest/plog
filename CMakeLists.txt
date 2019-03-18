@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
+option(PLOG_BUILD_SAMPLES "Build plog's samples." ON)
+
 project(plog LANGUAGES CXX)
 
 # Make sure install paths work on all platforms.
@@ -20,10 +22,8 @@ add_library(plog::plog ALIAS plog)
 get_filename_component(CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}   ABSOLUTE)
 get_filename_component(SOURCE_DIR ${CMAKE_SOURCE_DIR} ABSOLUTE)
 
-option(BUILD_SAMPLES "Building samples" ON)
-if(BUILD_SAMPLES)
 # check if building as a stand-alone project
-if(${CURRENT_SOURCE_DIR} STREQUAL ${SOURCE_DIR})
+if(${CURRENT_SOURCE_DIR} STREQUAL ${SOURCE_DIR} AND PLOG_BUILD_SAMPLES)
     # add a pseudo-project to make plog headers visible in IDE
     file(GLOB_RECURSE PLOG_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
     add_library(plog-headers STATIC ${PLOG_HEADERS})
@@ -33,7 +33,6 @@ if(${CURRENT_SOURCE_DIR} STREQUAL ${SOURCE_DIR})
     # add samples
     add_subdirectory(samples)
 endif()
-endif(BUILD_SAMPLES)
 
 install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/plog
