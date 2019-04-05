@@ -13,7 +13,7 @@ int main()
 
     foo();
 
-    LOGD << "A message from the main application!";
+    PLOGD << "A message from the main application!";
 
     return 0;
 }

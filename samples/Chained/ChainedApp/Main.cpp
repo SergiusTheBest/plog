@@ -12,7 +12,7 @@ int main()
 {
     plog::init(plog::debug, "ChainedApp.txt"); // Initialize the main logger.
 
-    LOGD << "Hello from app!"; // Write a log message.
+    PLOGD << "Hello from app!"; // Write a log message.
 
     initialize(plog::debug, plog::get()); // Initialize the logger in the shared library. Note that it has its own severity.
     foo(); // Call a function from the shared library that produces a log message.

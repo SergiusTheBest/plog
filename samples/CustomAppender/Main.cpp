@@ -34,7 +34,7 @@ int main()
     static plog::MyAppender<plog::FuncMessageFormatter> myAppender; // Create our custom appender. 
     plog::init(plog::debug, &myAppender); // Initialize the logger with our appender.
 
-    LOGD << "A debug message!";
+    PLOGD << "A debug message!";
 
     myAppender.getMessageList(); // This returns a list of stored log messages. 
 

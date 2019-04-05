@@ -15,14 +15,14 @@
 @implementation Greeter
 +(void) greet
 {
-    LOGD << "Hello ObjC++!";
+    PLOGD << "Hello ObjC++!";
 }
 @end
 
 int main()
 {
     plog::init(plog::debug, "ObjectiveC.csv"); // Initialize the logger.
-    LOGD << "Hello ObjC++!";
+    PLOGD << "Hello ObjC++!";
     
     [Greeter greet];
     

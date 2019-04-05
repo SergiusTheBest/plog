@@ -7,5 +7,5 @@
 void foo()
 {
     // The logger is initialized in the main app. It is safe not to do that and even not to use plog at all. The library will be linked fine.
-    LOGD << "A message from the static library!";
+    PLOGD << "A message from the static library!";
 }

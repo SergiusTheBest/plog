@@ -40,8 +40,8 @@ int main()
     static plog::RollingFileAppender<plog::TxtFormatter, plog::MyConverter> appender("CustomConverter.txt"); // Create an appender and pass our converter as a template parameter.
     plog::init(plog::debug, &appender); // Initialize the logger with the appender.
 
-    LOGD << "A debug message!";
-    LOGD << "Another one debug message!";
+    PLOGD << "A debug message!";
+    PLOGD << "Another one debug message!";
 
     return 0;
 }

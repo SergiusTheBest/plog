@@ -28,7 +28,7 @@ int main()
 {
     plog::init<plog::MyFormatter>(plog::debug, "CustomFormatter.txt"); // Initialize the logger and pass our formatter as a template parameter to init function.
 
-    LOGD << "A debug message!";
+    PLOGD << "A debug message!";
 
     return 0;
 }
