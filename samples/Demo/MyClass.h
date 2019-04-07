@@ -11,7 +11,7 @@ public:
 
     void inlineMethod()
     {
-        LOGD;
+        PLOGD;
     }
 
     static void staticMethod();

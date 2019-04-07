@@ -20,5 +20,5 @@ extern "C" void EXPORT initialize(plog::Severity severity, plog::IAppender* appe
 // Function that produces a log message.
 extern "C" void EXPORT foo()
 {
-    LOGI << "Hello from shared lib!";
+    PLOGI << "Hello from shared lib!";
 }

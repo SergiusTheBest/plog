@@ -15,14 +15,14 @@ int main()
     plog::init<SecondLog>(plog::debug, "MultiInstance-second.txt"); // Initialize the 2nd logger instance.
 
     // Write some messages to the default log.
-    LOGD << "Hello default log!";
-    LOG_DEBUG << "Hello default log!";
-    LOG(plog::debug) << "Hello default log!";
+    PLOGD << "Hello default log!";
+    PLOG_DEBUG << "Hello default log!";
+    PLOG(plog::debug) << "Hello default log!";
 
     // Write some messages to the 2nd log.
-    LOGD_(SecondLog) << "Hello second log!";
-    LOG_DEBUG_(SecondLog) << "Hello second log!";
-    LOG_(SecondLog, plog::debug) << "Hello second log!";
+    PLOGD_(SecondLog) << "Hello second log!";
+    PLOG_DEBUG_(SecondLog) << "Hello second log!";
+    PLOG_(SecondLog, plog::debug) << "Hello second log!";
 
     return 0;
 }

@@ -14,7 +14,7 @@ int main()
     // A bunch of log lines that goes to the both appenders: to the file and to the console.
     for (int i = 0; i < 100; ++i)
     {
-        LOG_INFO << "i: " << i;
+        PLOG_INFO << "i: " << i;
     }
 
     return 0;

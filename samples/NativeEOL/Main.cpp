@@ -14,7 +14,7 @@ int main()
     // Write some data.
     for (int i = 0; i < 100; ++i)
     {
-        LOGI << "i: " << i;
+        PLOGI << "i: " << i;
     }
 
     return 0;

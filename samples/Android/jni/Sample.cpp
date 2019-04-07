@@ -13,5 +13,5 @@ extern "C" void Java_com_github_sergius_myapp_Sample_foo(JNIEnv* env, jobject ob
     static plog::AndroidAppender<plog::FuncMessageFormatter> appender("MyApp"); // Create an appender and set a log tag.
     static plog::Logger<0>& logger = plog::init(plog::debug, &appender); // Initialize the logger with the appender.
 
-    LOGD << "Hello Android!";
+    PLOGD << "Hello Android!";
 }

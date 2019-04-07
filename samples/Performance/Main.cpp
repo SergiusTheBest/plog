@@ -19,7 +19,7 @@ int main()
     static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init<Console>(plog::debug, &consoleAppender);
 
-    LOGI_(Console) << "Test started";
+    PLOGI_(Console) << "Test started";
 
     plog::util::Time startTime;
     plog::util::ftime(&startTime);
@@ -29,7 +29,7 @@ int main()
     // Performance measure loop.
     for (int i = 0; i < kCount; ++i)
     {
-        LOGD << "Hello log!";
+        PLOGD << "Hello log!";
     }
 
     plog::util::Time finishTime;
@@ -37,7 +37,7 @@ int main()
 
     time_t timeDiff = (finishTime.millitm - startTime.millitm) + (finishTime.time - startTime.time) * 1000;
 
-    LOGI_(Console) << "Test finished: " << static_cast<double>(timeDiff) * 1000 / kCount << " microsec per call";
+    PLOGI_(Console) << "Test finished: " << static_cast<double>(timeDiff) * 1000 / kCount << " microsec per call";
 
     return 0;
 }
