@@ -6,6 +6,16 @@
 #include "MyClass.h"
 #include "Customer.h"
 
+#ifdef __cplusplus_cli
+#pragma managed(push, off)
+void unmanagedFunc()
+{
+    PLOGI << "Inside unmanaged function (char)";
+    PLOGI << L"Inside unmanaged function (wchar_t)";
+}
+#pragma managed(pop) 
+#endif
+
 int main()
 {
     plog::init(plog::debug, "Demo.csv", 5000, 3); // Initialize the logger.
@@ -41,6 +51,8 @@ int main()
 #ifdef __cplusplus_cli
     System::String^ managedStr = "This is a managed string";
     PLOG_INFO << managedStr;
+
+    unmanagedFunc();
 #endif
 
     // Null strings are safe.

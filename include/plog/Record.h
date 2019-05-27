@@ -49,6 +49,14 @@ namespace plog
         }
 #endif
 
+#ifdef __cplusplus_cli
+        inline void operator<<(util::nostringstream& stream, System::String^ data)
+        {
+            cli::pin_ptr<const System::Char> ptr = PtrToStringChars(data);
+            plog::detail::operator<<(stream, static_cast<const wchar_t*>(ptr));
+        }
+#endif
+
 #ifdef _WIN32
         namespace meta
         {
@@ -154,14 +162,6 @@ namespace plog
         {
             QString qstr;
             return *this << qstr.append(data);
-        }
-#endif
-
-#ifdef __cplusplus_cli
-        Record& operator<<(System::String^ data)
-        {
-            cli::pin_ptr<const System::Char> ptr = PtrToStringChars(data);
-            return *this << static_cast<const wchar_t*>(ptr);
         }
 #endif
 
