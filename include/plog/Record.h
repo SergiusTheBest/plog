@@ -13,7 +13,7 @@ namespace plog
         //////////////////////////////////////////////////////////////////////////
         // Stream output operators as free functions
 
-        inline void operator<<(util::nostringstream &stream, const char *data)
+        inline void operator<<(util::nostringstream& stream, const char* data)
         {
             data = data ? data : "(null)";
 
@@ -26,16 +26,16 @@ namespace plog
 #endif
         }
 
-        inline void operator<<(util::nostringstream &stream, const std::string &data)
+        inline void operator<<(util::nostringstream& stream, const std::string& data)
         {
             plog::detail::operator<<(stream, data.c_str());
         }
 
 #if defined(_MSC_VER)
 #if _HAS_CXX17
-        inline void operator<<(util::nostringstream &stream, const std::filesystem::path &pathName)
+        inline void operator<<(util::nostringstream& stream, const std::filesystem::path& pathName)
 #else // _HAS_CXX17
-        inline void operator<<(util::nostringstream &stream, const std::experimental::filesystem::path &pathName)
+        inline void operator<<(util::nostringstream& stream, const std::experimental::filesystem::path& pathName)
 #endif // _HAS_CXX17
         {
             plog::detail::operator<<(stream, pathName.string().c_str());
@@ -43,7 +43,7 @@ namespace plog
 #endif // _MSC_VER
 
 #if PLOG_ENABLE_WCHAR_INPUT
-        inline void operator<<(util::nostringstream &stream, const wchar_t *data)
+        inline void operator<<(util::nostringstream& stream, const wchar_t* data)
         {
             data = data ? data : L"(null)";
 
@@ -54,17 +54,17 @@ namespace plog
 #   endif
         }
 
-        inline void operator<<(util::nostringstream &stream, const std::wstring &data)
+        inline void operator<<(util::nostringstream& stream, const std::wstring& data)
         {
             plog::detail::operator<<(stream, data.c_str());
         }
 #endif
 
 #ifdef __cplusplus_cli
-        inline void operator<<(util::nostringstream &stream, System::String ^data)
+        inline void operator<<(util::nostringstream& stream, System::String^ data)
         {
             cli::pin_ptr<const System::Char> ptr = PtrToStringChars(data);
-            plog::detail::operator<<(stream, static_cast<const wchar_t *>(ptr));
+            plog::detail::operator<<(stream, static_cast<const wchar_t*>(ptr));
         }
 #endif
 
@@ -72,7 +72,7 @@ namespace plog
         namespace meta
         {
             template<class T, class Stream>
-            inline char operator<<(Stream &, const T &);
+            inline char operator<<(Stream&, const T&);
 
             template <class T, class Stream>
             struct isStreamable
@@ -80,11 +80,11 @@ namespace plog
 #ifdef __INTEL_COMPILER
 #    pragma warning(suppress: 327) // NULL reference is not allowed
 #endif
-                enum { value = sizeof(operator<<(*reinterpret_cast<Stream *>(0), *reinterpret_cast<const T *>(0))) != sizeof(char) };
+                enum { value = sizeof(operator<<(*reinterpret_cast<Stream*>(0), *reinterpret_cast<const T*>(0))) != sizeof(char) };
             };
 
             template <class Stream>
-            struct isStreamable<std::ios_base &(std::ios_base &), Stream>
+            struct isStreamable<std::ios_base& (std::ios_base&), Stream>
             {
                 enum { value = true };
             };
@@ -109,7 +109,7 @@ namespace plog
         }
 
         template<class T>
-        inline typename meta::enableIf<meta::isStreamable<T, std::ostream>::value && !meta::isStreamable<T, std::wostream>::value, void>::type operator<<(std::wostringstream &stream, const T &data)
+        inline typename meta::enableIf<meta::isStreamable<T, std::ostream>::value && !meta::isStreamable<T, std::wostream>::value, void>::type operator<<(std::wostringstream& stream, const T& data)
         {
             std::ostringstream ss;
             ss << data;
@@ -121,28 +121,28 @@ namespace plog
     class Record
     {
     public:
-        Record(Severity severity, const char *func, size_t line, const char *file, const void *object)
+        Record(Severity severity, const char* func, size_t line, const char* file, const void* object)
             : m_severity(severity), m_tid(util::gettid()), m_object(object), m_line(line), m_func(func), m_file(file)
         {
             util::ftime(&m_time);
         }
 
-        Record &ref()
-        {
-            return *this;
+        Record& ref() 
+        { 
+            return *this; 
         }
 
         //////////////////////////////////////////////////////////////////////////
         // Stream output operators
 
-        Record &operator<<(char data)
+        Record& operator<<(char data)
         {
             char str[] = { data, 0 };
             return *this << str;
         }
 
 #if PLOG_ENABLE_WCHAR_INPUT
-        Record &operator<<(wchar_t data)
+        Record& operator<<(wchar_t data)
         {
             wchar_t str[] = { data, 0 };
             return *this << str;
@@ -150,9 +150,9 @@ namespace plog
 #endif
 
 #ifdef _WIN32
-        Record &operator<<(std::wostream &(*data)(std::wostream &))
+        Record& operator<<(std::wostream& (*data)(std::wostream&))
 #else
-        Record &operator<<(std::ostream &(*data)(std::ostream &))
+        Record& operator<<(std::ostream& (*data)(std::ostream&))
 #endif
         {
             m_message << data;
@@ -160,7 +160,7 @@ namespace plog
         }
 
 #ifdef QT_VERSION
-        Record &operator<<(const QString &data)
+        Record& operator<<(const QString& data)
         {
 #   ifdef _WIN32
             return *this << data.toStdWString();
@@ -169,7 +169,7 @@ namespace plog
 #   endif
         }
 
-        Record &operator<<(const QStringRef &data)
+        Record& operator<<(const QStringRef& data)
         {
             QString qstr;
             return *this << qstr.append(data);
@@ -177,7 +177,7 @@ namespace plog
 #endif
 
         template<typename T>
-        Record &operator<<(const T &data)
+        Record& operator<<(const T& data)
         {
             using namespace plog::detail;
 
@@ -188,7 +188,7 @@ namespace plog
         //////////////////////////////////////////////////////////////////////////
         // Getters
 
-        virtual const util::Time &getTime() const
+        virtual const util::Time& getTime() const
         {
             return m_time;
         }
@@ -203,7 +203,7 @@ namespace plog
             return m_tid;
         }
 
-        virtual const void *getObject() const
+        virtual const void* getObject() const
         {
             return m_object;
         }
@@ -213,19 +213,19 @@ namespace plog
             return m_line;
         }
 
-        virtual const util::nchar *getMessage() const
+        virtual const util::nchar* getMessage() const
         {
             m_messageStr = m_message.str();
             return m_messageStr.c_str();
         }
 
-        virtual const char *getFunc() const
+        virtual const char* getFunc() const
         {
             m_funcStr = util::processFuncName(m_func);
             return m_funcStr.c_str();
         }
 
-        virtual const char *getFile() const
+        virtual const char* getFile() const
         {
             return m_file;
         }
@@ -238,11 +238,11 @@ namespace plog
         util::Time              m_time;
         const Severity          m_severity;
         const unsigned int      m_tid;
-        const void *const       m_object;
+        const void* const       m_object;
         const size_t            m_line;
         util::nostringstream    m_message;
-        const char *const       m_func;
-        const char *const       m_file;
+        const char* const       m_func;
+        const char* const       m_file;
         mutable std::string     m_funcStr;
         mutable util::nstring   m_messageStr;
     };
