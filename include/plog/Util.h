@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <filesystem>
 
 #ifndef PLOG_ENABLE_WCHAR_INPUT
 #   ifdef _WIN32
