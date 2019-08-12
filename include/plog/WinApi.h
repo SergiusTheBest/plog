@@ -5,6 +5,7 @@ namespace plog
 {
     typedef unsigned long DWORD;
     typedef unsigned short WORD;
+    typedef unsigned char BYTE;
     typedef unsigned int UINT;
     typedef int BOOL;
     typedef long LSTATUS;
@@ -119,7 +120,7 @@ namespace plog
         __declspec(dllimport) BOOL __stdcall ReportEventW(HANDLE hEventLog, WORD wType, WORD wCategory, DWORD dwEventID, void* lpUserSid, WORD wNumStrings, DWORD dwDataSize, LPCWSTR* lpStrings, void* lpRawData);
 
         __declspec(dllimport) LSTATUS __stdcall RegCreateKeyExW(HKEY hKey, LPCWSTR lpSubKey, DWORD Reserved, LPWSTR lpClass, DWORD dwOptions, DWORD samDesired, void* lpSecurityAttributes, HKEY* phkResult, DWORD* lpdwDisposition);
-        __declspec(dllimport) LSTATUS __stdcall RegSetValueExW(HKEY hKey, LPCWSTR lpValueName, DWORD Reserved, DWORD dwType, const void* lpData, DWORD cbData);
+        __declspec(dllimport) LSTATUS __stdcall RegSetValueExW(HKEY hKey, LPCWSTR lpValueName, DWORD Reserved, DWORD dwType, const BYTE* lpData, DWORD cbData);
         __declspec(dllimport) LSTATUS __stdcall RegCloseKey(HKEY hKey);
         __declspec(dllimport) LSTATUS __stdcall RegOpenKeyExW(HKEY hKey, LPCWSTR lpSubKey, DWORD ulOptions, DWORD samDesired, HKEY* phkResult);
         __declspec(dllimport) LSTATUS __stdcall RegDeleteKeyW(HKEY hKey, LPCWSTR lpSubKey);

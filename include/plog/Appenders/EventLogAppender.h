@@ -65,10 +65,10 @@ namespace plog
             }
 
             const DWORD kTypesSupported = eventLog::kErrorType | eventLog::kWarningType | eventLog::kInformationType;
-            RegSetValueExW(sourceKey, L"TypesSupported", 0, regType::kDword, &kTypesSupported, sizeof(kTypesSupported));
+            RegSetValueExW(sourceKey, L"TypesSupported", 0, regType::kDword, reinterpret_cast<const BYTE*>(&kTypesSupported), sizeof(kTypesSupported));
 
             const wchar_t kEventMessageFile[] = L"%windir%\\Microsoft.NET\\Framework\\v4.0.30319\\EventLogMessages.dll;%windir%\\Microsoft.NET\\Framework\\v2.0.50727\\EventLogMessages.dll";
-            RegSetValueExW(sourceKey, L"EventMessageFile", 0, regType::kExpandSz, kEventMessageFile, static_cast<DWORD>(::wcslen(kEventMessageFile) * sizeof(wchar_t)));
+            RegSetValueExW(sourceKey, L"EventMessageFile", 0, regType::kExpandSz, reinterpret_cast<const BYTE*>(kEventMessageFile), static_cast<DWORD>(::wcslen(kEventMessageFile) * sizeof(wchar_t)));
 
             RegCloseKey(sourceKey);
             return true;
