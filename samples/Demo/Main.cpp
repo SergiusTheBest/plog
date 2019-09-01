@@ -47,6 +47,14 @@ int main()
     PLOG_INFO << "This is a float: " << 1.2345f;
     PLOG_INFO << "This is a double: " << std::setprecision(15) << 1.234512345;
 
+#ifndef __cplusplus_cli
+    PLOG_INFO.printf("This is a format %s %d", "message", 42);
+
+#ifdef _WIN32
+    PLOG_INFO.printf(L"This is a wide format %s %d", L"message", 42);
+#endif
+#endif //__cplusplus_cli
+
     // Managed string.
 #ifdef __cplusplus_cli
     System::String^ managedStr = "This is a managed string";
