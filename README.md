@@ -872,11 +872,11 @@ Assume 20 microsec per a log call then 500 log calls per a second will slow down
 *Refer to [Performance](samples/Performance) for a complete sample.*
 
 ## Printf style formatting
-With the help of [fmtlib](https://github.com/fmtlib/fmt) printf style formatting can be used in plog:
+Plog supports printf style formatting:
 
 ```cpp
-PLOGI << fmt::sprintf("%d %s", 10, "test");
-PLOGI << fmt::format("{0} {1}", 12, "test");
+PLOGI.printf("%d %s", 42, "test");
+PLOGI.printf(L"%d %S", 42, "test"); // wchar_t version
 ```
 
 # Extending
