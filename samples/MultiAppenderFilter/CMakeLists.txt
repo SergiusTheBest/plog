@@ -1,0 +1,3 @@
+add_executable(MultiAppenderFilter Main.cpp)
+target_link_libraries(MultiAppenderFilter plog)
+set_target_properties(MultiAppenderFilter PROPERTIES FOLDER Samples)
