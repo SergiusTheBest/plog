@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdarg>
 #include <plog/Severity.h>
 #include <plog/Util.h>
 
@@ -173,6 +174,46 @@ namespace plog
             m_message << data;
             return *this;
         }
+
+#ifndef __cplusplus_cli
+        Record& printf(const char* format, ...)
+        {
+            using namespace util;
+
+            char* str = NULL;
+            va_list ap;
+
+            va_start(ap, format);
+            int len = vasprintf(&str, format, ap);
+            static_cast<void>(len);
+            va_end(ap);
+
+            *this << str;
+            free(str);
+
+            return *this;
+        }
+
+#ifdef _WIN32
+        Record& printf(const wchar_t* format, ...)
+        {
+            using namespace util;
+
+            wchar_t* str = NULL;
+            va_list ap;
+            
+            va_start(ap, format);
+            int len = vaswprintf(&str, format, ap);
+            static_cast<void>(len);
+            va_end(ap);
+
+            *this << str;
+            free(str);
+
+            return *this;
+        }
+#endif
+#endif //__cplusplus_cli
 
         //////////////////////////////////////////////////////////////////////////
         // Getters

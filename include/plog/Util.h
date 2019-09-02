@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cstring>
 #include <cstdio>
+#include <cstdlib>
 #include <sstream>
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -127,6 +128,58 @@ namespace plog
             return static_cast<unsigned int>(tid64);
 #endif
         }
+
+#ifdef _WIN32
+    inline int vasprintf(char** strp, const char* format, va_list ap)
+    {
+        int len = _vscprintf(format, ap);
+        if (len < 0)
+        {
+            return -1;
+        }
+
+        char* str = static_cast<char*>(malloc(len + 1));
+        if (!str)
+        {
+            return -1;
+        }
+
+        int retval = _vsnprintf_s(str, len + 1, len, format, ap);
+        if (retval < 0) 
+        {
+            free(str);
+            return -1;
+        }
+
+        *strp = str;
+        return retval;
+    }
+
+    inline int vaswprintf(wchar_t** strp, const wchar_t* format, va_list ap)
+    {
+        int len = _vscwprintf(format, ap);
+        if (len < 0)
+        {
+            return -1;
+        }
+
+        wchar_t* str = static_cast<wchar_t*>(malloc((len + 1) * sizeof(wchar_t)));
+        if (!str)
+        {
+            return -1;
+        }
+
+        int retval = _vsnwprintf_s(str, len + 1, len, format, ap);
+        if (retval < 0) 
+        {
+            free(str);
+            return -1;
+        }
+        
+        *strp = str;
+        return retval;
+    }
+#endif
 
 #if PLOG_ENABLE_WCHAR_INPUT && !defined(_WIN32)
         inline std::string toNarrow(const wchar_t* wstr)
