@@ -1,4 +1,4 @@
-﻿//
+//
 // CustomFormatter - shows how to implement a custom formatter.
 //
 

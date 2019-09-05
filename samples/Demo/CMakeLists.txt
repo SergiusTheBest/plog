@@ -14,7 +14,7 @@ if(NOT WIN32)
     target_link_libraries(DemoWchar plog)
     set_target_properties(DemoWchar PROPERTIES COMPILE_FLAGS "-DPLOG_ENABLE_WCHAR_INPUT=1")
     set_target_properties(DemoWchar PROPERTIES FOLDER Samples)
-    
+
     if(APPLE)
         target_link_libraries(DemoWchar -liconv)
     endif()

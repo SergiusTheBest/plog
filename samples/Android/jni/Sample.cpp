@@ -1,5 +1,5 @@
 //
-// Android - shows how to use the android-specific appender.  
+// Android - shows how to use the android-specific appender.
 //
 
 #include <jni.h>

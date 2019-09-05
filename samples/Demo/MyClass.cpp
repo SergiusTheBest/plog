@@ -1,4 +1,4 @@
-﻿#include "MyClass.h"
+#include "MyClass.h"
 
 MyClass::MyClass()
 {

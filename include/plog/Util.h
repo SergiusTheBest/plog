@@ -145,7 +145,7 @@ namespace plog
         }
 
         int retval = _vsnprintf_s(str, len + 1, len, format, ap);
-        if (retval < 0) 
+        if (retval < 0)
         {
             free(str);
             return -1;
@@ -170,12 +170,12 @@ namespace plog
         }
 
         int retval = _vsnwprintf_s(str, len + 1, len, format, ap);
-        if (retval < 0) 
+        if (retval < 0)
         {
             free(str);
             return -1;
         }
-        
+
         *strp = str;
         return retval;
     }

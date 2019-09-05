@@ -13,7 +13,7 @@ void unmanagedFunc()
     PLOGI << "Inside unmanaged function (char)";
     PLOGI << L"Inside unmanaged function (wchar_t)";
 }
-#pragma managed(pop) 
+#pragma managed(pop)
 #endif
 
 int main()

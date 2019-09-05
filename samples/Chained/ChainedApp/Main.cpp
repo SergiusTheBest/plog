@@ -1,4 +1,4 @@
-﻿//
+//
 // Chained - shows how to chain a logger (route messages) in a shared library with the main logger.
 //
 

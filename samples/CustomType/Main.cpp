@@ -1,4 +1,4 @@
-﻿//
+//
 // CustomType - shows how to print a custom type to the log stream.
 //
 

@@ -27,7 +27,7 @@ namespace plog
 
             for (size_t i = 0; i < str.size(); ++i)
             {
-                wchar_t ch = str[i];                
+                wchar_t ch = str[i];
 
                 if (ch == L'\n')
                 {

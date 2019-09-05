@@ -1,4 +1,4 @@
-﻿//
+//
 // Hello - a minimal introduction sample, shows the basic 3 steps to start using plog.
 //
 

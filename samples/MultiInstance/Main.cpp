@@ -1,4 +1,4 @@
-﻿//
+//
 // MultiInstance - shows how to use multiple logger instances, each instance has its own independent configuration.
 //
 

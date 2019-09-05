@@ -1,4 +1,4 @@
-﻿//
+//
 // Performance - measures time per a log call.
 //
 

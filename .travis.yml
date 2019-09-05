@@ -12,7 +12,7 @@ addons:
   apt:
     packages:
       - gobjc++
-  
+
 script:
   - cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=$BUILD_TYPE
   - cd build

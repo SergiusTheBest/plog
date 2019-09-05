@@ -1,4 +1,4 @@
-﻿//
+//
 // NativeEOL - shows how to use NativeEOLConverter.
 //
 

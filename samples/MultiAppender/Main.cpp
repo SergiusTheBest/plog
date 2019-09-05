@@ -1,5 +1,5 @@
-﻿//
-// MultiAppender - shows how to use multiple appenders with the same logger. 
+//
+// MultiAppender - shows how to use multiple appenders with the same logger.
 //
 
 #include <plog/Log.h>

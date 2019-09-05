@@ -70,7 +70,7 @@ namespace plog
             openLogFile();
             m_firstWrite = false;
         }
-		
+
     private:
         void openLogFile()
         {

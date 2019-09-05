@@ -23,8 +23,8 @@ int main()
 {
     plog::init(plog::debug, "ObjectiveC.csv"); // Initialize the logger.
     PLOGD << "Hello ObjC++!";
-    
+
     [Greeter greet];
-    
+
     return 0;
 }

@@ -1,4 +1,4 @@
-﻿//
+//
 // EventLog - shows how to use EventLogAppender to write to the windows event log.
 //
 

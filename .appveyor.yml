@@ -15,7 +15,7 @@ environment:
 
 matrix:
   fast_finish: true
-  
+
 shallow_clone: true
 
 before_build:

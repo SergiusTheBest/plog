@@ -1,4 +1,4 @@
-﻿//
+//
 // Facilities - shows how to use logging per facilities via multiple logger instances (useful for big projects).
 //
 

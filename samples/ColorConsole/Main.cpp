@@ -1,4 +1,4 @@
-﻿//
+//
 // ColorConsole - shows how to use a color console appender.
 //
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <plog/Log.h>
 
 class MyClass
@@ -6,7 +6,7 @@ class MyClass
 public:
     MyClass();
     ~MyClass();
-    
+
     void method();
 
     void inlineMethod()

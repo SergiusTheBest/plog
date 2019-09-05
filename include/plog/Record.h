@@ -117,9 +117,9 @@ namespace plog
             util::ftime(&m_time);
         }
 
-        Record& ref() 
-        { 
-            return *this; 
+        Record& ref()
+        {
+            return *this;
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -201,7 +201,7 @@ namespace plog
 
             wchar_t* str = NULL;
             va_list ap;
-            
+
             va_start(ap, format);
             int len = vaswprintf(&str, format, ap);
             static_cast<void>(len);

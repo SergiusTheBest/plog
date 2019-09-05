@@ -1,4 +1,4 @@
-﻿//
+//
 // UtcTime - shows how to use UTC time in logs.
 //
 

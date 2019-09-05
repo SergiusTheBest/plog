@@ -1,4 +1,4 @@
-﻿//
+//
 // Chained - shows how to chain a logger (route messages) in a shared library with the main logger.
 //
 
@@ -11,7 +11,7 @@
 #   define EXPORT __attribute__ ((visibility ("default")))
 #endif
 
-// Function that initializes the logger in the shared library. 
+// Function that initializes the logger in the shared library.
 extern "C" void EXPORT initialize(plog::Severity severity, plog::IAppender* appender)
 {
     plog::init(severity, appender); // Initialize the shared library logger.

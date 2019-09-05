@@ -1,4 +1,4 @@
-﻿//
+//
 // Library - shows plog usage in static libraries.
 //
 

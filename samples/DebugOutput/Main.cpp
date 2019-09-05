@@ -1,4 +1,4 @@
-﻿//
+//
 // DebugOutput - shows how to use DebugOutputAppender to write to the windows debug output.
 //
 
