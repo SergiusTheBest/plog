@@ -144,7 +144,11 @@ namespace plog
             return -1;
         }
 
+#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+        int retval = _vsnprintf(str, len + 1, format, ap);
+#else
         int retval = _vsnprintf_s(str, len + 1, len, format, ap);
+#endif        
         if (retval < 0)
         {
             free(str);
@@ -169,7 +173,11 @@ namespace plog
             return -1;
         }
 
+#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+        int retval = _vsnwprintf(str, len + 1, format, ap);
+#else
         int retval = _vsnwprintf_s(str, len + 1, len, format, ap);
+#endif         
         if (retval < 0)
         {
             free(str);
