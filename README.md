@@ -310,30 +310,30 @@ Here the logger is initialized in the way when log messages are written to both 
 *Refer to [MultiAppender](samples/MultiAppender) for a complete sample.*
 
 ## Multiple loggers
-Multiple [Loggers](#logger) can be used simultaneously each with their own separate configuration. The [Loggers](#logger) differ by their instance number (that is implemented as a template parameter). The default instance is zero. Initialization is done by the appropriate template `plog::init` functions:
+Multiple [Loggers](#logger) can be used simultaneously each with their own separate configuration. The [Loggers](#logger) differ by their instanceId (that is implemented as a template parameter). The default instanceId is zero. Initialization is done by the appropriate template `plog::init` functions:
 
 ```cpp
-Logger<instance>& init<instance>(...);
+Logger<instanceId>& init<instanceId>(...);
 ```
 
 To get a logger use `plog::get` function (returns `NULL` if the logger is not initialized):
 
 ```cpp
-Logger<instance>* get<instance>();
+Logger<instanceId>* get<instanceId>();
 ```
 
-All logging macros have their special versions that accept an instance parameter. These kind of macros have an underscore at the end:
+All logging macros have their special versions that accept an instanceId parameter. These kind of macros have an underscore at the end:
 
 ```cpp
-PLOGD_(instance) << "debug";
-PLOGD_IF_(instance, condition) << "conditional debug";
-IF_PLOG_(instance, severity)
+PLOGD_(instanceId) << "debug";
+PLOGD_IF_(instanceId, condition) << "conditional debug";
+IF_PLOG_(instanceId, severity)
 ```
 
 Sample:
 
 ```cpp
-enum // Define log instances. Default is 0 and is omitted from this enum.
+enum // Define log instanceIds. Default is 0 and is omitted from this enum.
 {
     SecondLog = 1
 };
@@ -525,11 +525,11 @@ The log data flow is shown below:
 -->
 
 ## Logger
-[Logger](#logger) is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. [Logger](#logger) can act as [Appender](#appender) for another [Logger](#logger) because it implements `IAppender` interface. Also there can be several independent loggers that are parameterized by an integer instance number. The default instance is 0.
+[Logger](#logger) is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. [Logger](#logger) can act as [Appender](#appender) for another [Logger](#logger) because it implements `IAppender` interface. Also there can be several independent loggers that are parameterized by an integer instanceId number. The default instanceId is 0.
 
 ```cpp
-template<int instance>
-class Logger : public util::Singleton<Logger<instance> >, public IAppender
+template<int instanceId>
+class Logger : public util::Singleton<Logger<instanceId> >, public IAppender
 {
 public:
     Logger(Severity maxSeverity = none);
@@ -584,9 +584,10 @@ public:
     virtual unsigned int getTid() const;
     virtual const void* getObject() const;
     virtual size_t getLine() const;
-    virtual const util::nchar* getMessage() const
-    virtual const char* getFunc() const
-    virtual const char* getFile() const
+    virtual const util::nchar* getMessage() const;
+    virtual const char* getFunc() const;
+    virtual const char* getFile() const;
+    virtual int getInstanceId() const;
 };
 ```
 
@@ -1050,7 +1051,7 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 - Fix #34: Introduce binary compatible interface to Record (WARNING: this is not compatible with 1.0.x version in [Chained mode](#chained-loggers), so don't mix 1.1.x and 1.0.x)
 
 ## Version 1.0.2 (19 Nov 2016)
-- New #11: Default instance can be set via `LOG_DEFAULT_INSTANCE`
+- New #11: Default instanceId can be set via `LOG_DEFAULT_INSTANCE`
 - New #30: Support for `QString`
 - New: Support for C++Builder
 - New #15: `severityFromString` function

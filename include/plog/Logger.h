@@ -3,14 +3,18 @@
 #include <plog/Util.h>
 #include <vector>
 
-#ifndef PLOG_DEFAULT_INSTANCE
-#   define PLOG_DEFAULT_INSTANCE 0
+#ifdef PLOG_DEFAULT_INSTANCE // for backward compatibility
+#   define PLOG_DEFAULT_INSTANCE_ID PLOG_DEFAULT_INSTANCE
+#endif
+
+#ifndef PLOG_DEFAULT_INSTANCE_ID
+#   define PLOG_DEFAULT_INSTANCE_ID 0
 #endif
 
 namespace plog
 {
-    template<int instance>
-    class Logger : public util::Singleton<Logger<instance> >, public IAppender
+    template<int instanceId>
+    class Logger : public util::Singleton<Logger<instanceId> >, public IAppender
     {
     public:
         Logger(Severity maxSeverity = none) : m_maxSeverity(maxSeverity)
@@ -60,14 +64,14 @@ namespace plog
         std::vector<IAppender*> m_appenders;
     };
 
-    template<int instance>
-    inline Logger<instance>* get()
+    template<int instanceId>
+    inline Logger<instanceId>* get()
     {
-        return Logger<instance>::getInstance();
+        return Logger<instanceId>::getInstance();
     }
 
-    inline Logger<PLOG_DEFAULT_INSTANCE>* get()
+    inline Logger<PLOG_DEFAULT_INSTANCE_ID>* get()
     {
-        return Logger<PLOG_DEFAULT_INSTANCE>::getInstance();
+        return Logger<PLOG_DEFAULT_INSTANCE_ID>::getInstance();
     }
 }
