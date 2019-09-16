@@ -1014,25 +1014,43 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 # Version history
 
 ## Version 1.1.5 (TBD)
-- Fix #25: Add macro names PLOG* to avoid name conflicts with syslog.h or sys/syslog.h, allow control of including olf LOG* macro names for downward compatibility
+- New: Add logger `instanceId` into `Record` (#141)
+- New: Add support for the printf style formatting (#139)
+- New: Make `severityFromString` case-insensitive
+- New: Define macro names with "PLOG" instead of "LOG" in order to avoid conflicts with "LOG" names defined in other packages or in system headers (#25, #129)
+- New: Add option for building samples (ON per default) (#125, #126)
+- New: Add CMake installer (#121, #122)
+- New: Add support for `QStringRef`
+- New: Modernize CMake (#106)
+- New: Allow rollLogFiles to be called manually (#100, #103)
+- New: Add ability to use UTC time (#101)
+- Fix: Disable `PLOG_GET_THIS()` by default (#120, #132)
+- Fix: Change `RegSetValueExW` prototype to match windows native declaration (void* -> BYTE*)
+- Fix: Move `System::String^` handler to a free function (#131)
+- Fix: Making sure we can build standalone under Windows (#123)
+- Fix: Parse error by ReSharper (#116)
+- Fix: Parse error by Clang Code Model in Qt Creator (#114)
+- Fix: Printing CustomType at begin of the stream (#94)
+- Fix: Make `RollingFileAppender` work with maxFiles set to 1 (#70)
+- Fix: Clang-tidy nullable issue
 
 ## Version 1.1.4 (26 Mar 2018)
 - New: Add `-Wundef` support
-- New #87: Add [RTEMS](https://www.rtems.org) support
-- New #84: Add Intel C++ Compiler support
-- New #83: Add FreeBSD support
-- New #79: Add `-Wnon-virtual-dtor` support
-- New #66: Support ostream operator<< on windows as well as wostream
-- Fix #68: Fix compilation for Android
-- Fix: Fix compiling with cmake 2.8
+- New: Add [RTEMS](https://www.rtems.org) support (#87)
+- New: Add Intel C++ Compiler support (#84)
+- New: Add FreeBSD support (#83)
+- New: Add `-Wnon-virtual-dtor` support (#79)
+- New: Support `ostream` operator<< on Windows as well as `wostream` (#66)
+- Fix: Fix compilation for Android (#68)
+- Fix: Fix compiling with CMake 2.8
 
 ## Version 1.1.3 (09 Aug 2017)
 - New: Introduce `LOG_ENABLE_WCHAR_INPUT` macro to control wide string support
-- New #63: Add support for managed C++ `System::String^`
-- New #61: Add missing macros for logging with severity NONE
-- Fix #59: Unable to build [NativeEOLConverter](#nativeeolconverter)/[UTF8Converter](#utf8converter) using Visual Studio
-- Fix #58: Use WriteConsoleW instead of global setlocale for writing unicode into windows console
-- Fix #55: Mention about linking to `iconv` on macOS
+- New: Add support for managed C++ `System::String^` (#63)
+- New: Add missing macros for logging with severity NONE (#61)
+- Fix: Unable to build [NativeEOLConverter](#nativeeolconverter)/[UTF8Converter](#utf8converter) using Visual Studio (#59)
+- Fix: Use `WriteConsoleW` instead of global `setlocale` for writing unicode into Windows console (#58)
+- Fix: Mention about linking to `iconv` on macOS (#55)
 - Fix: `IF_LOG` macro didn't work for curly braces blocks
 
 ## Version 1.1.2 (02 May 2017)
@@ -1041,36 +1059,36 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 - New: Slightly increase log performance on Windows (about 9%).
 
 ## Version 1.1.1 (17 Apr 2017)
-- Fix #47: Update includes
-- Fix #45, #13: Get rid of `windows.h` dependency
-- Fix #40: Signed unsigned assignment warning
-- Fix #39: Build warning on macOS 10.12 Sierra
-- New #36: Ability to check whether event log registry entry exists
+- New: Ability to check whether event log registry entry exists (#36)
+- Fix: Update includes (#47)
+- Fix: Get rid of `windows.h` dependency (#45, #13)
+- Fix: Signed unsigned assignment warning (#40)
+- Fix: Build warning on macOS 10.12 Sierra (#39)
 
 ## Version 1.1.0 (20 Nov 2016)
-- Fix #34: Introduce binary compatible interface to Record (WARNING: this is not compatible with 1.0.x version in [Chained mode](#chained-loggers), so don't mix 1.1.x and 1.0.x)
+- Fix: Introduce binary compatible interface to `Record` (WARNING: this is not compatible with 1.0.x version in [Chained mode](#chained-loggers), so don't mix 1.1.x and 1.0.x) (#34)
 
 ## Version 1.0.2 (19 Nov 2016)
-- New #11: Default instanceId can be set via `LOG_DEFAULT_INSTANCE`
-- New #30: Support for `QString`
+- New: Default instanceId can be set via `LOG_DEFAULT_INSTANCE` (#11)
+- New: Support for `QString` (#30)
 - New: Support for C++Builder
-- New #15: `severityFromString` function
-- New #21: Capture source file name (disabled by default)
-- New #33: Add [DebugOutputAppender](#debugoutputappender)
-- New #32: Add [EventLogAppender](#eventlogappender)
-- Fix #12: Crash on processing Obj-C function name
-- Fix #17: Compatibility with [MinGW](http://www.mingw.org/)
-- Fix #27: `IF_LOG_` macro in if/else leads to miss else branch
-- Fix #18, #29: Thread safety for [ConsoleAppender](#consoleappender)/[ColorConsoleAppender](#colorconsoleappender)
-- Fix #31: Support for stream manipulators like std::endl
+- New: `severityFromString` function (#15)
+- New: Capture source file name (disabled by default) (#21)
+- New: Add [DebugOutputAppender](#debugoutputappender) (#33)
+- New: Add [EventLogAppender](#eventlogappender) (#32)
+- Fix: Crash on processing Obj-C function name (#12)
+- Fix: Compatibility with [MinGW](http://www.mingw.org/) (#17)
+- Fix: `IF_LOG_` macro in if/else leads to miss else branch (#27)
+- Fix: Thread safety for [ConsoleAppender](#consoleappender)/[ColorConsoleAppender](#colorconsoleappender) (#18, #29)
+- Fix: Support for stream manipulators like `std::endl` (#31)
 - Fix: Compatibility with old Visual Studio versions
 
 ## Version 1.0.1 (01 Nov 2015)
 - New: Add [ColorConsoleAppender](#colorconsoleappender)
-- Fix #6: Compatibility with [Mingw-w64](http://mingw-w64.org/)
-- Fix #7: Log file not created if file name contains Unicode characters in Windows
-- Fix #4: Flush stdout
-- Fix #3: IntelliSense error: expected an identifier
+- Fix: Compatibility with [Mingw-w64](http://mingw-w64.org/) (#6)
+- Fix: Log file not created if file name contains Unicode characters in Windows (#7)
+- Fix: Flush stdout (#4)
+- Fix: IntelliSense error: expected an identifier (#3)
 
 ## Version 1.0.0 (19 May 2015)
 - Initial public release
