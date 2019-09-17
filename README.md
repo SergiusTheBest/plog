@@ -791,11 +791,11 @@ Stream output in plog has several improvements over the standard `std::ostream`:
 - handles wide chars/strings: `wchar_t`, `wchar_t*`, `std::wstring`
 - handles `NULL` values for C-strings: `char*` and `wchar_t*`
 - implicitly casts objects to: `std::string` and `std::wstring` (if they have an appropriate cast operator)
-- supports `QString` (you need to include Qt headers before plog)
+- supports `QString` and `QStringRef` (you need to include Qt headers before plog)
 - supports managed C++ `System::String^`
 
 ## Automatic 'this' pointer capture
-'This' pointer is captured automatically to log data and can be printed by [CsvFormatter](#csvformatter). Unfortunately this feature is supported only on msvc 2010 and higher.
+'This' pointer is captured automatically to log data and can be printed by [CsvFormatter](#csvformatter). Unfortunately this feature is supported only on msvc 2010 and higher. It's disabled by default (due to some compatibility issues with `__if_exists` C++ extension), to enable it define `PLOG_ENABLE_GET_THIS`.
 
 ## Headers to include
 The core plog functionality is provided by inclusion of `plog/Log.h` file. Extra components require inclusion of corresponding extra headers after `plog/Log.h`.
