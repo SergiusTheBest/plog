@@ -1,12 +1,13 @@
 #pragma once
 #include <plog/Appenders/IAppender.h>
 #include <plog/Converters/UTF8Converter.h>
+#include <plog/Converters/NativeEOLConverter.h>
 #include <plog/Util.h>
 #include <algorithm>
 
 namespace plog
 {
-    template<class Formatter, class Converter = UTF8Converter>
+    template<class Formatter, class Converter = NativeEOLConverter<UTF8Converter> >
     class RollingFileAppender : public IAppender
     {
     public:
