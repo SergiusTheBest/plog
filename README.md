@@ -1014,6 +1014,7 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 # Version history
 
 ## Version 1.1.5 (TBD)
+- New: Use `NativeEOLConverter` by default (#145)
 - New: Add logger `instanceId` into `Record` (#141)
 - New: Add support for the printf style formatting (#139)
 - New: Make `severityFromString` case-insensitive
