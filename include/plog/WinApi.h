@@ -1,6 +1,13 @@
 #pragma once
 
 #ifdef _WIN32
+
+// These windows structs must be in a global namespace
+struct HKEY__;
+struct _SECURITY_ATTRIBUTES;
+struct _CONSOLE_SCREEN_BUFFER_INFO;
+struct _RTL_CRITICAL_SECTION;
+
 namespace plog
 {
     typedef unsigned long DWORD;
@@ -14,7 +21,7 @@ namespace plog
     typedef const char* LPCSTR;
     typedef const wchar_t* LPCWSTR;
     typedef void* HANDLE;
-    typedef void* HKEY;
+    typedef HKEY__* HKEY;
     typedef size_t ULONG_PTR;
 
     struct CRITICAL_SECTION
@@ -101,6 +108,31 @@ namespace plog
         const WORD kIntensity = 0x0080;
     }
 
+    inline void InitializeCriticalSection(CRITICAL_SECTION* criticalSection)
+    {
+        InitializeCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+    }
+
+    inline void EnterCriticalSection(CRITICAL_SECTION* criticalSection)
+    {
+        EnterCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+    }
+
+    inline void LeaveCriticalSection(CRITICAL_SECTION* criticalSection)
+    {
+        LeaveCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+    }
+
+    inline void DeleteCriticalSection(CRITICAL_SECTION* criticalSection)
+    {
+        DeleteCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+    }
+
+    inline BOOL GetConsoleScreenBufferInfo(HANDLE consoleOutput, CONSOLE_SCREEN_BUFFER_INFO* consoleScreenBufferInfo)
+    {
+        return GetConsoleScreenBufferInfo(consoleOutput, reinterpret_cast<_CONSOLE_SCREEN_BUFFER_INFO*>(consoleScreenBufferInfo));
+    }
+
     extern "C"
     {
         __declspec(dllimport) int __stdcall MultiByteToWideChar(UINT CodePage, DWORD dwFlags, LPCSTR lpMultiByteStr, int cbMultiByte, LPWSTR lpWideCharStr, int cchWideChar);
@@ -110,16 +142,16 @@ namespace plog
 
         __declspec(dllimport) BOOL __stdcall MoveFileW(LPCWSTR lpExistingFileName, LPCWSTR lpNewFileName);
 
-        __declspec(dllimport) void __stdcall InitializeCriticalSection(CRITICAL_SECTION* lpCriticalSection);
-        __declspec(dllimport) void __stdcall EnterCriticalSection(CRITICAL_SECTION* lpCriticalSection);
-        __declspec(dllimport) void __stdcall LeaveCriticalSection(CRITICAL_SECTION* lpCriticalSection);
-        __declspec(dllimport) void __stdcall DeleteCriticalSection(CRITICAL_SECTION* lpCriticalSection);
+        __declspec(dllimport) void __stdcall InitializeCriticalSection(_RTL_CRITICAL_SECTION* lpCriticalSection);
+        __declspec(dllimport) void __stdcall EnterCriticalSection(_RTL_CRITICAL_SECTION* lpCriticalSection);
+        __declspec(dllimport) void __stdcall LeaveCriticalSection(_RTL_CRITICAL_SECTION* lpCriticalSection);
+        __declspec(dllimport) void __stdcall DeleteCriticalSection(_RTL_CRITICAL_SECTION* lpCriticalSection);
 
         __declspec(dllimport) HANDLE __stdcall RegisterEventSourceW(LPCWSTR lpUNCServerName, LPCWSTR lpSourceName);
         __declspec(dllimport) BOOL __stdcall DeregisterEventSource(HANDLE hEventLog);
         __declspec(dllimport) BOOL __stdcall ReportEventW(HANDLE hEventLog, WORD wType, WORD wCategory, DWORD dwEventID, void* lpUserSid, WORD wNumStrings, DWORD dwDataSize, LPCWSTR* lpStrings, void* lpRawData);
 
-        __declspec(dllimport) LSTATUS __stdcall RegCreateKeyExW(HKEY hKey, LPCWSTR lpSubKey, DWORD Reserved, LPWSTR lpClass, DWORD dwOptions, DWORD samDesired, void* lpSecurityAttributes, HKEY* phkResult, DWORD* lpdwDisposition);
+        __declspec(dllimport) LSTATUS __stdcall RegCreateKeyExW(HKEY hKey, LPCWSTR lpSubKey, DWORD Reserved, LPWSTR lpClass, DWORD dwOptions, DWORD samDesired, _SECURITY_ATTRIBUTES* lpSecurityAttributes, HKEY* phkResult, DWORD* lpdwDisposition);
         __declspec(dllimport) LSTATUS __stdcall RegSetValueExW(HKEY hKey, LPCWSTR lpValueName, DWORD Reserved, DWORD dwType, const BYTE* lpData, DWORD cbData);
         __declspec(dllimport) LSTATUS __stdcall RegCloseKey(HKEY hKey);
         __declspec(dllimport) LSTATUS __stdcall RegOpenKeyExW(HKEY hKey, LPCWSTR lpSubKey, DWORD ulOptions, DWORD samDesired, HKEY* phkResult);
@@ -128,7 +160,7 @@ namespace plog
         __declspec(dllimport) HANDLE __stdcall GetStdHandle(DWORD nStdHandle);
 
         __declspec(dllimport) BOOL __stdcall WriteConsoleW(HANDLE hConsoleOutput, const void* lpBuffer, DWORD nNumberOfCharsToWrite, DWORD* lpNumberOfCharsWritten, void* lpReserved);
-        __declspec(dllimport) BOOL __stdcall GetConsoleScreenBufferInfo(HANDLE hConsoleOutput, CONSOLE_SCREEN_BUFFER_INFO* lpConsoleScreenBufferInfo);
+        __declspec(dllimport) BOOL __stdcall GetConsoleScreenBufferInfo(HANDLE hConsoleOutput, _CONSOLE_SCREEN_BUFFER_INFO* lpConsoleScreenBufferInfo);
         __declspec(dllimport) BOOL __stdcall SetConsoleTextAttribute(HANDLE hConsoleOutput, WORD wAttributes);
 
         __declspec(dllimport) void __stdcall OutputDebugStringW(LPCWSTR lpOutputString);
