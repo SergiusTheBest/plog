@@ -108,31 +108,6 @@ namespace plog
         const WORD kIntensity = 0x0080;
     }
 
-    inline void InitializeCriticalSection(CRITICAL_SECTION* criticalSection)
-    {
-        InitializeCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
-    }
-
-    inline void EnterCriticalSection(CRITICAL_SECTION* criticalSection)
-    {
-        EnterCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
-    }
-
-    inline void LeaveCriticalSection(CRITICAL_SECTION* criticalSection)
-    {
-        LeaveCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
-    }
-
-    inline void DeleteCriticalSection(CRITICAL_SECTION* criticalSection)
-    {
-        DeleteCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
-    }
-
-    inline BOOL GetConsoleScreenBufferInfo(HANDLE consoleOutput, CONSOLE_SCREEN_BUFFER_INFO* consoleScreenBufferInfo)
-    {
-        return GetConsoleScreenBufferInfo(consoleOutput, reinterpret_cast<_CONSOLE_SCREEN_BUFFER_INFO*>(consoleScreenBufferInfo));
-    }
-
     extern "C"
     {
         __declspec(dllimport) int __stdcall MultiByteToWideChar(UINT CodePage, DWORD dwFlags, LPCSTR lpMultiByteStr, int cbMultiByte, LPWSTR lpWideCharStr, int cchWideChar);
@@ -164,6 +139,31 @@ namespace plog
         __declspec(dllimport) BOOL __stdcall SetConsoleTextAttribute(HANDLE hConsoleOutput, WORD wAttributes);
 
         __declspec(dllimport) void __stdcall OutputDebugStringW(LPCWSTR lpOutputString);
+    }
+
+    inline void InitializeCriticalSection(CRITICAL_SECTION* criticalSection)
+    {
+        InitializeCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+    }
+
+    inline void EnterCriticalSection(CRITICAL_SECTION* criticalSection)
+    {
+        EnterCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+    }
+
+    inline void LeaveCriticalSection(CRITICAL_SECTION* criticalSection)
+    {
+        LeaveCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+    }
+
+    inline void DeleteCriticalSection(CRITICAL_SECTION* criticalSection)
+    {
+        DeleteCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+    }
+
+    inline BOOL GetConsoleScreenBufferInfo(HANDLE consoleOutput, CONSOLE_SCREEN_BUFFER_INFO* consoleScreenBufferInfo)
+    {
+        return GetConsoleScreenBufferInfo(consoleOutput, reinterpret_cast<_CONSOLE_SCREEN_BUFFER_INFO*>(consoleScreenBufferInfo));
     }
 }
 #endif // _WIN32
