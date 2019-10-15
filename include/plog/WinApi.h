@@ -143,27 +143,27 @@ namespace plog
 
     inline void InitializeCriticalSection(CRITICAL_SECTION* criticalSection)
     {
-        InitializeCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+        plog::InitializeCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
     }
 
     inline void EnterCriticalSection(CRITICAL_SECTION* criticalSection)
     {
-        EnterCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+        plog::EnterCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
     }
 
     inline void LeaveCriticalSection(CRITICAL_SECTION* criticalSection)
     {
-        LeaveCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+        plog::LeaveCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
     }
 
     inline void DeleteCriticalSection(CRITICAL_SECTION* criticalSection)
     {
-        DeleteCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
+        plog::DeleteCriticalSection(reinterpret_cast<_RTL_CRITICAL_SECTION*>(criticalSection));
     }
 
     inline BOOL GetConsoleScreenBufferInfo(HANDLE consoleOutput, CONSOLE_SCREEN_BUFFER_INFO* consoleScreenBufferInfo)
     {
-        return GetConsoleScreenBufferInfo(consoleOutput, reinterpret_cast<_CONSOLE_SCREEN_BUFFER_INFO*>(consoleScreenBufferInfo));
+        return plog::GetConsoleScreenBufferInfo(consoleOutput, reinterpret_cast<_CONSOLE_SCREEN_BUFFER_INFO*>(consoleScreenBufferInfo));
     }
 }
 #endif // _WIN32
