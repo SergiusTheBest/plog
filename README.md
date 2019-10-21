@@ -23,7 +23,9 @@ Pretty powerful logging library in about 1000 lines of code [![Build Status](htt
   - [Record](#record)
   - [Formatter](#formatter)
     - [TxtFormatter](#txtformatter)
+    - [TxtFormatterUtcTime](#txtformatterutctime)
     - [CsvFormatter](#csvformatter)
+    - [CsvFormatterUtcTime](#csvformatterutctime)
     - [FuncMessageFormatter](#funcmessageformatter)
     - [MessageOnlyFormatter](#messageonlyformatter)
   - [Converter](#converter)
@@ -45,6 +47,7 @@ Pretty powerful logging library in about 1000 lines of code [![Build Status](htt
   - [Wide string support](#wide-string-support)
   - [Performance](#performance)
   - [Printf style formatting](#printf-style-formatting)
+  - [LOG_XXX macro name clashes](#log_xxx-macro-name-clashes)
 - [Extending](#extending)
   - [Custom data type](#custom-data-type)
   - [Custom appender](#custom-appender)
@@ -60,23 +63,28 @@ Pretty powerful logging library in about 1000 lines of code [![Build Status](htt
 # Introduction
 
 ## Hello log!
-Plog is a C++ logging library that is designed to be as simple, small and flexible as possible. It is created as an alternative to existing large libraries and provides some unique features as [CSV log format]((#csvformatter)) and [automatic 'this' pointer capture](#automatic-this-pointer-capture).
+Plog is a C++ logging library that is designed to be as simple, small and flexible as possible. It is created as an alternative to existing large libraries and provides some unique features as [CSV log format]((#csvformatter)) and [wide string support](#wide-string-support).
 
 Here is a minimal hello log sample:
 
 ```cpp
-#include <plog/Log.h> // Step1: include the header.
+#include <plog/Log.h> // Step1: include the header
 
 int main()
 {
-    plog::init(plog::debug, "Hello.txt"); // Step2: initialize the logger.
+    plog::init(plog::debug, "Hello.txt"); // Step2: initialize the logger
 
-    // Step3: write log messages using a special macro.
-    // There are several log macros, use the macro you liked the most.
+    // Step3: write log messages using a special macro
+    // There are several log macros, use the macro you liked the most
 
     PLOGD << "Hello log!"; // short macro
     PLOG_DEBUG << "Hello log!"; // long macro
     PLOG(plog::debug) << "Hello log!"; // function-style macro
+    
+    // Also you can use LOG_XXX macro but it may clash with other logging libraries
+    LOGD << "Hello log!"; // short macro
+    LOG_DEBUG << "Hello log!"; // long macro
+    LOG(plog::debug) << "Hello log!"; // function-style macro
 
     return 0;
 }
@@ -97,7 +105,7 @@ And its output:
 - No 3rd-party dependencies
 - Cross-platform: Windows, Linux, FreeBSD, macOS, Android, RTEMS (gcc, clang, msvc, mingw, mingw-w64, icc, c++builder)
 - Thread and type safe
-- Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter)
+- Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter), [MessageOnly](#messageonlyformatter)
 - Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender), [EventLog](#eventlogappender), [DebugOutput](#debugoutputappender)
 - [Automatic 'this' pointer capture](#automatic-this-pointer-capture) (supported only on msvc)
 - [Lazy stream evaluation](#lazy-stream-evaluation)
@@ -105,6 +113,8 @@ And its output:
 - Doesn't require C++11
 - [Extendable](#extending)
 - No `windows.h` dependency
+- Can use UTC or local time
+- Uses modern CMake
 
 # Usage
 To start using plog you need to make 3 simple steps.
@@ -114,7 +124,6 @@ At first your project needs to know about plog. For that you have to:
 
 1. Add `plog/include` to the project include paths
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
-3. If the project include paths include `<syslog.h>` or `<sys/syslog.h>` or any other header that defines macros with names starting with "LOG", add `#define PLOG_OMIT_LOG_DEFINES` **before** `#include <plog/Log.h>`
 
 ## Step 2: Initialization
 The next step is to initialize the [Logger](#logger). This is done by the following `plog::init` function:
@@ -623,6 +632,9 @@ This is a classic log format available in almost any log library. It is good for
 2014-11-11 00:29:06.261 DEBUG [4460] [Object::~Object@13]
 ```
 
+### TxtFormatterUtcTime
+This is a variant of [TxtFormatter](#txtformatter) that uses UTC time instead of local time.
+
 ### CsvFormatter
 This is the most powerful log format. It can be easily read without any tools (but slighlty harder than [TXT format](#txtformatter)) and can be heavily analyzed if it is opened with a CSV-aware tool (like Excel). One rows can be highlighted according to their cell values, another rows can be hidden, columns can be manipulated and you can even run SQL queries on log data! This is a recommended format if logs are big and require heavy analysis. Also 'this' pointer is shown so object instances can be told apart.
 
@@ -639,6 +651,9 @@ Date;Time;Severity;TID;This;Function;Message
 ```
 
 *Note: message size is limited to 32000 chars.*
+
+### CsvFormatterUtcTime
+This is a variant of [CsvFormatter](#csvformatter) that uses UTC time instead of local time.
 
 ### FuncMessageFormatter
 This format is designed to be used with appenders that provide their own timestamps (like [AndroidAppender](#androidappender) or linux syslog facility).
@@ -800,27 +815,12 @@ Stream output in plog has several improvements over the standard `std::ostream`:
 ## Headers to include
 The core plog functionality is provided by inclusion of `plog/Log.h` file. Extra components require inclusion of corresponding extra headers after `plog/Log.h`.
 
-![Plog core and extra components](http://gravizo.com/g?@startuml;package%20"Plog%20core\\n%28no%20additional%20include,%20just%20plog/Log.h%29"%20{;%20%20class%20TxtFormatter;%20%20class%20CsvFormatter;%20%20class%20UTF8Converter;%20%20class%20RollingFileAppender;};package%20"Plog%20extra\\n%28requires%20additional%20include%29"%20{;%20%20class%20FuncMessageFormatter;%20%20class%20ConsoleAppender;%20%20class%20ColorConsoleAppender;%20%20class%20AndroidAppender;%20%20class%20DebugOutputAppender;%20%20class%20EventLogAppender;};hide%20empty%20members;hide%20empty%20fields;@enduml)
-<!--
-@startuml
-package "Plog core\n(no additional include, just plog/Log.h)" {
-  class TxtFormatter
-  class CsvFormatter
-  class UTF8Converter
-  class RollingFileAppender
-}
-package "Plog extra\n(requires additional include)" {
-  class FuncMessageFormatter
-  class ConsoleAppender
-  class ColorConsoleAppender
-  class AndroidAppender
-  class DebugOutputAppender
-  class EventLogAppender
-}
-hide empty members
-hide empty fields
-@enduml
--->
+Core components are:
+- [TxtFormatter](#txtformatter)/[TxtFormatterUtcTime](#txtformatterutctime)
+- [CsvFormatter](#csvformatter)/[CsvFormatterUtcTime](#csvformatterutctime)
+- [UTF8Converter](#utf8converter)
+- [NativeEOLConverter](#nativeeolconverter)
+- [RollingFileAppender](#rollingfileappender)
 
 ## Unicode
 Plog is unicode aware and wide string friendly. All messages are converted to a system native char type:
@@ -879,6 +879,11 @@ Plog supports printf style formatting:
 PLOGI.printf("%d %s", 42, "test");
 PLOGI.printf(L"%d %S", 42, "test"); // wchar_t version
 ```
+
+## LOG_XXX macro name clashes
+`LOG_XXX` macro names may be in conflict with other libraries (for example [syslog](https://linux.die.net/man/3/syslog)). In such cases you can disable `LOG_XXX` macro by defining `PLOG_OMIT_LOG_DEFINES` and use `PLOG_XXX`.
+
+*Define `PLOG_OMIT_LOG_DEFINES` before `#include <plog/Log.h>` or in the project settings!*
 
 # Extending
 Plog can be easily extended to support new:
@@ -977,9 +982,10 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[Library](samples/Library)|Shows plog usage in static libraries.|
 |[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
 |[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
-|[NativeEOL](samples/NativeEOL)|Shows how to use [NativeEOLConverter](#nativeeolconverter).|
+|[SkipNativeEOL](samples/SkipNativeEOL)|Shows how to skip [NativeEOLConverter](#nativeeolconverter).|
 |[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
 |[Performance](samples/Performance)|Measures time per a log call.|
+|[UtcTime](samples/UtcTime)|Shows how to use UTC time instead of local time.|
 
 # References
 
@@ -1013,7 +1019,7 @@ Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You c
 
 # Version history
 
-## Version 1.1.5 (TBD)
+## Version 1.1.5 (21 Oct 2019)
 - New: Use `NativeEOLConverter` by default (#145)
 - New: Add logger `instanceId` into `Record` (#141)
 - New: Add support for the printf style formatting (#139)
