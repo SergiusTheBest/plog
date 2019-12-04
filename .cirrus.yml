@@ -1,0 +1,12 @@
+task:
+    name: FreeBSD
+    freebsd_instance:
+        matrix:
+            image_family: freebsd-12-1
+    matrix:
+        env:
+            BUILD_TYPE: Debug
+        env:
+            BUILD_TYPE: Release
+    install_script: pkg install -y cmake
+    compile_script: cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=$BUILD_TYPE && cmake --build build -- -j4
