@@ -15,16 +15,28 @@
 #   endif
 #endif
 
-#if defined(_WIN32) || defined(_WIN64)
-#   if defined(PLOG_EXPORTS)
-#       define PLOG_DLL __declspec(dllexport)
-#   elif defined(PLOG_IMPORTS)
-#       define PLOG_DLL __declspec(dllimport)
-#   else
-#       define PLOG_DLL
+#ifdef _WIN32
+#   if defined(PLOG_EXPORT)
+#       define PLOG_LINKAGE __declspec(dllexport)
+#   elif defined(PLOG_IMPORT)
+#       define PLOG_LINKAGE __declspec(dllimport)
+#   endif
+#   if defined(PLOG_GLOBAL)
+#       error "PLOG_GLOBAL isn't supported on Windows"
 #   endif
 #else
-#   define PLOG_DLL 
+#   if defined(PLOG_GLOBAL)
+#       define PLOG_LINKAGE __attribute__ ((visibility ("default")))
+#   elif defined(PLOG_LOCAL)
+#       define PLOG_LINKAGE __attribute__ ((visibility ("hidden")))
+#   endif
+#   if defined(PLOG_EXPORT) || defined(PLOG_IMPORT)
+#       error "PLOG_EXPORT/PLOG_IMPORT is supported only on Windows"
+#   endif
+#endif
+
+#ifndef PLOG_LINKAGE
+#   define PLOG_LINKAGE
 #endif
 
 #ifdef _WIN32
@@ -160,7 +172,7 @@ namespace plog
         int retval = _vsnprintf(str, len + 1, format, ap);
 #else
         int retval = _vsnprintf_s(str, len + 1, len, format, ap);
-#endif        
+#endif
         if (retval < 0)
         {
             free(str);
@@ -189,7 +201,7 @@ namespace plog
         int retval = _vsnwprintf(str, len + 1, format, ap);
 #else
         int retval = _vsnwprintf_s(str, len + 1, len, format, ap);
-#endif         
+#endif
         if (retval < 0)
         {
             free(str);
@@ -305,7 +317,7 @@ namespace plog
             }
         }
 
-        class PLOG_DLL NonCopyable
+        class PLOG_LINKAGE NonCopyable
         {
         protected:
             NonCopyable()
@@ -484,7 +496,11 @@ namespace plog
         };
 
         template<class T>
+#ifdef _WIN32
         class Singleton : NonCopyable
+#else
+        class PLOG_LINKAGE Singleton : NonCopyable
+#endif
         {
         public:
             Singleton()

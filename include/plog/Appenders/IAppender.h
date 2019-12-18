@@ -4,7 +4,7 @@
 
 namespace plog
 {
-    class PLOG_DLL IAppender
+    class PLOG_LINKAGE IAppender
     {
     public:
         virtual ~IAppender()
