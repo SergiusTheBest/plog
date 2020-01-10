@@ -24,6 +24,7 @@
 #elif defined(__rtems__)
 #   include <unistd.h>
 #   include <rtems.h>
+#   include <sys/time.h>
 #   if PLOG_ENABLE_WCHAR_INPUT
 #       include <iconv.h>
 #   endif
@@ -449,6 +450,8 @@ namespace plog
         private:
 #ifdef _WIN32
             CRITICAL_SECTION m_sync;
+#elif defined(__rtems__)
+            rtems_id m_sync;
 #else
             pthread_mutex_t m_sync;
 #endif
