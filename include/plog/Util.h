@@ -346,7 +346,7 @@ namespace plog
                 close();
             }
 
-            off_t open(const nchar* fileName)
+            size_t open(const nchar* fileName)
             {
 #if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
                 m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY, SH_DENYWR, _S_IREAD | _S_IWRITE);
@@ -358,28 +358,34 @@ namespace plog
                 return seek(0, SEEK_END);
             }
 
-            int write(const void* buf, size_t count)
+            size_t write(const void* buf, size_t count)
             {
+                return m_file != -1 ? static_cast<size_t>(
 #ifdef _WIN32
-                return m_file != -1 ? ::_write(m_file, buf, static_cast<unsigned int>(count)) : -1;
+                    ::_write(m_file, buf, static_cast<unsigned int>(count))
 #else
-                return m_file != -1 ? static_cast<int>(::write(m_file, buf, count)) : -1;
+                    ::write(m_file, buf, count)
 #endif
+                    ) : static_cast<size_t>(-1);
             }
 
             template<class CharType>
-            int write(const std::basic_string<CharType>& str)
+            size_t write(const std::basic_string<CharType>& str)
             {
                 return write(str.data(), str.size() * sizeof(CharType));
             }
 
-            off_t seek(off_t offset, int whence)
+            size_t seek(size_t offset, int whence)
             {
-#ifdef _WIN32
-                return m_file != -1 ? ::_lseek(m_file, offset, whence) : -1;
+                return m_file != -1 ? static_cast<size_t>(
+#if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
+                    ::_lseek(m_file, static_cast<off_t>(offset), whence)
+#elif defined(_WIN32)
+                    ::_lseeki64(m_file, static_cast<off_t>(offset), whence)
 #else
-                return m_file != -1 ? ::lseek(m_file, offset, whence) : -1;
+                    ::lseek(m_file, static_cast<off_t>(offset), whence)
 #endif
+                    ) : static_cast<size_t>(-1);
             }
 
             void close()
