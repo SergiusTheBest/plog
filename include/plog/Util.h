@@ -127,6 +127,8 @@ namespace plog
             uint64_t tid64;
             pthread_threadid_np(NULL, &tid64);
             return static_cast<unsigned int>(tid64);
+#else
+            return 0;
 #endif
         }
 
