@@ -6,20 +6,32 @@
 
 namespace plog
 {
+    enum class OutputStream
+    {
+        kCout,
+        kCerr
+    };
+
     template<class Formatter>
     class ConsoleAppender : public IAppender
     {
     public:
 #ifdef _WIN32
-        ConsoleAppender() : m_isatty(!!_isatty(_fileno(stdout))), m_stdoutHandle()
+        ConsoleAppender(OutputStream outStream = OutputStream::kCout)
+            : m_isatty(!!_isatty(_fileno(outStream == OutputStream::kCout ? stdout : stderr)))
+            , m_outputStream(outStream == OutputStream::kCout ? std::cout : std::cerr)
+            , m_outputHandle()
         {
             if (m_isatty)
             {
-                m_stdoutHandle = GetStdHandle(stdHandle::kOutput);
+                m_outputHandle = GetStdHandle(outStream == OutputStream::kCout ? stdHandle::kOutput : stdHandle::kErrorOutput);
             }
         }
 #else
-        ConsoleAppender() : m_isatty(!!isatty(fileno(stdout))) {}
+        ConsoleAppender(OutputStream outStream = OutputStream::kCout) 
+            : m_isatty(!!isatty(fileno(outStream == OutputStream::kCout ? stdout : stderr))) 
+            , m_outputStream(outStream == OutputStream::kCout ? std::cout : std::cerr)
+        {}
 #endif
 
         virtual void write(const Record& record)
@@ -36,14 +48,14 @@ namespace plog
 #ifdef _WIN32
             if (m_isatty)
             {
-                WriteConsoleW(m_stdoutHandle, str.c_str(), static_cast<DWORD>(str.size()), NULL, NULL);
+                WriteConsoleW(m_outputHandle, str.c_str(), static_cast<DWORD>(str.size()), NULL, NULL);
             }
             else
             {
-                std::cout << util::toNarrow(str, codePage::kActive) << std::flush;
+                m_outputStream << util::toNarrow(str, codePage::kActive) << std::flush;
             }
 #else
-            std::cout << str << std::flush;
+            m_outputStream << str << std::flush;
 #endif
         }
 
@@ -55,8 +67,9 @@ namespace plog
     protected:
         util::Mutex m_mutex;
         const bool  m_isatty;
+        std::ostream& m_outputStream;
 #ifdef _WIN32
-        HANDLE      m_stdoutHandle;
+        HANDLE      m_outputHandle;
 #endif
     };
 }
