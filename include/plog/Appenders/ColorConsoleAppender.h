@@ -16,7 +16,7 @@ namespace plog
             if (this->m_isatty)
             {
                 CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
-                GetConsoleScreenBufferInfo(this->m_stdoutHandle, &csbiInfo);
+                GetConsoleScreenBufferInfo(this->m_outputHandle, &csbiInfo);
 
                 m_originalAttr = csbiInfo.wAttributes;
             }
