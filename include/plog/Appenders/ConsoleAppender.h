@@ -6,10 +6,10 @@
 
 namespace plog
 {
-    enum class OutputStream
+    enum OutputStream
     {
-        kCout,
-        kCerr
+        streamStdOut,
+        streamStdErr
     };
 
     template<class Formatter>
@@ -17,20 +17,20 @@ namespace plog
     {
     public:
 #ifdef _WIN32
-        ConsoleAppender(OutputStream outStream = OutputStream::kCout)
-            : m_isatty(!!_isatty(_fileno(outStream == OutputStream::kCout ? stdout : stderr)))
-            , m_outputStream(outStream == OutputStream::kCout ? std::cout : std::cerr)
+        ConsoleAppender(OutputStream outStream = streamStdOut)
+            : m_isatty(!!_isatty(_fileno(outStream == streamStdOut ? stdout : stderr)))
+            , m_outputStream(outStream == streamStdOut ? std::cout : std::cerr)
             , m_outputHandle()
         {
             if (m_isatty)
             {
-                m_outputHandle = GetStdHandle(outStream == OutputStream::kCout ? stdHandle::kOutput : stdHandle::kErrorOutput);
+                m_outputHandle = GetStdHandle(outStream == streamStdOut ? stdHandle::kOutput : stdHandle::kErrorOutput);
             }
         }
 #else
-        ConsoleAppender(OutputStream outStream = OutputStream::kCout) 
-            : m_isatty(!!isatty(fileno(outStream == OutputStream::kCout ? stdout : stderr))) 
-            , m_outputStream(outStream == OutputStream::kCout ? std::cout : std::cerr)
+        ConsoleAppender(OutputStream outStream = streamStdOut) 
+            : m_isatty(!!isatty(fileno(outStream == streamStdOut ? stdout : stderr))) 
+            , m_outputStream(outStream == streamStdOut ? std::cout : std::cerr)
         {}
 #endif
 

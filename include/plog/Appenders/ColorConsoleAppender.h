@@ -9,7 +9,7 @@ namespace plog
     {
     public:
 #ifdef _WIN32
-        ColorConsoleAppender(OutputStream outStream = OutputStream::kCout) 
+        ColorConsoleAppender(OutputStream outStream = streamStdOut) 
             : ConsoleAppender<Formatter>(outStream)
             , m_originalAttr()
         {
@@ -22,7 +22,7 @@ namespace plog
             }
         }
 #else
-        ColorConsoleAppender(OutputStream outStream = OutputStream::kCout) 
+        ColorConsoleAppender(OutputStream outStream = streamStdOut) 
             : ConsoleAppender<Formatter>(outStream)
         {}
 #endif
