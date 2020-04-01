@@ -9,7 +9,9 @@ namespace plog
     {
     public:
 #ifdef _WIN32
-        ColorConsoleAppender() : m_originalAttr()
+        ColorConsoleAppender(OutputStream outStream = OutputStream::kCout) 
+            : ConsoleAppender<Formatter>(outStream)
+            , m_originalAttr()
         {
             if (this->m_isatty)
             {
@@ -20,7 +22,9 @@ namespace plog
             }
         }
 #else
-        ColorConsoleAppender() {}
+        ColorConsoleAppender(OutputStream outStream = OutputStream::kCout) 
+            : ConsoleAppender<Formatter>(outStream)
+        {}
 #endif
 
         virtual void write(const Record& record)
