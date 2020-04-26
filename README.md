@@ -767,6 +767,8 @@ The sample file names produced by this appender:
 - mylog.1.log <== previous log file (size >= maxFileSize)
 - mylog.2.log <== previous log file (size >= maxFileSize)
 
+Also a file name can be changed at arbitrary moment by calling `setFileName`.
+
 *Note: the lowest `maxFileSize` is 1000 bytes.*
 
 *Note: a log file is created on the first log message.*
@@ -1007,10 +1009,11 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[Library](samples/Library)|Shows plog usage in static libraries.|
 |[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
 |[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
-|[SkipNativeEOL](samples/SkipNativeEOL)|Shows how to skip [NativeEOLConverter](#nativeeolconverter).|
-|[Shared](samples/Shared)|Shows how to share logger instances across binary modules.|
 |[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
 |[Performance](samples/Performance)|Measures time per a log call.|
+|[SetFileName](samples/SetFileName)|Shows how to change a log file name at arbitrary moment.|
+|[Shared](samples/Shared)|Shows how to share logger instances across binary modules.|
+|[SkipNativeEOL](samples/SkipNativeEOL)|Shows how to skip [NativeEOLConverter](#nativeeolconverter).|
 |[UtcTime](samples/UtcTime)|Shows how to use UTC time instead of local time.|
 
 # References

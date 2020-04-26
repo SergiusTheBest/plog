@@ -17,7 +17,7 @@ namespace plog
             , m_maxFiles(maxFiles)
             , m_firstWrite(true)
         {
-            util::splitFileName(fileName, m_fileNameNoExt, m_fileExt);
+            setFileName(fileName);
         }
 
 #ifdef _WIN32
@@ -27,7 +27,7 @@ namespace plog
             , m_maxFiles(maxFiles)
             , m_firstWrite(true)
         {
-            util::splitFileName(util::toWide(fileName).c_str(), m_fileNameNoExt, m_fileExt);
+            setFileName(fileName);
         }
 #endif
 
@@ -52,6 +52,23 @@ namespace plog
                 m_fileSize += bytesWritten;
             }
         }
+
+        void setFileName(const util::nchar* fileName)
+        {
+            util::MutexLock lock(m_mutex);
+
+            util::splitFileName(fileName, m_fileNameNoExt, m_fileExt);
+
+            m_file.close();
+            m_firstWrite = true;
+        }
+
+#ifdef _WIN32
+        void setFileName(const char* fileName)
+        {
+            setFileName(util::toWide(fileName).c_str());
+        }
+#endif
 
         void rollLogFiles()
         {
