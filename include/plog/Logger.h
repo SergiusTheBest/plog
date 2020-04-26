@@ -14,7 +14,7 @@
 namespace plog
 {
     template<int instanceId>
-    class Logger : public util::Singleton<Logger<instanceId> >, public IAppender
+    class PLOG_LINKAGE Logger : public util::Singleton<Logger<instanceId> >, public IAppender
     {
     public:
         Logger(Severity maxSeverity = none) : m_maxSeverity(maxSeverity)
@@ -61,7 +61,14 @@ namespace plog
 
     private:
         Severity m_maxSeverity;
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable:4251) // needs to have dll-interface to be used by clients of class
+#endif
         std::vector<IAppender*> m_appenders;
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
     };
 
     template<int instanceId>

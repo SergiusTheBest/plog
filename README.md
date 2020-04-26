@@ -16,6 +16,7 @@ Pretty powerful logging library in about 1000 lines of code [![Build Status](htt
   - [Custom initialization](#custom-initialization)
   - [Multiple appenders](#multiple-appenders)
   - [Multiple loggers](#multiple-loggers)
+  - [Share log instances across modules (exe, dll, so, dylib)](#share-log-instances-across-modules-exe-dll-so-dylib)
   - [Chained loggers](#chained-loggers)
 - [Architecture](#architecture)
   - [Overview](#overview)
@@ -364,8 +365,32 @@ int main()
 
 *Refer to [MultiInstance](samples/MultiInstance) for a complete sample.*
 
+## Share log instances across modules (exe, dll, so, dylib)
+For applications that consist from several binary modules plog instances can be local (each module has its own instance) or shared (all modules use the same instance). In case of shared you have to initialize plog only in one module, other modules will reuse that instance.
+
+Sharing behavior is controlled by the following macros and is OS-dependent:
+
+|Macro|OS|Behavior|
+|--|--|--|
+|PLOG_GLOBAL|Linux/Unix|Shared|
+|PLOG_LOCAL|Linux/Unix|Local|
+|PLOG_EXPORT|Linux/Unix|n/a|
+|PLOG_IMPORT|Linux/Unix|n/a|
+|<default>|Linux/Unix|According to compiler settings|
+|PLOG_GLOBAL|Windows|n/a|
+|PLOG_LOCAL|Windows|Local|
+|PLOG_EXPORT|Windows|Shared (exports)|
+|PLOG_IMPORT|Windows|Shared (imports)|
+|<default>|Windows|Local|
+
+For sharing on Windows one module should use `PLOG_EXPORT` and others should use `PLOG_IMPORT`. Also be cafeful on Linux/Unix: if you don't specify sharing behavior it will be determined by compiler settings (`-fvisibility`).
+
+*Refer to [Shared](samples/Shared) for a complete sample.*
+
 ## Chained loggers
 A [Logger](#logger) can work as an [Appender](#appender) for another [Logger](#logger). So you can chain several loggers together. This is useful for streaming log messages from a shared library to the main application binary.
+
+*Important: don't forget to specify `PLOG_LOCAL` sharing mode on Linux/Unix systems for this sample.*
 
 Sample:
 
@@ -742,6 +767,8 @@ The sample file names produced by this appender:
 - mylog.1.log <== previous log file (size >= maxFileSize)
 - mylog.2.log <== previous log file (size >= maxFileSize)
 
+Also a file name can be changed at arbitrary moment by calling `setFileName`.
+
 *Note: the lowest `maxFileSize` is 1000 bytes.*
 
 *Note: a log file is created on the first log message.*
@@ -982,9 +1009,11 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[Library](samples/Library)|Shows plog usage in static libraries.|
 |[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
 |[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
-|[SkipNativeEOL](samples/SkipNativeEOL)|Shows how to skip [NativeEOLConverter](#nativeeolconverter).|
 |[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
 |[Performance](samples/Performance)|Measures time per a log call.|
+|[SetFileName](samples/SetFileName)|Shows how to change a log file name at arbitrary moment.|
+|[Shared](samples/Shared)|Shows how to share logger instances across binary modules.|
+|[SkipNativeEOL](samples/SkipNativeEOL)|Shows how to skip [NativeEOLConverter](#nativeeolconverter).|
 |[UtcTime](samples/UtcTime)|Shows how to use UTC time instead of local time.|
 
 # References

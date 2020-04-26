@@ -5,7 +5,7 @@
 #include <plog/Log.h>
 
 // Helper macro to mark functions exported from the library.
-#if defined _MSC_VER || defined __CYGWIN__
+#ifdef _WIN32
 #   define EXPORT __declspec(dllexport)
 #else
 #   define EXPORT __attribute__ ((visibility ("default")))
