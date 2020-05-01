@@ -33,7 +33,7 @@ namespace plog
             resetColor();
         }
 
-    private:
+    protected:
         void setColor(Severity severity)
         {
             if (this->m_isatty)
