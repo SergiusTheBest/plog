@@ -3,6 +3,7 @@
 //
 
 #include <plog/Log.h>
+#include <plog/Init.h>
 #include <plog/Formatters/FuncMessageFormatter.h>
 #include <list>
 

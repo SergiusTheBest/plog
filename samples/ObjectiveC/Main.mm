@@ -4,6 +4,7 @@
 
 #include <objc/Object.h>
 #include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
 
 @interface Greeter : Object
 {

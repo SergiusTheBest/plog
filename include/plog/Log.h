@@ -5,7 +5,6 @@
 
 #pragma once
 #include <plog/Logger.h>
-#include <plog/Init.h>
 
 //////////////////////////////////////////////////////////////////////////
 // Helper macros that get context info

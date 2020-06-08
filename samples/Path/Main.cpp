@@ -3,6 +3,7 @@
 //
 
 #include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
 
 #if __has_include(<filesystem>)
     #include <filesystem>

@@ -3,6 +3,7 @@
 //
 
 #include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
 
 enum Facility // Define log facilities.
 {

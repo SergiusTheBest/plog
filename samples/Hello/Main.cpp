@@ -3,6 +3,7 @@
 //
 
 #include <plog/Log.h> // Step1: include the header.
+#include <plog/Initializers/RollingFileInitializer.h>
 
 int main()
 {

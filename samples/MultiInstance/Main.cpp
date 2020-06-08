@@ -3,6 +3,7 @@
 //
 
 #include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
 
 enum // Define log instances. Default is 0 and is omitted from this enum.
 {

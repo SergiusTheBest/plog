@@ -3,6 +3,7 @@
 //
 
 #include <plog/Log.h>
+#include <plog/Init.h>
 
 // Helper macro to mark functions exported from the library.
 #ifdef _WIN32

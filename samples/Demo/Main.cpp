@@ -3,6 +3,8 @@
 //
 
 #include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
+
 #include "MyClass.h"
 #include "Customer.h"
 

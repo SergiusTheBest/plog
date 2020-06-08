@@ -4,6 +4,7 @@
 
 #include <jni.h>
 #include <plog/Log.h>
+#include <plog/Init.h>
 #include <plog/Appenders/AndroidAppender.h>
 #include <plog/Formatters/FuncMessageFormatter.h>
 
