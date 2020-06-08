@@ -9,6 +9,9 @@ namespace plog
     {
     public:
 #ifdef _WIN32
+#   ifdef _MSC_VER
+#       pragma warning(suppress: 26812) //  Prefer 'enum class' over 'enum'
+#   endif
         ColorConsoleAppender(OutputStream outStream = streamStdOut) 
             : ConsoleAppender<Formatter>(outStream)
             , m_originalAttr()

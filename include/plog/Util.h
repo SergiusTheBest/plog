@@ -159,22 +159,24 @@ namespace plog
 #ifdef _WIN32
     inline int vasprintf(char** strp, const char* format, va_list ap)
     {
-        int len = _vscprintf(format, ap);
-        if (len < 0)
+        int charCount = _vscprintf(format, ap);
+        if (charCount < 0)
         {
             return -1;
         }
 
-        char* str = static_cast<char*>(malloc(len + 1));
+        size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
+
+        char* str = static_cast<char*>(malloc(bufferCharCount));
         if (!str)
         {
             return -1;
         }
 
 #if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
-        int retval = _vsnprintf(str, len + 1, format, ap);
+        int retval = _vsnprintf(str, bufferCharCount, format, ap);
 #else
-        int retval = _vsnprintf_s(str, len + 1, len, format, ap);
+        int retval = _vsnprintf_s(str, bufferCharCount, charCount, format, ap);
 #endif
         if (retval < 0)
         {
@@ -188,22 +190,24 @@ namespace plog
 
     inline int vaswprintf(wchar_t** strp, const wchar_t* format, va_list ap)
     {
-        int len = _vscwprintf(format, ap);
-        if (len < 0)
+        int charCount = _vscwprintf(format, ap);
+        if (charCount < 0)
         {
             return -1;
         }
 
-        wchar_t* str = static_cast<wchar_t*>(malloc((len + 1) * sizeof(wchar_t)));
+        size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
+
+        wchar_t* str = static_cast<wchar_t*>(malloc(bufferCharCount * sizeof(wchar_t)));
         if (!str)
         {
             return -1;
         }
 
 #if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
-        int retval = _vsnwprintf(str, len + 1, format, ap);
+        int retval = _vsnwprintf(str, bufferCharCount, format, ap);
 #else
-        int retval = _vsnwprintf_s(str, len + 1, len, format, ap);
+        int retval = _vsnwprintf_s(str, bufferCharCount, charCount, format, ap);
 #endif
         if (retval < 0)
         {

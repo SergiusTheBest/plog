@@ -17,7 +17,7 @@ namespace plog
         static util::nstring format(const Record& record)
         {
             tm t;
-            (useUtcTime ? util::gmtime_s : util::localtime_s)(&t, &record.getTime().time);
+            useUtcTime ? util::gmtime_s(&t, &record.getTime().time) : util::localtime_s(&t, &record.getTime().time);
 
             util::nostringstream ss;
             ss << t.tm_year + 1900 << "-" << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mon + 1 << PLOG_NSTR("-") << std::setfill(PLOG_NSTR('0')) << std::setw(2) << t.tm_mday << PLOG_NSTR(" ");

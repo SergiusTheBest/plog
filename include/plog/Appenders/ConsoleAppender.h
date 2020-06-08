@@ -17,6 +17,9 @@ namespace plog
     {
     public:
 #ifdef _WIN32
+#   ifdef _MSC_VER
+#       pragma warning(suppress: 26812) //  Prefer 'enum class' over 'enum'
+#   endif
         ConsoleAppender(OutputStream outStream = streamStdOut)
             : m_isatty(!!_isatty(_fileno(outStream == streamStdOut ? stdout : stderr)))
             , m_outputStream(outStream == streamStdOut ? std::cout : std::cerr)
