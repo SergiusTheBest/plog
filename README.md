@@ -69,7 +69,8 @@ Plog is a C++ logging library that is designed to be as simple, small and flexib
 Here is a minimal hello log sample:
 
 ```cpp
-#include <plog/Log.h> // Step1: include the header
+#include <plog/Log.h> // Step1: include the headers
+#include "plog/Initializers/RollingFileInitializer.h"
 
 int main()
 {
