@@ -12,7 +12,7 @@ endif()
 add_library(plog INTERFACE)
 target_include_directories(plog
     INTERFACE
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
+    $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
@@ -34,9 +34,27 @@ if(${CURRENT_SOURCE_DIR} STREQUAL ${SOURCE_DIR} AND PLOG_BUILD_SAMPLES)
     add_subdirectory(samples)
 endif()
 
+
+# install plog as cmake module
+install(TARGETS plog EXPORT plogTargets)
+
+include(GNUInstallDirs)
 install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/plog
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     FILES_MATCHING # headers only
     PATTERN "*.h"
 )
+install(FILES "${CMAKE_CURRENT_LIST_DIR}/LICENSE" DESTINATION ${CMAKE_INSTALL_DOCDIR})
+install(FILES "${CMAKE_CURRENT_LIST_DIR}/README.md" DESTINATION ${CMAKE_INSTALL_DOCDIR})
+
+if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+# this might be a bit too restrictive, since for other (BSD, ...) this might apply also
+# but this can be fixed later in extra pull requests from people on the platform
+	install(FILES plog-config.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/plog)
+	install(EXPORT plogTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/plog)
+else()
+	install(FILES plog-config.cmake DESTINATION CMake)
+	install(EXPORT plogTargets DESTINATION CMake)
+endif()
+
