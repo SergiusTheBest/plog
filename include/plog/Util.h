@@ -520,6 +520,11 @@ namespace plog
 #endif
         {
         public:
+#if defined(__clang__) || __GNUC__ >= 8
+            // This constructor is called before the `T` object is fully constructed, and
+            // pointers are not dereferenced anyway, so UBSan shouldn't check vptrs.
+            __attribute__((no_sanitize("vptr")))
+#endif
             Singleton()
             {
                 assert(!m_instance);
