@@ -33,7 +33,11 @@
 // Log severity level checker
 
 #ifdef PLOG_DISABLE_LOGGING
-#   define IF_PLOG_(instanceId, severity)   if (true) {;} else
+#   ifdef _MSC_VER
+#       define IF_PLOG_(instanceId, severity)  __pragma(warning(push)) __pragma(warning(disable:4127)) if (true) {;} else __pragma(warning(pop)) // conditional expression is constant
+#   else
+#       define IF_PLOG_(instanceId, severity)   if (true) {;} else
+#   endif
 #else
 #   define IF_PLOG_(instanceId, severity)   if (!plog::get<instanceId>() || !plog::get<instanceId>()->checkSeverity(severity)) {;} else
 #endif
