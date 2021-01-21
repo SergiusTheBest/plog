@@ -45,18 +45,17 @@
 #   include <sys/timeb.h>
 #   include <io.h>
 #   include <share.h>
-#elif defined(__rtems__)
-#   include <unistd.h>
-#   include <rtems.h>
-#   include <sys/time.h>
-#   if PLOG_ENABLE_WCHAR_INPUT
-#       include <iconv.h>
-#   endif
 #else
 #   include <unistd.h>
-#   include <sys/syscall.h>
 #   include <sys/time.h>
-#   include <pthread.h>
+#   if defined(__linux__) || defined(__FreeBSD__)
+#       include <sys/syscall.h>
+#   elif defined(__rtems__)
+#       include <rtems.h>
+#   endif
+#   if defined(_POSIX_THREADS)
+#       include <pthread.h>
+#   endif
 #   if PLOG_ENABLE_WCHAR_INPUT
 #       include <iconv.h>
 #   endif
@@ -359,10 +358,10 @@ namespace plog
                 m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif defined(_WIN32)
                 ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, _SH_DENYWR, _S_IREAD | _S_IWRITE);
-#elif defined(__rtems__)
-                m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-#else
+#elif defined(O_CLOEXEC)
                 m_file = ::open(fileName, O_CREAT | O_WRONLY | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+#else
+                m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
                 return seek(0, SEEK_END);
             }
@@ -444,7 +443,7 @@ namespace plog
                             RTEMS_PRIORITY |
                             RTEMS_BINARY_SEMAPHORE |
                             RTEMS_INHERIT_PRIORITY, 1, &m_sync);
-#else
+#elif defined(_POSIX_THREADS)
                 ::pthread_mutex_init(&m_sync, 0);
 #endif
             }
@@ -455,7 +454,7 @@ namespace plog
                 DeleteCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_delete(m_sync);
-#else
+#elif defined(_POSIX_THREADS)
                 ::pthread_mutex_destroy(&m_sync);
 #endif
             }
@@ -469,7 +468,7 @@ namespace plog
                 EnterCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_obtain(m_sync, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
-#else
+#elif defined(_POSIX_THREADS)
                 ::pthread_mutex_lock(&m_sync);
 #endif
             }
@@ -480,7 +479,7 @@ namespace plog
                 LeaveCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_release(m_sync);
-#else
+#elif defined(_POSIX_THREADS)
                 ::pthread_mutex_unlock(&m_sync);
 #endif
             }
@@ -490,7 +489,7 @@ namespace plog
             CRITICAL_SECTION m_sync;
 #elif defined(__rtems__)
             rtems_id m_sync;
-#else
+#elif defined(_POSIX_THREADS)
             pthread_mutex_t m_sync;
 #endif
         };
