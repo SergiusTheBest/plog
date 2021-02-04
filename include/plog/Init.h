@@ -1,16 +1,18 @@
 #pragma once
-#include <plog/Logger.h>
+#include <plog/LoggerHolder.h>
 
 namespace plog
 {
     template<int instanceId>
-    inline Logger<instanceId>& init(Severity maxSeverity = none, IAppender* appender = NULL)
+    inline Logger& init(Severity maxSeverity = none, IAppender* appender = NULL)
     {
-        static Logger<instanceId> logger(maxSeverity);
+        static Logger logger(maxSeverity);
+        LoggerHolderAccessor<instanceId>::set(&logger);
+
         return appender ? logger.addAppender(appender) : logger;
     }
 
-    inline Logger<PLOG_DEFAULT_INSTANCE_ID>& init(Severity maxSeverity = none, IAppender* appender = NULL)
+    inline Logger& init(Severity maxSeverity = none, IAppender* appender = NULL)
     {
         return init<PLOG_DEFAULT_INSTANCE_ID>(maxSeverity, appender);
     }

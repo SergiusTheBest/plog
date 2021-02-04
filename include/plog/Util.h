@@ -323,7 +323,7 @@ namespace plog
             }
         }
 
-        class PLOG_LINKAGE NonCopyable
+        class NonCopyable
         {
         protected:
             NonCopyable()
@@ -510,42 +510,5 @@ namespace plog
         private:
             Mutex& m_mutex;
         };
-
-        template<class T>
-#ifdef _WIN32
-        class Singleton : NonCopyable
-#else
-        class PLOG_LINKAGE Singleton : NonCopyable
-#endif
-        {
-        public:
-#if defined(__clang__) || __GNUC__ >= 8
-            // This constructor is called before the `T` object is fully constructed, and
-            // pointers are not dereferenced anyway, so UBSan shouldn't check vptrs.
-            __attribute__((no_sanitize("vptr")))
-#endif
-            Singleton()
-            {
-                assert(!m_instance);
-                m_instance = static_cast<T*>(this);
-            }
-
-            ~Singleton()
-            {
-                assert(m_instance);
-                m_instance = 0;
-            }
-
-            static T* getInstance()
-            {
-                return m_instance;
-            }
-
-        private:
-            static T* m_instance;
-        };
-
-        template<class T>
-        T* Singleton<T>::m_instance = NULL;
     }
 }

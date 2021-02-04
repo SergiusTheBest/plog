@@ -3,18 +3,9 @@
 #include <plog/Util.h>
 #include <vector>
 
-#ifdef PLOG_DEFAULT_INSTANCE // for backward compatibility
-#   define PLOG_DEFAULT_INSTANCE_ID PLOG_DEFAULT_INSTANCE
-#endif
-
-#ifndef PLOG_DEFAULT_INSTANCE_ID
-#   define PLOG_DEFAULT_INSTANCE_ID 0
-#endif
-
 namespace plog
 {
-    template<int instanceId>
-    class PLOG_LINKAGE Logger : public util::Singleton<Logger<instanceId> >, public IAppender
+    class PLOG_LINKAGE Logger : public IAppender
     {
     public:
         Logger(Severity maxSeverity = none) : m_maxSeverity(maxSeverity)
@@ -70,15 +61,4 @@ namespace plog
 #   pragma warning(pop)
 #endif
     };
-
-    template<int instanceId>
-    inline Logger<instanceId>* get()
-    {
-        return Logger<instanceId>::getInstance();
-    }
-
-    inline Logger<PLOG_DEFAULT_INSTANCE_ID>* get()
-    {
-        return Logger<PLOG_DEFAULT_INSTANCE_ID>::getInstance();
-    }
 }
