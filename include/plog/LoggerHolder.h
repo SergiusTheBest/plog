@@ -38,6 +38,9 @@ namespace plog
         }
     };
 
+    //////////////////////////////////////////////////////////////////////////
+    // Static instance getters
+
     template<int instanceId>
     inline Logger* get()
     {
@@ -47,5 +50,25 @@ namespace plog
     inline Logger* get()
     {
         return get<PLOG_DEFAULT_INSTANCE_ID>();
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    // Dynamic instance getters
+
+    inline plog::Logger* get(plog::Logger* logger)
+    {
+        return logger;
+    }
+
+    template<class T>
+    inline plog::Logger* get(T* t)
+    {
+        return get(t->get());
+    }
+
+    template<class T>
+    inline plog::Logger* get(T& t)
+    {
+        return get(t.get());
     }
 }

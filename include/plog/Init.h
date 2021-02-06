@@ -6,10 +6,9 @@ namespace plog
     template<int instanceId>
     inline Logger& init(Severity maxSeverity = none, IAppender* appender = NULL)
     {
-        static Logger logger(maxSeverity);
+        static Logger logger(maxSeverity, appender);
         LoggerHolderAccessor<instanceId>::set(&logger);
-
-        return appender ? logger.addAppender(appender) : logger;
+        return logger;
     }
 
     inline Logger& init(Severity maxSeverity = none, IAppender* appender = NULL)

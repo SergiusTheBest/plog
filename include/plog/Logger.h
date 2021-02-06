@@ -8,8 +8,12 @@ namespace plog
     class PLOG_LINKAGE Logger : public IAppender
     {
     public:
-        Logger(Severity maxSeverity = none) : m_maxSeverity(maxSeverity)
+        Logger(Severity maxSeverity = none, IAppender* appender = NULL) : m_maxSeverity(maxSeverity)
         {
+            if (appender)
+            {
+                addAppender(appender);
+            }
         }
 
         Logger& addAppender(IAppender* appender)
