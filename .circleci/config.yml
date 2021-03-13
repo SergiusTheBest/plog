@@ -1,8 +1,20 @@
 version: 2.0
 jobs:
-  build:
+  rtems:
     docker:
       - image: sergiusthebest/rtems-arm-rasberrypi-ci:latest
     steps:
       - checkout
       - run: cmake -H. -Bbuild -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE && cd build && make -j
+  platformio:
+    docker:
+      - image: sergiusthebest/platformio-ci:latest
+    steps:
+      - checkout
+      - run: pio run -d samples/Arduino
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - rtems
+      - platformio
