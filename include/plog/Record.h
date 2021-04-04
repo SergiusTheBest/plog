@@ -55,7 +55,7 @@ namespace plog
             plog::detail::operator<<(stream, data.c_str());
         }
 
-#if !defined(__GNUC__) || __GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 4 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
+#if defined(__clang__) || !defined(__GNUC__) || __GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 4 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
         template<typename T>
         inline typename meta::enableIf<!!(sizeof(static_cast<std::basic_string<util::nchar> >(meta::declval<T>())) + sizeof(T*)), void>::type operator<<(util::nostringstream& stream, const T& data)
         {
