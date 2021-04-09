@@ -32,6 +32,29 @@ namespace plog
         //////////////////////////////////////////////////////////////////////////
         // Stream output operators as free functions
 
+#if PLOG_ENABLE_WCHAR_INPUT
+        inline void operator<<(util::nostringstream& stream, const wchar_t* data)
+        {
+            data = data ? data : L"(null)";
+
+#   ifdef _WIN32
+            std::operator<<(stream, data);
+#   else
+            std::operator<<(stream, util::toNarrow(data));
+#   endif
+        }
+
+        inline void operator<<(util::nostringstream& stream, wchar_t* data)
+        {
+            plog::detail::operator<<(stream, const_cast<const wchar_t*>(data));
+        }
+
+        inline void operator<<(util::nostringstream& stream, const std::wstring& data)
+        {
+            plog::detail::operator<<(stream, data.c_str());
+        }
+#endif
+
         inline void operator<<(util::nostringstream& stream, const char* data)
         {
             data = data ? data : "(null)";
@@ -60,29 +83,6 @@ namespace plog
         inline typename meta::enableIf<!!(sizeof(static_cast<std::basic_string<util::nchar> >(meta::declval<T>())) + sizeof(T*)), void>::type operator<<(util::nostringstream& stream, const T& data)
         {
             plog::detail::operator<<(stream, static_cast<std::basic_string<util::nchar> >(data));
-        }
-#endif
-
-#if PLOG_ENABLE_WCHAR_INPUT
-        inline void operator<<(util::nostringstream& stream, const wchar_t* data)
-        {
-            data = data ? data : L"(null)";
-
-#   ifdef _WIN32
-            std::operator<<(stream, data);
-#   else
-            std::operator<<(stream, util::toNarrow(data));
-#   endif
-        }
-
-        inline void operator<<(util::nostringstream& stream, wchar_t* data)
-        {
-            plog::detail::operator<<(stream, const_cast<const wchar_t*>(data));
-        }
-
-        inline void operator<<(util::nostringstream& stream, const std::wstring& data)
-        {
-            plog::detail::operator<<(stream, data.c_str());
         }
 #endif
 
