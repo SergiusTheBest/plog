@@ -1,6 +1,8 @@
 #pragma once
 #include <plog/Appenders/IAppender.h>
+#ifdef ANDROID
 #include <android/log.h>
+#endif
 
 namespace plog
 {
@@ -12,6 +14,7 @@ namespace plog
         {
         }
 
+#ifdef ANDROID
         virtual void write(const Record& record)
         {
             std::string str = Formatter::format(record);
@@ -40,6 +43,12 @@ namespace plog
                 return ANDROID_LOG_UNKNOWN;
             }
         }
+#else
+        virtual void write(const Record&)
+        {
+            // no-op
+        }
+#endif
 
     private:
         const char* const m_tag;

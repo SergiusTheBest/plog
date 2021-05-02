@@ -16,6 +16,10 @@ target_include_directories(plog
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
+if (ANDROID)
+    target_link_libraries(plog INTERFACE log)
+endif()
+
 add_library(plog::plog ALIAS plog)
 
 #making sure we can build standalone under windows
