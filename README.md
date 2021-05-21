@@ -154,7 +154,7 @@ enum Severity
 The log format is determined automatically by `fileName` file extension:
 
 - .csv => [CSV format](#csvformatter)
-- anyting else => [TXT format](#txtformatter)
+- anything else => [TXT format](#txtformatter)
 
 The rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters:
 
