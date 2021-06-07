@@ -186,11 +186,19 @@ namespace plog
 #   endif
         }
 
+#   if QT_VERSION < 0x060000
         Record& operator<<(const QStringRef& data)
         {
-            QString qstr;
-            return *this << qstr.append(data);
+            return *this << data.toString();
         }
+#   endif
+
+#   ifdef QSTRINGVIEW_H
+        Record& operator<<(QStringView data)
+        {
+            return *this << data.toString();
+        }
+#   endif
 #endif
 
         template<typename T>
