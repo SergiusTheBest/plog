@@ -86,8 +86,10 @@ namespace plog
 
         inline void localtime_s(struct tm* t, const time_t* time)
         {
-#if defined(_WIN32) && defined(__BORLANDC__)
+#if defined(_WIN32) && defined(__BORLANDC__) && __BORLANDC__ > 0x0560
             ::localtime_s(time, t);
+#elif defined(_WIN32) && defined(__BORLANDC__) && __BORLANDC__ <= 0x0560
+            *t = *::localtime(time);
 #elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
             *t = *::localtime(time);
 #elif defined(_WIN32)
@@ -99,8 +101,10 @@ namespace plog
 
         inline void gmtime_s(struct tm* t, const time_t* time)
         {
-#if defined(_WIN32) && defined(__BORLANDC__)
+#if defined(_WIN32) && defined(__BORLANDC__) && __BORLANDC__ > 0x0560
             ::gmtime_s(time, t);
+#elif defined(_WIN32) && defined(__BORLANDC__) && __BORLANDC__ <= 0x0560
+            *t = *::gmtime(time);          
 #elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
             *t = *::gmtime(time);
 #elif defined(_WIN32)
