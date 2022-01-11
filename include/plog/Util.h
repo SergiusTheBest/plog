@@ -260,12 +260,12 @@ namespace plog
 
         inline std::string toNarrow(const std::wstring& wstr, long page)
         {
-            std::string str(wstr.size() * sizeof(wchar_t), 0);
+			int len = WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), 0, 0, 0, 0);
+            std::string str(len, 0);
 
             if (!str.empty())
             {
-                int len = WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], static_cast<int>(str.size()), 0, 0);
-                str.resize(len);
+                WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], len, 0, 0);              
             }
 
             return str;
