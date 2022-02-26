@@ -1,0 +1,3 @@
+add_executable(RollingDateFileAppender Main.cpp)
+target_link_libraries(RollingDateFileAppender plog)
+set_target_properties(RollingDateFileAppender PROPERTIES FOLDER Samples)
