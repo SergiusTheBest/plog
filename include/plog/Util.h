@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
+#include <ctime>
 #include <fcntl.h>
 #include <sys/stat.h>
 
@@ -64,6 +65,9 @@
 #ifdef _WIN32
 #   define _PLOG_NSTR(x)   L##x
 #   define PLOG_NSTR(x)    _PLOG_NSTR(x)
+#ifndef CP_UTF8
+#define CP_UTF8 65001
+#endif
 #else
 #   define PLOG_NSTR(x)    x
 #endif
@@ -108,50 +112,6 @@ namespace plog
 #else
             ::gmtime_r(time, t);
 #endif
-        }
-
-        inline static bool exists(const char *path_string) {
-            struct stat buffer = {};
-            return (stat(path_string, &buffer) == 0);
-        }
-        inline static time_t get_zero_time() {
-            time_t t = time(nullptr);
-            struct tm *tm = localtime(&t);
-            tm->tm_mday += 1;
-            tm->tm_hour = 0;
-            tm->tm_min = 0;
-            tm->tm_sec = 0;
-            return mktime(tm);
-        }
-
-#ifdef _WIN32
-        /**
-         * "%Y-%m-%d-%H-%M-%S"
-         * @param name
-         * @return
-         */
-        inline static std::string get_file_name(const util::nchar *name) {
-            return get_file_name(util::toNarrow(name,CP_UTF8).c_str());
-        }
-#endif
-
-        /**
-         * "%Y-%m-%d-%H-%M-%S"
-         * @param name
-         * @return
-         */
-        inline static std::string get_file_name(const char *name, int day = 0) {
-            std::stringstream str_time;
-            std::time_t current_time = std::time(nullptr);
-            if (day != 0) {
-                struct tm *tm = localtime(&current_time);
-                tm->tm_mday += day;
-                current_time = mktime(tm);
-            }
-            char tAll[255];
-            std::strftime(tAll, sizeof(tAll), name, std::localtime(&current_time));
-            str_time << tAll;
-            return str_time.str();
         }
 
 #ifdef _WIN32
@@ -309,6 +269,51 @@ namespace plog
             return str;
         }
 #endif
+
+        inline static bool exists(const char *path_string) {
+            struct stat buffer = {};
+            return (stat(path_string, &buffer) == 0);
+        }
+        inline static time_t get_zero_time() {
+            time_t t = time(nullptr);
+            struct tm *tm = localtime(&t);
+            tm->tm_mday += 1;
+            tm->tm_hour = 0;
+            tm->tm_min = 0;
+            tm->tm_sec = 0;
+            return mktime(tm);
+        }
+
+        /**
+         * "%Y-%m-%d-%H-%M-%S"
+         * @param name
+         * @return
+         */
+        inline static std::string get_file_name(const char *name, int day = 0) {
+            std::stringstream str_time;
+            std::time_t current_time = std::time(nullptr);
+            if (day != 0) {
+                struct tm *tm = localtime(&current_time);
+                tm->tm_mday += day;
+                current_time = mktime(tm);
+            }
+            char tAll[255];
+            std::strftime(tAll, sizeof(tAll), name, std::localtime(&current_time));
+            str_time << tAll;
+            return str_time.str();
+        }
+
+#ifdef _WIN32
+        /**
+         * "%Y-%m-%d-%H-%M-%S"
+         * @param name
+         * @return
+         */
+        inline static std::string get_file_name(const util::nchar *name, int day = 0) {
+            return get_file_name(util::toNarrow(name,CP_UTF8).c_str(),day);
+        }
+#endif
+
 
         inline std::string processFuncName(const char* func)
         {

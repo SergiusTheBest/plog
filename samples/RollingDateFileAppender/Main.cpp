@@ -14,11 +14,11 @@ int main() {
     plog::init(plog::debug, &dateFileAppender); // Step2: initialize the logger.
 
     // Step3: write log messages using a special macro. There are several log macros, use the macro you liked the most.
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 10; i++) {
         PLOGD << "Hello log!"; // short macro
         PLOG_DEBUG << "Hello log!"; // long macro
         PLOG(plog::debug) << "Hello log!"; // function-style macro
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     return 0;
 }

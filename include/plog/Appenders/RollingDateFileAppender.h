@@ -56,14 +56,22 @@ namespace plog {
             last_date = 0;
         }
 
+        inline void setMaxFiles(int maxFiles) {
+            m_fileSize = maxFiles;
+        }
+
         inline void write(const Record &record) {
             if (record.getTime().time >= last_date) {
                 std::string path = util::get_file_name(m_fileName);
                 this->setFileName(path.c_str());
                 if (m_fileSize > 0) {
                     int size = (int) m_fileSize;
-                    util::nstring lastFileName = util::get_file_name(m_fileName, -size);
+                    std::string lastFileName = util::get_file_name(m_fileName, -size);
+#ifdef _WIN32
+                    util::File::unlink(util::toWide(lastFileName.c_str()).c_str());
+#else
                     util::File::unlink(lastFileName.c_str());
+#endif
                 }
                 if (!(util::exists(path.c_str()))) {
                     RollingFileAppender<Formatter, Converter>::rollLogFiles();
