@@ -4,11 +4,9 @@
 
 #include <plog/Log.h> // Step1: include the header.
 #include <plog/Appenders/RollingDateFileAppender.h>
-#include <thread>
 
 int main() {
-    using plog::TxtFormatter;
-    static plog::RollingDateFileAppender<TxtFormatter> dateFileAppender("Hello_date.%Y-%m-%d.log");
+    static plog::RollingDateFileAppender<plog::TxtFormatter> dateFileAppender("Hello_date.%Y-%m-%d.log");
 
 
     plog::init(plog::debug, &dateFileAppender); // Step2: initialize the logger.
@@ -18,7 +16,6 @@ int main() {
         PLOGD << "Hello log!"; // short macro
         PLOG_DEBUG << "Hello log!"; // long macro
         PLOG(plog::debug) << "Hello log!"; // function-style macro
-        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     return 0;
 }
