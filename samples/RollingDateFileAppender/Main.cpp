@@ -3,7 +3,11 @@
 //
 
 #include <plog/Log.h> // Step1: include the header.
+#include <plog/Init.h>
 #include <plog/Formatters/TxtFormatter.h>
+#include <plog/Converters/NativeEOLConverter.h>
+#include <plog/Appenders/RollingFileAppender.h>
+#include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Appenders/RollingDateFileAppender.h>
 
 int main() {
