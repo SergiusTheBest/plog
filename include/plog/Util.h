@@ -277,7 +277,7 @@ namespace plog
 
         inline static time_t get_zero_time() {
             time_t t = time(NULL);
-            struct tm tm{};
+            tm tm;
             util::localtime_s(&tm, &t);
 
             tm.tm_mday += 1;
@@ -296,12 +296,15 @@ namespace plog
             std::stringstream str_time;
             std::time_t current_time = std::time(NULL);
             if (day != 0) {
-                struct tm *tm = localtime(&current_time);
-                tm->tm_mday += day;
-                current_time = mktime(tm);
+                tm tm;
+                util::localtime_s(&tm, &current_time);
+                tm.tm_mday += day;
+                current_time = mktime(&tm);
             }
             char tAll[255];
-            std::strftime(tAll, sizeof(tAll), name, std::localtime(&current_time));
+            tm t;
+            util::localtime_s(&t, &current_time);
+            std::strftime(tAll, sizeof(tAll), name, &t);
             str_time << tAll;
             return str_time.str();
         }
