@@ -275,7 +275,7 @@ namespace plog
             return (stat(path_string, &buffer) == 0);
         }
         inline static time_t get_zero_time() {
-            time_t t = time(nullptr);
+            time_t t = time(NULL);
             struct tm *tm = localtime(&t);
             tm->tm_mday += 1;
             tm->tm_hour = 0;
@@ -291,7 +291,7 @@ namespace plog
          */
         inline static std::string get_file_name(const char *name, int day = 0) {
             std::stringstream str_time;
-            std::time_t current_time = std::time(nullptr);
+            std::time_t current_time = std::time(NULL);
             if (day != 0) {
                 struct tm *tm = localtime(&current_time);
                 tm->tm_mday += day;
