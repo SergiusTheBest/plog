@@ -41,6 +41,17 @@ namespace plog {
             last_date = util::get_zero_time();
         }
 #endif
+        inline void setFileName(const util::nchar* fileName)
+        {
+            RollingFileAppender<Formatter, Converter>::setFileName(util::get_file_name(fileName).c_str());
+        }
+#ifdef _WIN32
+        void setFileName(const char* fileName)
+        {
+            RollingFileAppender<Formatter, Converter>::setFileName(util::get_file_name(fileName).c_str());
+        }
+#endif
+
 
         /**
          *
