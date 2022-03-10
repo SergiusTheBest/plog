@@ -310,6 +310,10 @@ namespace plog
         }
 
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
+        inline static bool exists(const nchar *path_string) {
+            struct stat buffer = {};
+            return (wstat(path_string, &buffer) == 0);
+        }
         /**
          * "%Y-%m-%d-%H-%M-%S"
          * @param name
