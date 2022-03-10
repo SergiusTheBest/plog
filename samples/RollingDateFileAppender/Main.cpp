@@ -6,12 +6,13 @@
 #include <plog/Init.h>
 #include <plog/Formatters/TxtFormatter.h>
 #include <plog/Converters/NativeEOLConverter.h>
+#include <plog/Converters/UTF8Converter.h>
 #include <plog/Appenders/RollingFileAppender.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Appenders/RollingDateFileAppender.h>
 
 int main() {
-    static plog::RollingDateFileAppender<plog::TxtFormatter> dateFileAppender("Hello_date.%Y-%m-%d.log");
+    static plog::RollingDateFileAppender<plog::TxtFormatter,plog::UTF8Converter> dateFileAppender("Hello_date.%Y-%m-%d.log");
 
 
     plog::init(plog::debug, &dateFileAppender); // Step2: initialize the logger.
@@ -21,6 +22,7 @@ int main() {
         PLOGD << "Hello log!"; // short macro
         PLOG_DEBUG << "Hello log!"; // long macro
         PLOG(plog::debug) << "Hello log!"; // function-style macro
+        PLOG(plog::debug) << "Hello log! chinese test 中文测试"; // function-style macro
     }
     return 0;
 }

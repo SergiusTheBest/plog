@@ -19,7 +19,13 @@ namespace plog
 
         virtual void write(const Record& record)
         {
+#if  defined(PLOG_DISABLE_WCHAR_T)
+            std::wostringstream _str ;
+            _str << Formatter::format(record).c_str();
+            std::wstring str = _str.str();
+#else
             std::wstring str = Formatter::format(record);
+#endif
             const wchar_t* logMessagePtr[] = { str.c_str() };
 
             ReportEventW(m_eventSource, logSeverityToType(record.getSeverity()), static_cast<WORD>(record.getSeverity()), 0, NULL, 1, 0, logMessagePtr, NULL);

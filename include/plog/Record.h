@@ -18,9 +18,9 @@ namespace plog
         {
             data = data ? data : "(null)";
 
-#if defined(_WIN32) && defined(__BORLANDC__)
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32) && defined(__BORLANDC__)
             stream << util::toWide(data);
-#elif defined(_WIN32)
+#elif  !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
             std::operator<<(stream, util::toWide(data));
 #else
             std::operator<<(stream, data);

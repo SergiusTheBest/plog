@@ -25,7 +25,7 @@ namespace plog {
         const util::nchar *m_fileName;
 
     public:
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         /**
          *
          * @param fileName "%Y-%m-%d-%H-%M-%S"
@@ -45,7 +45,7 @@ namespace plog {
         {
             RollingFileAppender<Formatter, Converter>::setFileName(util::get_file_name(fileName).c_str());
         }
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         void setFileName(const char* fileName)
         {
             RollingFileAppender<Formatter, Converter>::setFileName(util::get_file_name(fileName).c_str());
@@ -78,7 +78,7 @@ namespace plog {
                 if (m_fileSize > 0) {
                     int size = (int) m_fileSize;
                     std::string lastFileName = util::get_file_name(m_fileName, -size);
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
                     util::File::unlink(util::toWide(lastFileName.c_str()).c_str());
 #else
                     util::File::unlink(lastFileName.c_str());

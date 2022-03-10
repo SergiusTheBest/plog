@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 
 option(PLOG_BUILD_SAMPLES "Build plog's samples." ON)
+option(PLOG_DISABLE_WCHAR_T "disable wchar_t ." OFF)
 
 project(plog LANGUAGES CXX)
+
+if(PLOG_DISABLE_WCHAR_T)
+    add_definitions(-DPLOG_DISABLE_WCHAR_T)
+endif()
 
 # Make sure install paths work on all platforms.
 if(NOT CMAKE_INSTALL_INCLUDEDIR)

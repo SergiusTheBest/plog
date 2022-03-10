@@ -23,7 +23,7 @@ namespace plog
             setFileName(fileName);
         }
 
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
             : m_fileSize()
             , m_maxFileSize((std::max)(maxFileSize, static_cast<size_t>(1000))) // set a lower limit for the maxFileSize
@@ -66,7 +66,7 @@ namespace plog
             m_firstWrite = true;
         }
 
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         void setFileName(const char* fileName)
         {
             setFileName(util::toWide(fileName).c_str());

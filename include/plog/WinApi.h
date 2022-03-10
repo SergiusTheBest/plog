@@ -139,6 +139,8 @@ namespace plog
         __declspec(dllimport) BOOL __stdcall SetConsoleTextAttribute(HANDLE hConsoleOutput, WORD wAttributes);
 
         __declspec(dllimport) void __stdcall OutputDebugStringW(LPCWSTR lpOutputString);
+
+        __declspec(dllimport) void __stdcall OutputDebugStringA(LPCSTR lpOutputString);
     }
 
     inline void InitializeCriticalSection(CRITICAL_SECTION* criticalSection)
