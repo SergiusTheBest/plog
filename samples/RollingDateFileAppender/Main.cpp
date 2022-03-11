@@ -12,9 +12,9 @@
 #include <plog/Appenders/RollingDateFileAppender.h>
 
 int main() {
-    static plog::RollingDateFileAppender<plog::TxtFormatter,plog::UTF8Converter> dateFileAppender("Hello_date.%Y-%m-%d.log");
+    static plog::RollingDateFileAppender<plog::TxtFormatter, plog::UTF8Converter> dateFileAppender("");
 
-
+    dateFileAppender.setFileName("Hello_date.%Y-%m-%d.log");
     plog::init(plog::debug, &dateFileAppender); // Step2: initialize the logger.
 
     // Step3: write log messages using a special macro. There are several log macros, use the macro you liked the most.

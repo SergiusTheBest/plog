@@ -44,21 +44,15 @@ namespace plog {
         inline void setFileName(const util::nchar* fileName)
         {
             m_fileName = fileName;
-            bool flag = util::exists(m_fileName.c_str());
             RollingFileAppender<Formatter, Converter>::setFileName(util::get_file_name(fileName).c_str());
-            if(flag){
-                RollingFileAppender<Formatter, Converter>::m_firstWrite = false;
+            if (!(util::exists(util::get_file_name(fileName).c_str()))) {
+                RollingFileAppender<Formatter, Converter>::rollLogFiles();
             }
         }
 #if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         void setFileName(const char* fileName)
         {
-            m_fileName = util::toWide(fileName).c_str();
-            bool flag = util::exists(m_fileName.c_str());
-            RollingFileAppender<Formatter, Converter>::setFileName(util::get_file_name(fileName).c_str());
-            if(flag){
-                RollingFileAppender<Formatter, Converter>::m_firstWrite = false;
-            }
+            setFileName(util::toWide(fileName).c_str());
         }
 #endif
 
@@ -84,7 +78,7 @@ namespace plog {
         inline void write(const Record &record) {
             if (record.getTime().time >= last_date) {
                 std::string path = util::get_file_name(m_fileName.c_str());
-                this->setFileName(path.c_str());
+                RollingFileAppender<Formatter, Converter>::setFileName(path.c_str());
                 if (m_fileSize > 0) {
                     int size = (int) m_fileSize;
                     std::string lastFileName = util::get_file_name(m_fileName.c_str(), -size);
