@@ -41,14 +41,15 @@ namespace plog {
             last_date = util::get_zero_time();
         }
 #endif
-        inline void setFileName(const util::nchar* fileName)
-        {
+
+        inline void setFileName(const util::nchar *fileName) {
             m_fileName = fileName;
             RollingFileAppender<Formatter, Converter>::setFileName(util::get_file_name(fileName).c_str());
             if (!(util::exists(util::get_file_name(fileName).c_str()))) {
                 RollingFileAppender<Formatter, Converter>::rollLogFiles();
             }
         }
+
 #if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         void setFileName(const char* fileName)
         {
@@ -71,7 +72,7 @@ namespace plog {
             last_date = 0;
         }
 
-        inline void setMaxFiles(int maxFiles) {
+        inline void setMaxFiles(size_t maxFiles) {
             m_fileSize = maxFiles;
         }
 
@@ -79,7 +80,7 @@ namespace plog {
             if (record.getTime().time >= last_date) {
                 std::string path = util::get_file_name(m_fileName.c_str());
                 RollingFileAppender<Formatter, Converter>::setFileName(path.c_str());
-                if (m_fileSize > 0) {
+                if (path != m_fileName && m_fileSize > 0) {
                     int size = (int) m_fileSize;
                     std::string lastFileName = util::get_file_name(m_fileName.c_str(), -size);
 #if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
