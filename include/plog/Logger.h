@@ -28,6 +28,13 @@ namespace plog
             return *this;
         }
 
+        Logger& removeAppender(const std::string& name)
+        {
+            assert(!name.empty());
+			m_appenders.erase(std::remove_if(m_appenders.begin(), m_appenders.end(), [&name](IAppender * appender){return appender->getAppenderName() == name;}),m_appenders.end());
+            return *this;
+        }
+		
         Severity getMaxSeverity() const
         {
             return m_maxSeverity;
