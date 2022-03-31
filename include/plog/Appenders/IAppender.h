@@ -12,5 +12,6 @@ namespace plog
         }
 
         virtual void write(const Record& record) = 0;
+		virtual std::string getAppenderName() { return "";}
     };
 }
