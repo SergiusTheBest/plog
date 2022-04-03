@@ -68,6 +68,12 @@
 #   define PLOG_NSTR(x)    x
 #endif
 
+#ifdef _WIN32
+#   define PLOG_CDECL      __cdecl
+#else
+#   define PLOG_CDECL
+#endif
+
 namespace plog
 {
     namespace util

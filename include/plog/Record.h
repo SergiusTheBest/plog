@@ -107,7 +107,7 @@ namespace plog
             };
 
             template <class Stream>
-            struct isStreamable<std::ios_base& (std::ios_base&), Stream>
+            struct isStreamable<std::ios_base& PLOG_CDECL (std::ios_base&), Stream>
             {
                 enum { value = true };
             };
@@ -167,7 +167,7 @@ namespace plog
 #endif
 
 #ifdef _WIN32
-        Record& operator<<(std::wostream& (*data)(std::wostream&))
+        Record& operator<<(std::wostream& (PLOG_CDECL *data)(std::wostream&))
 #else
         Record& operator<<(std::ostream& (*data)(std::ostream&))
 #endif
