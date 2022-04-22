@@ -1014,6 +1014,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[EventLog](samples/EventLog)|Shows how to use [EventLogAppender](#eventlogappender) to write to the windows event log.|
 |[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple logger instances (useful for big projects).|
 |[Hello](samples/Hello)|A minimal introduction sample, shows the basic 3 steps to start using plog.|
+|[HexDump](samples/HexDump)|Shows how to use `plog::hexdump` to dump binary buffers into hex.|
 |[Library](samples/Library)|Shows plog usage in static libraries.|
 |[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
 |[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
