@@ -40,6 +40,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
 endif()
 
 add_subdirectory(Android)
+add_subdirectory(AscDump)
 add_subdirectory(Chained)
 add_subdirectory(ColorConsole)
 add_subdirectory(CustomAppender)

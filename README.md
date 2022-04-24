@@ -1002,6 +1002,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |------|-----------|
 |[Android](samples/Android)|Shows how to use [AndroidAppender](#androidappender).|
 |[Arduino](samples/Arduino)|Arduino sample - not finished yet!|
+|[AscDump](samples/AscDump)|Shows how to use `plog::ascdump` to dump binary buffers into ASCII.|
 |[Chained](samples/Chained)|Shows how to chain a logger in a shared library with the main logger (route messages).|
 |[ColorConsole](samples/ColorConsole)|Shows how to use [ColorConsoleAppender](#colorconsoleappender).|
 |[CustomAppender](samples/CustomAppender)|Shows how to implement a custom appender that stores log messages in memory.|
