@@ -78,11 +78,42 @@ namespace plog
             plog::detail::operator<<(stream, data.c_str());
         }
 
+        // Print `std::pair`
+        template<class T1, class T2>
+        inline void operator<<(util::nostringstream& stream, const std::pair<T1, T2>& data)
+        {
+            stream << data.first;
+            stream << ":";
+            stream << data.second;
+        }
+
 #if defined(__clang__) || !defined(__GNUC__) || __GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 4 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
+        // Print data that can be casted to `std::basic_string`. `+ sizeof(T*)` is required for GCC 4.5-4.7.
         template<typename T>
         inline typename meta::enableIf<!!(sizeof(static_cast<std::basic_string<util::nchar> >(meta::declval<T>())) + sizeof(T*)), void>::type operator<<(util::nostringstream& stream, const T& data)
         {
             plog::detail::operator<<(stream, static_cast<std::basic_string<util::nchar> >(data));
+        }
+
+        // Print std containers
+        template<class Container>
+        inline typename meta::enableIf<!!(sizeof(typename Container::const_iterator)), void>::type operator<<(util::nostringstream& stream, const Container& data)
+        {
+            stream << "[";
+
+            for (typename Container::const_iterator it = data.begin(); it != data.end();)
+            {
+                stream << *it;
+
+                if (++it == data.end())
+                {
+                    break;
+                }
+
+                stream << ", ";
+            }
+
+            stream << "]";
         }
 #endif
 

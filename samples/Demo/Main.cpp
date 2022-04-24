@@ -4,6 +4,14 @@
 
 #include <plog/Log.h>
 #include <plog/Initializers/RollingFileInitializer.h>
+#include <plog/Formatters/TxtFormatter.h>
+#include <plog/Appenders/ColorConsoleAppender.h>
+
+#include <vector>
+#include <deque>
+#include <list>
+#include <map>
+#include <set>
 
 #include "MyClass.h"
 #include "Customer.h"
@@ -20,7 +28,10 @@ void unmanagedFunc()
 
 int main()
 {
-    plog::init(plog::debug, "Demo.csv", 5000, 3); // Initialize the logger.
+    plog::init(plog::debug, "Demo.csv", 5000, 3); // Initialize logging to the file.
+
+    plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
+    plog::get()->addAppender(&consoleAppender); // Also add logging to the console.
 
     // Log macro types.
     PLOGD << "Hello log!"; // short macro
@@ -120,6 +131,51 @@ int main()
     // ostream operator<< (on Windows wostream operator<< has priority but not required)
     Customer customer = { 10, "John" };
     PLOG_INFO << customer;
+
+    // Std containers can be printed
+    std::vector<int> vectorOfInts;
+    vectorOfInts.push_back(1);
+    vectorOfInts.push_back(2);
+    vectorOfInts.push_back(3);
+    PLOG_INFO << "std::vector<int>: " << vectorOfInts;
+
+    std::deque<std::string> dequeOfStrings;
+    dequeOfStrings.push_back("one");
+    dequeOfStrings.push_back("two");
+    dequeOfStrings.push_back("three");
+    PLOG_INFO << "std::deque<std::string>: " << dequeOfStrings;
+
+    std::list<const char*> listOfCharPointers;
+    listOfCharPointers.push_back("one");
+    listOfCharPointers.push_back("two");
+    listOfCharPointers.push_back(NULL);
+    PLOG_INFO << "std::list<const char*>: " << listOfCharPointers;
+
+    std::set<int> setOfInts;
+    setOfInts.insert(10);
+    setOfInts.insert(20);
+    setOfInts.insert(30);
+    PLOG_INFO << "std::set<int>: " << setOfInts;
+
+    std::map<std::string, int> mapStringToInt;
+    mapStringToInt["red"] = 1;
+    mapStringToInt["green"] = 2;
+    mapStringToInt["blue"] = 4;
+    PLOG_INFO << "std::map<std::string, int>: " << mapStringToInt;
+
+    std::multimap<int, std::string> multimapIntToString;
+    multimapIntToString.insert(std::make_pair(1, "one"));
+    multimapIntToString.insert(std::make_pair(1, "uno"));
+    multimapIntToString.insert(std::make_pair(2, "two"));
+    multimapIntToString.insert(std::make_pair(2, "due"));
+    PLOG_INFO << "std::multimap<int, std::string>: " << multimapIntToString;
+
+    std::vector<std::vector<int> > vectorOfVectorsOfInts(3);
+    vectorOfVectorsOfInts[0].push_back(1);
+    vectorOfVectorsOfInts[0].push_back(2);
+    vectorOfVectorsOfInts[1].push_back(-1);
+    vectorOfVectorsOfInts[1].push_back(-2);
+    PLOG_INFO << "std::vector<std::vector<int> >: " << vectorOfVectorsOfInts;
 
     return 0;
 }
