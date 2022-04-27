@@ -28,7 +28,7 @@ namespace plog
             template<class T>
             struct enableIf<true, T> { typedef T type; };
 
-		    struct No  { char a[1]; };
+            struct No  { char a[1]; };
             struct Yes { char a[2]; };
 
             template <class From, class To>
