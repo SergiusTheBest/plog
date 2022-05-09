@@ -3,17 +3,15 @@
 //
 
 #include <plog/Log.h>
-#include <plog/Init.h>
+#include <plog/Initializers/ConsoleInitializer.h>
 #include <plog/Formatters/TxtFormatter.h>
-#include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Helpers/AscDump.h>
 
 #include <vector>
 
 int main()
 {
-    static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
-    plog::init(plog::verbose, &consoleAppender);
+    plog::init<plog::TxtFormatter>(plog::verbose, plog::streamStdOut);
 
     std::vector<short> v;
     v.push_back(0x6548);
