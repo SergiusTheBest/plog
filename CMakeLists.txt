@@ -1,73 +1,72 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(plog VERSION 1.1.5 LANGUAGES CXX)
-
-include(GNUInstallDirs)
-
-add_library(plog INTERFACE)
-target_include_directories(plog
-    INTERFACE
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-)
-
-add_library(plog::plog ALIAS plog)
-
-# workaround for stand-alone build detection under windows (as it's case insensitive)
-get_filename_component(CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ABSOLUTE)
-get_filename_component(SOURCE_DIR ${CMAKE_SOURCE_DIR} ABSOLUTE)
+project(plog VERSION 1.1.6 LANGUAGES CXX)
 
 # check if building as a stand-alone project
-if(CURRENT_SOURCE_DIR STREQUAL SOURCE_DIR)
-    set(PLOG_MASTER_PROJECT ON)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    set(IS_TOPLEVEL_PROJECT TRUE)
+else()
+    set(IS_TOPLEVEL_PROJECT FALSE)
 endif()
 
 # options
-option(PLOG_BUILD_SAMPLES "Build plog's samples" ${PLOG_MASTER_PROJECT})
-option(PLOG_INSTALL "Generate plog's install target" ${PLOG_MASTER_PROJECT})
+option(PLOG_BUILD_SAMPLES "Build ${PROJECT_NAME} samples" ${IS_TOPLEVEL_PROJECT})
+option(PLOG_INSTALL "Generate ${PROJECT_NAME} install target" ${IS_TOPLEVEL_PROJECT})
+
+# make sure install paths work on all platforms
+include(GNUInstallDirs)
+
+add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
+target_include_directories(${PROJECT_NAME}
+    INTERFACE
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
 
 if(PLOG_BUILD_SAMPLES)
     # add a pseudo-project to make plog headers visible in IDE
-    file(GLOB_RECURSE PLOG_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
-    add_library(plog-headers STATIC ${PLOG_HEADERS})
-    set_target_properties(plog-headers PROPERTIES LINKER_LANGUAGE CXX)
-    set_target_properties(plog-headers PROPERTIES FOLDER Include)
+    file(GLOB_RECURSE ${PROJECT_NAME}_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+    add_library(${PROJECT_NAME}-headers STATIC ${${PROJECT_NAME}_HEADERS})
+    set_target_properties(${PROJECT_NAME}-headers PROPERTIES LINKER_LANGUAGE CXX FOLDER Include)
 
     # add samples
     add_subdirectory(samples)
 endif()
 
 if(PLOG_INSTALL)
-    # install plog as cmake module
-    install(TARGETS plog EXPORT plogConfig)
-
     install(
-        EXPORT plogConfig
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/plog"
-        NAMESPACE plog::
+        TARGETS ${PROJECT_NAME}
+        EXPORT ${PROJECT_NAME}Config
     )
 
     install(
-        DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/plog"
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-        FILES_MATCHING PATTERN "*.h" # headers only
+        EXPORT ${PROJECT_NAME}Config
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+        NAMESPACE ${PROJECT_NAME}::
+    )
+
+    install(
+        DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 
     install(
         FILES
-            "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
-            "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE"
-        DESTINATION "${CMAKE_INSTALL_DOCDIR}"
+            ${CMAKE_CURRENT_SOURCE_DIR}/README.md
+            ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
+        DESTINATION ${CMAKE_INSTALL_DOCDIR}
     )
 
     include(CMakePackageConfigHelpers)
     write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/plogConfigVersion.cmake"
-        COMPATIBILITY SameMajorVersion
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+        COMPATIBILITY AnyNewerVersion
     )
 
     install(
-        FILES "${CMAKE_CURRENT_BINARY_DIR}/plogConfigVersion.cmake"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/plog"
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     )
 endif()
