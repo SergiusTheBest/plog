@@ -150,7 +150,7 @@ enum Severity
 };
 ```
 
-*Note: messages with severity level `none` will always be printed.*
+> **Note** Messages with severity level `none` will always be printed.
 
 The log format is determined automatically by `fileName` file extension:
 
@@ -172,7 +172,7 @@ plog::init(plog::warning, "c:\\logs\\log.csv", 1000000, 5);
 
 Here the logger is initialized to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1'000'000 bytes and 5 log files are kept.
 
-*Note: see [Custom initialization](#custom-initialization) for advanced usage.*
+> **Note** See [Custom initialization](#custom-initialization) for advanced usage.
 
 ## Step 3: Logging
 Logging is performed with the help of special macros. A log message is constructed using stream output operators `<<`. Thus it is type-safe and extendable in contrast to a format string output.
@@ -293,7 +293,7 @@ Logger& init(Severity maxSeverity = none, IAppender* appender = NULL);
 
 You have to construct an [Appender](#appender) parameterized with a [Formatter](#formatter) and pass it to the `plog::init` function.
 
-*Note: the appender lifetime should be static!*
+> **Note** The appender lifetime should be static!
 
 Sample:
 
@@ -586,7 +586,7 @@ public:
 - function name
 - message
 
-*Note: Source file name isn't captured by default. To enable it define PLOG_CAPTURE_FILE.*
+> **Note** Source file name isn't captured by default. To enable it define PLOG_CAPTURE_FILE.
 
 Also [Record](#record) has a number of overloaded stream output operators to construct a message.
 
@@ -670,7 +670,7 @@ Date;Time;Severity;TID;This;Function;Message
 2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::~Object@13;
 ```
 
-*Note: message size is limited to 32000 chars.*
+> **Note** Message size is limited to 32000 chars.
 
 ### CsvFormatterUtcTime
 This is a variant of [CsvFormatter](#csvformatter) that uses UTC time instead of local time.
@@ -764,9 +764,9 @@ The sample file names produced by this appender:
 
 A file name can be changed at an arbitrary moment by calling `setFileName` as well as `maxFiles` and `maxFileSize` can be changed by calling `setMaxFiles` and `setMaxFileSize`.
 
-*Note: the lowest `maxFileSize` is 1000 bytes.*
+> **Note** The lowest `maxFileSize` is 1000 bytes.
 
-*Note: a log file is created on the first log message.*
+> **Note** A log file is created on the first log message.
 
 ### ConsoleAppender
 This appender outputs log data to `stdout` or `stderr`.  As a template parameter it accepts [Formatter](#formatter).
@@ -876,7 +876,7 @@ By default all log files are stored in UTF-8 with BOM thanks to [UTF8Converter](
 
 Whether `wchar_t`, `wchar_t*`, `std::wstring` can be streamed to log messages or not is controlled by the `PLOG_ENABLE_WCHAR_INPUT` macro. Set it to a non-zero value to enable wide string support. By default wide string support is enabled for Windows and disabled for all non-Windows systems.
 
-*Note: wide string support requires linking to `iconv` on macOS.*
+> **Note** Wide string support requires linking to `iconv` on macOS.
 
 ## Performance
 Plog is not using any asynchronous techniques so it may slow down your application on large volumes of log messages.
