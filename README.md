@@ -439,77 +439,41 @@ int main()
 ## Overview
 Plog is designed to be small but flexible, so it prefers templates to interface inheritance. All main entities are shown on the following UML diagram:
 
-![Plog class diagram](http://gravizo.com/svg?@startuml;class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};package%20Appenders%20<<Frame>>%20{;%20%20%20%20interface%20IAppender%20{;%20%20%20%20%20%20%20%20+write%28%29;%20%20%20%20};%20%20%20%20;%20%20%20%20class%20RollingFileAppender<Formatter,%20Converter>;%20%20%20%20class%20ConsoleAppender<Formatter>;%20%20%20%20class%20ColorConsoleAppender<Formatter>;%20%20%20%20class%20AndroidAppender<Formatter>;%20%20%20%20class%20EventLogAppender<Formatter>;%20%20%20%20class%20DebugOutputAppender<Formatter>;%20%20%20%20ConsoleAppender%20<|--%20ColorConsoleAppender;%20%20%20%20IAppender%20<|-u-%20Logger;%20%20%20%20IAppender%20<|--%20RollingFileAppender;%20%20%20%20IAppender%20<|--%20ConsoleAppender;%20%20%20%20IAppender%20<|--%20AndroidAppender;%20%20%20%20IAppender%20<|--%20EventLogAppender;%20%20%20%20IAppender%20<|--%20DebugOutputAppender;%20%20%20%20;%20%20%20%20Logger%20"1"%20o--%20"0..n"%20IAppender;};package%20Formatters%20<<Frame>>%20{;%20%20%20%20class%20CsvFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};%20%20%20%20class%20TxtFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};%20%20%20%20class%20FuncMessageFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};%20%20%20%20class%20MessageOnlyFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};};package%20Converters%20<<Frame>>%20{;%20%20%20%20class%20UTF8Converter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20convert%28%29;%20%20%20%20};%20%20%20%20class%20NativeEOLConverter%20<NextConverter>{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20convert%28%29;%20%20%20%20};};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-file;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
-<!--
-@startuml
+```mermaid
+classDiagram
 
-class Logger<int instance> <<singleton>> {
-    +addAppender();
-    +getMaxSeverity();
-    +setMaxSeverity();
-    +checkSeverity();
-    -maxSeverity;
-    -appenders;
+class Logger~instanceId~ {
+    <<singleton>>
+    +addAppender()
+    +getMaxSeverity()
+    +setMaxSeverity()
+    +checkSeverity()
+    -maxSeverity
+    -appenders
 }
 
-package Appenders <<Frame>> {
-    interface IAppender {
-        +write();
-    }
-
-    class RollingFileAppender<Formatter, Converter>
-    class ConsoleAppender<Formatter>
-    class ColorConsoleAppender<Formatter>
-    class AndroidAppender<Formatter>
-    class EventLogAppender<Formatter>
-    class DebugOutputAppender<Formatter>
-
-    ConsoleAppender <|-- ColorConsoleAppender
-    IAppender <|-u- Logger
-    IAppender <|-- RollingFileAppender
-    IAppender <|-- ConsoleAppender
-    IAppender <|-- AndroidAppender
-    IAppender <|-- EventLogAppender
-    IAppender <|-- DebugOutputAppender
-
-    Logger "1" o-- "0..n" IAppender
+class IAppender {
+    <<interface>>
+    +write()
 }
 
-package Formatters <<Frame>> {
-    class CsvFormatter {
-        {static} header();
-        {static} format();
-    }
+Logger --|> IAppender
+Logger "1" o-- "*" IAppender
 
-    class TxtFormatter {
-        {static} header();
-        {static} format();
-    }
+IAppender <|-- RollingFileAppender~Formatter, Converter~
+IAppender <|-- ConsoleAppender~Formatter~
+IAppender <|-- AndroidAppender~Formatter~
+IAppender <|-- EventLogAppender~Formatter~
+IAppender <|-- DebugOutputAppender~Formatter~
 
-    class FuncMessageFormatter {
-        {static} header();
-        {static} format();
-    }
+ConsoleAppender <|-- ColorConsoleAppender~Formatter~
+```
+    
+```mermaid    
+classDiagram
 
-    class MessageOnlyFormatter {
-        {static} header();
-        {static} format();
-    }
-}
-
-package Converters <<Frame>> {
-    class UTF8Converter {
-        {static} header();
-        {static} convert();
-    }
-
-    class NativeEOLConverter <NextConverter>{
-        {static} header();
-        {static} convert();
-    }
-}
-
-enum Severity {
+class Severity {
+    <<enumeration>>
     none,
     fatal,
     error,
@@ -520,21 +484,57 @@ enum Severity {
 }
 
 class Record {
-    +operator<<();
-    -time;
-    -severity;
-    -tid;
-    -object;
-    -line;
-    -file;
-    -message;
-    -func;
+    +operator<<()
+    +printf()
+    -time
+    -severity
+    -tid
+    -object
+    -line
+    -message
+    -func
+    -file
+    -instanceId
+}    
+```
+
+```mermaid
+classDiagram
+
+class CsvFormatter {
+    +header()$
+    +format()$
 }
 
-hide empty members
-hide empty fields
-@enduml
--->
+class TxtFormatter {
+    +header()$
+    +format()$
+}
+
+class FuncMessageFormatter {
+    +header()$
+    +format()$
+}
+
+class MessageOnlyFormatter {
+    +header()$
+    +format()$
+}
+```
+
+```mermaid
+classDiagram
+
+class UTF8Converter {
+    +header()$
+    +convert()$
+}
+
+class NativeEOLConverter~NextConverter~{
+    +header()$
+    +convert()$
+}
+```
 
 There are 5 functional parts:
 
@@ -546,19 +546,12 @@ There are 5 functional parts:
 
 The log data flow is shown below:
 
-![Log data flow](http://gravizo.com/g?@startuml;%28*%29%20-r->%20"PLOG%20macro";-r->%20"Record";-r->%20"Logger";-r-->%20"Appender";-d->%20"Formatter";-d->%20"Converter";-u->%20"Appender";-r->%20%28*%29;@enduml)
-<!--
-@startuml
-(*) -r-> "PLOG macro"
--r-> "Record"
--r-> "Logger"
--r-> "Appender"
--d-> "Formatter"
--d-> "Converter"
--u-> "Appender"
--r-> (*)
-@enduml
--->
+```mermaid
+flowchart LR;
+    ST((start)) --> P[PLOG macro] --> R[Record] --> L[Logger] --> A[Appender]
+    A -->|record| F[Formatter] -->|text| C[Converter] -->|binary| A
+    A --> FIN(((finish)))
+```
 
 ## Logger
 [Logger](#logger) is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. [Logger](#logger) can act as [Appender](#appender) for another [Logger](#logger) because it implements `IAppender` interface. Also there can be several independent loggers that are parameterized by an integer instanceId number. The default instanceId is 0.
@@ -1049,8 +1042,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 
 - [__if_exists Statement](https://msdn.microsoft.com/en-us/library/x7wy9xh3.aspx)
 - [Controlling Symbol Visibility](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html)
-- [Gravizo](http://gravizo.com)
-- [PlantUML](http://plantuml.sourceforge.net)
+- [Mermaid](https://mermaid-js.github.io/mermaid/)
 - [DocToc](https://github.com/thlorenz/doctoc)
 - [CMake](http://www.cmake.org)
 
