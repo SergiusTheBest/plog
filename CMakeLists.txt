@@ -32,8 +32,8 @@ endif()
 if(PLOG_BUILD_SAMPLES)
     # add a pseudo-project to make plog headers visible in IDE
     file(GLOB_RECURSE ${PROJECT_NAME}_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
-    add_library(${PROJECT_NAME}-headers STATIC ${${PROJECT_NAME}_HEADERS})
-    set_target_properties(${PROJECT_NAME}-headers PROPERTIES LINKER_LANGUAGE CXX FOLDER Include)
+    add_custom_target(${PROJECT_NAME}-headers SOURCES ${${PROJECT_NAME}_HEADERS})
+    set_target_properties(${PROJECT_NAME}-headers PROPERTIES FOLDER Include)
 
     # add samples
     add_subdirectory(samples)
