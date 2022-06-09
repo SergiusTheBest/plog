@@ -1051,6 +1051,18 @@ This version of plog is licensed under the [MIT license](https://choosealicense.
 
 # Version history
 
+## Version 1.1.7 (09 Jun 2022)
+- New: Add hex dumper (#111)
+- New: Add ASCII dumper (#213)
+- New: Add support for printing std containers (#207)
+- New: Add console initializer
+- New: Add PrintVar helper
+- New: Add CMake find_package support (#171)
+- Enh: Change license to MIT (#212)
+- Fix: Specify calling convention for std stream manipulators (#210)
+- Fix: Compilation on VS2010 (#207)
+- Fix: Use add_custom_target for pseudo-project with headers (#216)
+
 ## Version 1.1.6 (06 Feb 2022)
 - New: Ability to disable logging to reduce binary size (#130)
 - New: Ability to change `maxFiles`/`maxFileSize` after initialization
