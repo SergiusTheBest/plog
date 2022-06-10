@@ -1002,6 +1002,8 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[CustomConverter](samples/CustomConverter)|Shows how to implement a custom converter that encrypts log messages.|
 |[CustomFormatter](samples/CustomFormatter)|Shows how to implement a custom formatter.|
 |[CustomType](samples/CustomType)|Shows how to print a custom type to the log stream.|
+|[CXX11](samples/CXX11)|Demonstrates log stream abilities for C++11 features.|
+|[CXX17](samples/CXX17)|Demonstrates log stream abilities for C++17 features.|
 |[DebugOutput](samples/DebugOutput)|Shows how to use [DebugOutputAppender](#debugoutputappender) to write to the windows debug output.|
 |[Demo](samples/Demo)|Demonstrates log stream abilities, prints various types of messages.|
 |[DisableLogging](samples/DisableLogging)|Shows how to disable logging (so it will be stripped from the binary).|

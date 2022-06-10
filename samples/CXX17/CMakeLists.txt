@@ -1,0 +1,12 @@
+if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.3.0)
+    cmake_minimum_required(VERSION 3.3)
+
+    if(cxx_std_17 IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+        add_executable(CXX17 Main.cpp)
+        target_link_libraries(CXX17 plog::plog)
+        set_target_properties(CXX17 PROPERTIES FOLDER Samples CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+        if (CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
+            target_link_libraries(CXX17 stdc++fs)
+        endif()
+    endif()
+endif()
