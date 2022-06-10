@@ -1053,6 +1053,9 @@ This version of plog is licensed under the [MIT license](https://choosealicense.
 
 # Version history
 
+## Version 1.1.8 (10 Jun 2022)
+- Fix: 'operator <<' is ambiguous for string_view on Windows (#217)
+    
 ## Version 1.1.7 (09 Jun 2022)
 - New: Add hex dumper (#111)
 - New: Add ASCII dumper (#213)
