@@ -45,7 +45,10 @@ namespace plog
             };
 
             template <class T>
-            struct isConvertibleToNString : isConvertible<T, std::basic_string<util::nchar> > {};
+            struct isConvertibleToNString : isConvertible<T, util::nstring> {};
+
+            template <class T>
+            struct isConvertibleToString : isConvertible<T, std::string> {};
 
             template <class T>
             struct isContainer
@@ -129,12 +132,13 @@ namespace plog
         template<class T>
         inline typename meta::enableIf<meta::isConvertibleToNString<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)
         {
-            plog::detail::operator<<(stream, static_cast<std::basic_string<util::nchar> >(data));
+            plog::detail::operator<<(stream, static_cast<util::nstring>(data));
         }
 
         // Print std containers
         template<class T>
-        inline typename meta::enableIf<meta::isContainer<T>::value && !meta::isConvertibleToNString<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)
+        inline typename meta::enableIf<meta::isContainer<T>::value && !meta::isConvertibleToNString<T>::value && !meta::isConvertibleToString<T>::value, void>::type
+            operator<<(util::nostringstream& stream, const T& data)
         {
             stream << "[";
 
