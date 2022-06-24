@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>plog</id>
+    <version>$version$</version>
+    <description>Pretty powerful logging library in about 1000 lines of code</description>
+    <authors>SergiusTheBest</authors>
+    <projectUrl>https://github.com/SergiusTheBest/plog</projectUrl>
+    <licenseUrl>https://github.com/SergiusTheBest/plog/blob/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>native log logging c++ cpp</tags>
+  </metadata>
+  <files>
+    <file src="include/**/*.h"  target="/lib/native/include" />
+    <file src="README.md"       target="/docs" />
+    <file src="plog.targets"    target="/build/native" />
+    <file src="LICENSE" />
+  </files>
+</package>
