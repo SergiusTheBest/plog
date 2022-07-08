@@ -6,12 +6,16 @@
     <description>Pretty powerful logging library in about 1000 lines of code</description>
     <authors>SergiusTheBest</authors>
     <projectUrl>https://github.com/SergiusTheBest/plog</projectUrl>
-    <licenseUrl>https://github.com/SergiusTheBest/plog/blob/master/LICENSE</licenseUrl>
+    <license type="expression">MIT</license>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>native log logging c++ cpp</tags>
+    <repository type="git" url="https://github.com/SergiusTheBest/plog" />
+    <dependencies>
+      <group targetFramework="native0.0" />
+    </dependencies>
   </metadata>
   <files>
-    <file src="include/**/*.h"  target="/lib/native/include" />
+    <file src="include/**/*.h"  target="/lib/native" />
     <file src="README.md"       target="/docs" />
     <file src="plog.targets"    target="/build/native" />
     <file src="LICENSE" />
