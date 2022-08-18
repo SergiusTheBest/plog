@@ -1014,11 +1014,12 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[Library](samples/Library)|Shows plog usage in static libraries.|
 |[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
 |[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
+|[NotShared](samples/NotShared)|Shows how to make logger instances local across binary modules (this is the default behavior on Windows but not on other platforms, so be careful).|
 |[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
 |[Path](samples/Path)|A test sample to check that `std::filesystem::path` can be logged.|
 |[Performance](samples/Performance)|Measures time per a log call.|
 |[SetFileName](samples/SetFileName)|Shows how to change a log file name at arbitrary moment.|
-|[Shared](samples/Shared)|Shows how to share logger instances across binary modules.|
+|[Shared](samples/Shared)|Shows how to share logger instances across binary modules (this is the default behavior on everything except Windows, so be careful)|
 |[SkipNativeEOL](samples/SkipNativeEOL)|Shows how to skip [NativeEOLConverter](#nativeeolconverter).|
 |[UtcTime](samples/UtcTime)|Shows how to use UTC time instead of local time.|
 

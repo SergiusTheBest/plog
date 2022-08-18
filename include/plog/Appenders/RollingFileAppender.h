@@ -8,7 +8,7 @@
 namespace plog
 {
     template<class Formatter, class Converter = NativeEOLConverter<UTF8Converter> >
-    class RollingFileAppender : public IAppender
+    class PLOG_LINKAGE_HIDDEN RollingFileAppender : public IAppender
     {
     public:
         RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)

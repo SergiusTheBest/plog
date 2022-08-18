@@ -5,7 +5,7 @@
 namespace plog
 {
     template <class Formatter>
-    class EventLogAppender : public IAppender
+    class PLOG_LINKAGE_HIDDEN EventLogAppender : public IAppender
     {
     public:
         EventLogAppender(const wchar_t* sourceName) : m_eventSource(RegisterEventSourceW(NULL, sourceName))

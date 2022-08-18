@@ -8,7 +8,7 @@ namespace plog
     // ColorConsoleAppender with any Formatter
 
     template<class Formatter, int instanceId>
-    inline Logger<instanceId>& init(Severity maxSeverity, OutputStream outputStream)
+    PLOG_LINKAGE_HIDDEN inline Logger<instanceId>& init(Severity maxSeverity, OutputStream outputStream)
     {
         static ColorConsoleAppender<Formatter> appender(outputStream);
         return init<instanceId>(maxSeverity, &appender);

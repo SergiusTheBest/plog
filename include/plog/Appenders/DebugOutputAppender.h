@@ -5,7 +5,7 @@
 namespace plog
 {
     template<class Formatter>
-    class DebugOutputAppender : public IAppender
+    class PLOG_LINKAGE_HIDDEN DebugOutputAppender : public IAppender
     {
     public:
         virtual void write(const Record& record)

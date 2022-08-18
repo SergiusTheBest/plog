@@ -29,6 +29,7 @@
 #       define PLOG_LINKAGE __attribute__ ((visibility ("default")))
 #   elif defined(PLOG_LOCAL)
 #       define PLOG_LINKAGE __attribute__ ((visibility ("hidden")))
+#       define PLOG_LINKAGE_HIDDEN PLOG_LINKAGE
 #   endif
 #   if defined(PLOG_EXPORT) || defined(PLOG_IMPORT)
 #       error "PLOG_EXPORT/PLOG_IMPORT is supported only on Windows"
@@ -37,6 +38,10 @@
 
 #ifndef PLOG_LINKAGE
 #   define PLOG_LINKAGE
+#endif
+
+#ifndef PLOG_LINKAGE_HIDDEN
+#   define PLOG_LINKAGE_HIDDEN
 #endif
 
 #ifdef _WIN32
@@ -341,7 +346,7 @@ namespace plog
             NonCopyable& operator=(const NonCopyable&);
         };
 
-        class File : NonCopyable
+        class PLOG_LINKAGE_HIDDEN File : NonCopyable
         {
         public:
             File() : m_file(-1)
@@ -437,7 +442,7 @@ namespace plog
             int m_file;
         };
 
-        class Mutex : NonCopyable
+        class PLOG_LINKAGE_HIDDEN Mutex : NonCopyable
         {
         public:
             Mutex()
@@ -500,7 +505,7 @@ namespace plog
 #endif
         };
 
-        class MutexLock : NonCopyable
+        class PLOG_LINKAGE_HIDDEN MutexLock : NonCopyable
         {
         public:
             MutexLock(Mutex& mutex) : m_mutex(mutex)
