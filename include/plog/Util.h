@@ -169,11 +169,15 @@ namespace plog
 #ifdef _WIN32
     inline int vasprintf(char** strp, const char* format, va_list ap)
     {
+#if defined(__BORLANDC__)
+        int charCount = 0x1000; // there is no _vscprintf on Borland/Embarcadero
+#else
         int charCount = _vscprintf(format, ap);
         if (charCount < 0)
         {
             return -1;
         }
+#endif
 
         size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
 
@@ -183,7 +187,9 @@ namespace plog
             return -1;
         }
 
-#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+#if defined(__BORLANDC__)
+        int retval = vsnprintf_s(str, bufferCharCount, format, ap);
+#elif defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
         int retval = _vsnprintf(str, bufferCharCount, format, ap);
 #else
         int retval = _vsnprintf_s(str, bufferCharCount, charCount, format, ap);
@@ -200,11 +206,15 @@ namespace plog
 
     inline int vaswprintf(wchar_t** strp, const wchar_t* format, va_list ap)
     {
+#if defined(__BORLANDC__)
+        int charCount = 0x1000; // there is no _vscwprintf on Borland/Embarcadero
+#else
         int charCount = _vscwprintf(format, ap);
         if (charCount < 0)
         {
             return -1;
         }
+#endif
 
         size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
 
@@ -214,7 +224,9 @@ namespace plog
             return -1;
         }
 
-#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+#if defined(__BORLANDC__)
+        int retval = vsnwprintf_s(str, bufferCharCount, format, ap);
+#elif defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
         int retval = _vsnwprintf(str, bufferCharCount, format, ap);
 #else
         int retval = _vsnwprintf_s(str, bufferCharCount, charCount, format, ap);
@@ -530,7 +542,7 @@ namespace plog
 #endif
         {
         public:
-#if defined(__clang__) || __GNUC__ >= 8
+#if (defined(__clang__) || defined(__GNUC__) && __GNUC__ >= 8) && !defined(__BORLANDC__)
             // This constructor is called before the `T` object is fully constructed, and
             // pointers are not dereferenced anyway, so UBSan shouldn't check vptrs.
             __attribute__((no_sanitize("vptr")))
