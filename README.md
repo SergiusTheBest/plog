@@ -39,6 +39,7 @@ Pretty powerful logging library in about 1000 lines of code [![Build Status](htt
     - [AndroidAppender](#androidappender)
     - [EventLogAppender](#eventlogappender)
     - [DebugOutputAppender](#debugoutputappender)
+    - [DynamicAppender](#dynamicappender)
 - [Miscellaneous notes](#miscellaneous-notes)
   - [Lazy stream evaluation](#lazy-stream-evaluation)
   - [Stream improvements over std::ostream](#stream-improvements-over-stdostream)
@@ -109,7 +110,7 @@ And its output:
 - Cross-platform: Windows, Linux, FreeBSD, macOS, Android, RTEMS (gcc, clang, msvc, mingw, mingw-w64, icc, c++builder)
 - Thread and type safe
 - Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter), [MessageOnly](#messageonlyformatter)
-- Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender), [EventLog](#eventlogappender), [DebugOutput](#debugoutputappender)
+- Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender), [EventLog](#eventlogappender), [DebugOutput](#debugoutputappender), [DynamicAppender](#dynamicappender)
 - [Automatic 'this' pointer capture](#automatic-this-pointer-capture) (supported only on msvc)
 - [Lazy stream evaluation](#lazy-stream-evaluation)
 - [Unicode aware](#unicode), files are stored in UTF8
@@ -465,8 +466,11 @@ IAppender <|-- ConsoleAppender~Formatter~
 IAppender <|-- AndroidAppender~Formatter~
 IAppender <|-- EventLogAppender~Formatter~
 IAppender <|-- DebugOutputAppender~Formatter~
+IAppender <|-- DynamicAppender
 
 ConsoleAppender <|-- ColorConsoleAppender~Formatter~
+
+DynamicAppender "1" o-- "*" IAppender
 ```
     
 ```mermaid    
@@ -813,6 +817,16 @@ Registry operations are system-wide and require administrator rights. Also they 
 DebugOutputAppender<Formatter>::DebugOutputAppender();
 ```
 
+### DynamicAppender
+[DynamicAppender](#dynamicappender) is a wrapper that can add/remove appenders dynamically (at any point of time) in a thread-safe manner.
+
+```cpp
+DynamicAppender& DynamicAppender::addAppender(IAppender* appender);
+DynamicAppender& DynamicAppender::removeAppender(IAppender* appender);
+```
+
+*Refer to [DynamicAppender sample](samples/DynamicAppender) for a complete sample.*
+
 # Miscellaneous notes
 
 ## Lazy stream evaluation
@@ -1007,6 +1021,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[DebugOutput](samples/DebugOutput)|Shows how to use [DebugOutputAppender](#debugoutputappender) to write to the windows debug output.|
 |[Demo](samples/Demo)|Demonstrates log stream abilities, prints various types of messages.|
 |[DisableLogging](samples/DisableLogging)|Shows how to disable logging (so it will be stripped from the binary).|
+|[DynamicAppender](samples/DynamicAppender)|Shows how to add/remove appenders dynamically).|
 |[EventLog](samples/EventLog)|Shows how to use [EventLogAppender](#eventlogappender) to write to the windows event log.|
 |[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple logger instances (useful for big projects).|
 |[Hello](samples/Hello)|A minimal introduction sample, shows the basic 3 steps to start using plog.|
