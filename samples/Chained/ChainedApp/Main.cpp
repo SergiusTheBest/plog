@@ -3,6 +3,7 @@
 //
 
 #include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
 
 // Functions imported form the shared library.
 extern "C" void initialize(plog::Severity severity, plog::IAppender* appender);

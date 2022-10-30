@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 option(PLOG_BUILD_SAMPLES "Build plog's samples." ON)
 option(PLOG_DISABLE_WCHAR_T "disable wchar_t ." OFF)
@@ -20,6 +20,10 @@ target_include_directories(plog
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
+
+if(ANDROID)
+    target_link_libraries(plog INTERFACE log)
+endif()
 
 add_library(plog::plog ALIAS plog)
 

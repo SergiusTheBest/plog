@@ -3,6 +3,7 @@
 //
 
 #include <plog/Log.h>
+#include <plog/Init.h>
 #include <plog/Appenders/EventLogAppender.h>
 #include <plog/Formatters/MessageOnlyFormatter.h>
 #include <iostream>

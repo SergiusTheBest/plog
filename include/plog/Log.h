@@ -5,7 +5,6 @@
 
 #pragma once
 #include <plog/Logger.h>
-#include <plog/Init.h>
 
 //////////////////////////////////////////////////////////////////////////
 // Helper macros that get context info
@@ -33,7 +32,16 @@
 //////////////////////////////////////////////////////////////////////////
 // Log severity level checker
 
-#define IF_PLOG_(instanceId, severity)   if (!plog::get<instanceId>() || !plog::get<instanceId>()->checkSeverity(severity)) {;} else
+#ifdef PLOG_DISABLE_LOGGING
+#   ifdef _MSC_VER
+#       define IF_PLOG_(instanceId, severity)  __pragma(warning(push)) __pragma(warning(disable:4127)) if (true) {;} else __pragma(warning(pop)) // conditional expression is constant
+#   else
+#       define IF_PLOG_(instanceId, severity)   if (true) {;} else
+#   endif
+#else
+#   define IF_PLOG_(instanceId, severity)   if (!plog::get<instanceId>() || !plog::get<instanceId>()->checkSeverity(severity)) {;} else
+#endif
+
 #define IF_PLOG(severity)                IF_PLOG_(PLOG_DEFAULT_INSTANCE_ID, severity)
 
 //////////////////////////////////////////////////////////////////////////
@@ -115,9 +123,6 @@
 // Old macro names for downward compatibility. To bypass including these macro names, add
 // #define PLOG_OMIT_LOG_DEFINES before #include <plog/Log.h>
 #ifndef PLOG_OMIT_LOG_DEFINES
-//////////////////////////////////////////////////////////////////////////
-// Log severity level checker
-
 
 //////////////////////////////////////////////////////////////////////////
 // Main logging macros - can be changed later to point at macros for a different logging package

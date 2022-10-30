@@ -11,8 +11,49 @@ namespace plog
 {
     namespace detail
     {
+        namespace meta
+        {
+            template<class T>
+            inline T& declval()
+            {
+#ifdef __INTEL_COMPILER
+#    pragma warning(suppress: 327) // NULL reference is not allowed
+#endif
+                return *reinterpret_cast<T*>(0);
+            }
+
+            template<bool B, class T = void>
+            struct enableIf {};
+
+            template<class T>
+            struct enableIf<true, T> { typedef T type; };
+        }
+
         //////////////////////////////////////////////////////////////////////////
         // Stream output operators as free functions
+
+#if PLOG_ENABLE_WCHAR_INPUT
+        inline void operator<<(util::nostringstream& stream, const wchar_t* data)
+        {
+            data = data ? data : L"(null)";
+
+#   ifdef _WIN32
+            std::operator<<(stream, data);
+#   else
+            std::operator<<(stream, util::toNarrow(data));
+#   endif
+        }
+
+        inline void operator<<(util::nostringstream& stream, wchar_t* data)
+        {
+            plog::detail::operator<<(stream, const_cast<const wchar_t*>(data));
+        }
+
+        inline void operator<<(util::nostringstream& stream, const std::wstring& data)
+        {
+            plog::detail::operator<<(stream, data.c_str());
+        }
+#endif
 
         inline void operator<<(util::nostringstream& stream, const char* data)
         {
@@ -27,26 +68,21 @@ namespace plog
 #endif
         }
 
+        inline void operator<<(util::nostringstream& stream, char* data)
+        {
+            plog::detail::operator<<(stream, const_cast<const char*>(data));
+        }
+
         inline void operator<<(util::nostringstream& stream, const std::string& data)
         {
             plog::detail::operator<<(stream, data.c_str());
         }
 
-#if PLOG_ENABLE_WCHAR_INPUT
-        inline void operator<<(util::nostringstream& stream, const wchar_t* data)
+#if defined(__clang__) || !defined(__GNUC__) || __GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 4 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
+        template<typename T>
+        inline typename meta::enableIf<!!(sizeof(static_cast<std::basic_string<util::nchar> >(meta::declval<T>())) + sizeof(T*)), void>::type operator<<(util::nostringstream& stream, const T& data)
         {
-            data = data ? data : L"(null)";
-
-#   ifdef _WIN32
-            std::operator<<(stream, data);
-#   else
-            std::operator<<(stream, util::toNarrow(data));
-#   endif
-        }
-
-        inline void operator<<(util::nostringstream& stream, const std::wstring& data)
-        {
-            plog::detail::operator<<(stream, data.c_str());
+            plog::detail::operator<<(stream, static_cast<std::basic_string<util::nchar> >(data));
         }
 #endif
 
@@ -67,10 +103,7 @@ namespace plog
             template <class T, class Stream>
             struct isStreamable
             {
-#ifdef __INTEL_COMPILER
-#    pragma warning(suppress: 327) // NULL reference is not allowed
-#endif
-                enum { value = sizeof(operator<<(*reinterpret_cast<Stream*>(0), *reinterpret_cast<const T*>(0))) != sizeof(char) };
+                enum { value = sizeof(operator<<(meta::declval<Stream>(), meta::declval<const T>())) != sizeof(char) };
             };
 
             template <class Stream>
@@ -90,12 +123,6 @@ namespace plog
             {
                 enum { value = false };
             };
-
-            template<bool B, class T = void>
-            struct enableIf {};
-
-            template<class T>
-            struct enableIf<true, T> { typedef T type; };
         }
 
         template<class T>
@@ -159,11 +186,19 @@ namespace plog
 #   endif
         }
 
+#   if QT_VERSION < 0x060000
         Record& operator<<(const QStringRef& data)
         {
-            QString qstr;
-            return *this << qstr.append(data);
+            return *this << data.toString();
         }
+#   endif
+
+#   ifdef QSTRINGVIEW_H
+        Record& operator<<(QStringView data)
+        {
+            return *this << data.toString();
+        }
+#   endif
 #endif
 
         template<typename T>

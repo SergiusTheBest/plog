@@ -1,6 +1,8 @@
 //
-// ColorConsole - shows how to use a color console appender.
+// DisableLogging - shows how to disable logging (so it will be stripped from the binary).
 //
+
+#define PLOG_DISABLE_LOGGING
 
 #include <plog/Log.h>
 #include <plog/Init.h>
@@ -9,10 +11,12 @@
 
 int main()
 {
+#ifndef PLOG_DISABLE_LOGGING
     static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init(plog::verbose, &consoleAppender);
+#endif
 
-    // Log severity levels are printed in different colors.
+    // The following code will be stripped from the binary by optimizer.
     PLOG_VERBOSE << "This is a VERBOSE message";
     PLOG_DEBUG << "This is a DEBUG message";
     PLOG_INFO << "This is an INFO message";

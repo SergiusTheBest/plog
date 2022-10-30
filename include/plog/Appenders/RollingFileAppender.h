@@ -16,21 +16,23 @@ namespace plog
     public:
         RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
             : m_fileSize()
-            , m_maxFileSize((std::max)(maxFileSize, static_cast<size_t>(1000))) // set a lower limit for the maxFileSize
+            , m_maxFileSize()
             , m_maxFiles(maxFiles)
             , m_firstWrite(true)
         {
             setFileName(fileName);
+            setMaxFileSize(maxFileSize);
         }
 
 #if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
             : m_fileSize()
-            , m_maxFileSize((std::max)(maxFileSize, static_cast<size_t>(1000))) // set a lower limit for the maxFileSize
+            , m_maxFileSize()
             , m_maxFiles(maxFiles)
             , m_firstWrite(true)
         {
             setFileName(fileName);
+            setMaxFileSize(maxFileSize);
         }
 #endif
 
@@ -72,6 +74,16 @@ namespace plog
             setFileName(util::toWide(fileName).c_str());
         }
 #endif
+
+        void setMaxFiles(int maxFiles)
+        {
+            m_maxFiles = maxFiles;
+        }
+
+        void setMaxFileSize(size_t maxFileSize)
+        {
+            m_maxFileSize = (std::max)(maxFileSize, static_cast<size_t>(1000)); // set a lower limit for the maxFileSize
+        }
 
         void rollLogFiles()
         {
@@ -131,8 +143,8 @@ namespace plog
         util::Mutex     m_mutex;
         util::File      m_file;
         size_t          m_fileSize;
-        const size_t    m_maxFileSize;
-        const int       m_maxFiles;
+        size_t          m_maxFileSize;
+        int             m_maxFiles;
         util::nstring   m_fileExt;
         util::nstring   m_fileNameNoExt;
         bool            m_firstWrite;

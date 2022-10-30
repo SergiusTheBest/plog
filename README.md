@@ -1,5 +1,5 @@
 # Plog - portable, simple and extensible C++ logging library
-Pretty powerful logging library in about 1000 lines of code [![Build Status](https://travis-ci.org/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.org/SergiusTheBest/plog) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master) [![CircleCI](https://circleci.com/gh/SergiusTheBest/plog.svg?style=svg)](https://circleci.com/gh/SergiusTheBest/plog)
+Pretty powerful logging library in about 1000 lines of code [![Build Status](https://travis-ci.com/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.com/SergiusTheBest/plog) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master) [![CircleCI](https://circleci.com/gh/SergiusTheBest/plog.svg?style=svg)](https://circleci.com/gh/SergiusTheBest/plog) [![Build Status](https://api.cirrus-ci.com/github/SergiusTheBest/plog.svg)](https://cirrus-ci.com/github/SergiusTheBest/plog)
 
 - [Introduction](#introduction)
   - [Hello log!](#hello-log)
@@ -49,6 +49,7 @@ Pretty powerful logging library in about 1000 lines of code [![Build Status](htt
   - [Performance](#performance)
   - [Printf style formatting](#printf-style-formatting)
   - [LOG_XXX macro name clashes](#log_xxx-macro-name-clashes)
+  - [Disable logging to reduce binary size](#disable-logging-to-reduce-binary-size)
 - [Extending](#extending)
   - [Custom data type](#custom-data-type)
   - [Custom appender](#custom-appender)
@@ -69,7 +70,8 @@ Plog is a C++ logging library that is designed to be as simple, small and flexib
 Here is a minimal hello log sample:
 
 ```cpp
-#include <plog/Log.h> // Step1: include the header
+#include <plog/Log.h> // Step1: include the headers
+#include "plog/Initializers/RollingFileInitializer.h"
 
 int main()
 {
@@ -148,12 +150,12 @@ enum Severity
 };
 ```
 
-*Note: messages with severity level `none` will be always printed.*
+*Note: messages with severity level `none` will always be printed.*
 
 The log format is determined automatically by `fileName` file extension:
 
 - .csv => [CSV format](#csvformatter)
-- anyting else => [TXT format](#txtformatter)
+- anything else => [TXT format](#txtformatter)
 
 The rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters:
 
@@ -209,7 +211,7 @@ PLOG(severity) << "msg";
 ```
 
 ### Conditional logging macros
-These macros are used to do a conditional logging. They accept a condition as a parameter and perform logging if the condition is true.
+These macros are used to do conditional logging. They accept a condition as a parameter and perform logging if the condition is true.
 
 #### Long macros:
 
@@ -291,7 +293,7 @@ Logger& init(Severity maxSeverity = none, IAppender* appender = NULL);
 
 You have to construct an [Appender](#appender) parameterized with a [Formatter](#formatter) and pass it to the `plog::init` function.
 
-*Note: a lifetime of the appender should be static!*
+*Note: the appender lifetime should be static!*
 
 Sample:
 
@@ -366,7 +368,7 @@ int main()
 *Refer to [MultiInstance](samples/MultiInstance) for a complete sample.*
 
 ## Share log instances across modules (exe, dll, so, dylib)
-For applications that consist from several binary modules plog instances can be local (each module has its own instance) or shared (all modules use the same instance). In case of shared you have to initialize plog only in one module, other modules will reuse that instance.
+For applications that consist of several binary modules, plog instances can be local (each module has its own instance) or shared (all modules use the same instance). In case of shared you have to initialize plog only in one module, other modules will reuse that instance.
 
 Sharing behavior is controlled by the following macros and is OS-dependent:
 
@@ -383,7 +385,7 @@ Sharing behavior is controlled by the following macros and is OS-dependent:
 |PLOG_IMPORT|Windows|Shared (imports)|
 |<default>|Windows|Local|
 
-For sharing on Windows one module should use `PLOG_EXPORT` and others should use `PLOG_IMPORT`. Also be cafeful on Linux/Unix: if you don't specify sharing behavior it will be determined by compiler settings (`-fvisibility`).
+For sharing on Windows one module should use `PLOG_EXPORT` and others should use `PLOG_IMPORT`. Also be careful on Linux/Unix: if you don't specify sharing behavior it will be determined by compiler settings (`-fvisibility`).
 
 *Refer to [Shared](samples/Shared) for a complete sample.*
 
@@ -413,7 +415,7 @@ extern "C" void EXPORT foo()
 ```cpp
 // main app
 
-// Functions imported form the shared library.
+// Functions imported from the shared library.
 extern "C" void initialize(plog::Severity severity, plog::IAppender* appender);
 extern "C" void foo();
 
@@ -724,7 +726,7 @@ public:
 [UTF8Converter](#utf8converter) is a default converter in plog. It converts string data to UTF-8 with BOM.
 
 ### NativeEOLConverter
-This converter converts `<LF>` line endings to `<CRLF>` on Windows and do nothing on everything else. As a template parameter it accepts another converter that is called next (by default [UTF8Converter](#utf8converter)).
+This converter converts `<LF>` line endings to `<CRLF>` on Windows and does nothing on everything else. As a template parameter it accepts another converter that is called next (by default [UTF8Converter](#utf8converter)).
 
 Sample:
 
@@ -749,7 +751,7 @@ public:
 *See [How to implement a custom appender](#custom-appender).*
 
 ### RollingFileAppender
-This appender outputs log data to a file with rolling behaviour. As template parameters it accepts both [Formatter](#formatter) and [Converter](#converter).
+This appender outputs log data to a file with rolling behavior. As template parameters it accepts both [Formatter](#formatter) and [Converter](#converter).
 
 ```cpp
 RollingFileAppender<Formatter, Converter>::RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0);
@@ -759,7 +761,7 @@ RollingFileAppender<Formatter, Converter>::RollingFileAppender(const util::nchar
 - `maxFileSize` - the maximum log file size in bytes
 - `maxFiles` - a number of log files to keep
 
-If `maxFileSize` or `maxFiles` is 0 then rolling behaviour is turned off.
+If `maxFileSize` or `maxFiles` is 0 then rolling behavior is turned off.
 
 The sample file names produced by this appender:
 
@@ -767,24 +769,24 @@ The sample file names produced by this appender:
 - mylog.1.log <== previous log file (size >= maxFileSize)
 - mylog.2.log <== previous log file (size >= maxFileSize)
 
-Also a file name can be changed at arbitrary moment by calling `setFileName`.
+A file name can be changed at an arbitrary moment by calling `setFileName` as well as `maxFiles` and `maxFileSize` can be changed by calling `setMaxFiles` and `setMaxFileSize`.
 
 *Note: the lowest `maxFileSize` is 1000 bytes.*
 
 *Note: a log file is created on the first log message.*
 
 ### ConsoleAppender
-This appender outputs log data to `stdout`.  As a template parameter it accepts [Formatter](#formatter).
+This appender outputs log data to `stdout` or `stderr`.  As a template parameter it accepts [Formatter](#formatter).
 
 ```cpp
-ConsoleAppender<Formatter>::ConsoleAppender();
+ConsoleAppender<Formatter>::ConsoleAppender(OutputStream outStream = streamStdOut);
 ```
 
 ### ColorConsoleAppender
-This appender outputs log data to `stdout` using colors that depends on a log message severity level.  As a template parameter it accepts [Formatter](#formatter).
+This appender outputs log data to `stdout` or `stderr` using colors that depend on a log message severity level.  As a template parameter it accepts [Formatter](#formatter).
 
 ```cpp
-ColorConsoleAppender<Formatter>::ColorConsoleAppender();
+ColorConsoleAppender<Formatter>::ColorConsoleAppender(OutputStream outStream = streamStdOut);
 ```
 
 ### AndroidAppender
@@ -834,6 +836,7 @@ Stream output in plog has several improvements over the standard `std::ostream`:
 - handles `NULL` values for C-strings: `char*` and `wchar_t*`
 - implicitly casts objects to: `std::string` and `std::wstring` (if they have an appropriate cast operator)
 - supports `QString` and `QStringRef` (you need to include Qt headers before plog)
+- supports `std::filesystem::path`
 - supports managed C++ `System::String^`
 
 ## Automatic 'this' pointer capture
@@ -878,7 +881,7 @@ By default all log files are stored in UTF-8 with BOM thanks to [UTF8Converter](
 
 ## Wide string support
 
-Whether `wchar_t`, `wchar_t*`, `std::wstring` can be streamed to log messages or not is controlled by `PLOG_ENABLE_WCHAR_INPUT` macro. Set it to a non-zero value to enable wide string support. By default wide string support is enabled for Windows and disabled for all non-Windows systems.
+Whether `wchar_t`, `wchar_t*`, `std::wstring` can be streamed to log messages or not is controlled by the `PLOG_ENABLE_WCHAR_INPUT` macro. Set it to a non-zero value to enable wide string support. By default wide string support is enabled for Windows and disabled for all non-Windows systems.
 
 *Note: wide string support requires linking to `iconv` on macOS.*
 
@@ -895,7 +898,7 @@ Producing a single log message takes the following amount of time:
 |Intel Core i5-2500K @4.2GHz|Windows 2008 R2|8|
 |Intel Atom N270 @1.6GHz|Windows 2003|68|
 
-Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. It is acceptable for the most use cases.
+Assume 20 microsec per a log call then 500 log calls per a second will slow down an application by 1%. It is acceptable for most use cases.
 
 *Refer to [Performance](samples/Performance) for a complete sample.*
 
@@ -908,9 +911,12 @@ PLOGI.printf(L"%d %S", 42, "test"); // wchar_t version
 ```
 
 ## LOG_XXX macro name clashes
-`LOG_XXX` macro names may be in conflict with other libraries (for example [syslog](https://linux.die.net/man/3/syslog)). In such cases you can disable `LOG_XXX` macro by defining `PLOG_OMIT_LOG_DEFINES` and use `PLOG_XXX`.
+`LOG_XXX` macro names may be in conflict with other libraries (for example [syslog](https://linux.die.net/man/3/syslog)). In such cases you can disable the `LOG_XXX` macro by defining `PLOG_OMIT_LOG_DEFINES` and use `PLOG_XXX`.
 
 *Define `PLOG_OMIT_LOG_DEFINES` before `#include <plog/Log.h>` or in the project settings!*
+
+## Disable logging to reduce binary size
+Logging code makes binary files larger. If you use it for debugging you can remove all logging code from release builds by defining the macro `PLOG_DISABLE_LOGGING`.
 
 # Extending
 Plog can be easily extended to support new:
@@ -933,7 +939,7 @@ namespace plog
 *Refer to [CustomType](samples/CustomType) for a complete sample.*
 
 ## Custom appender
-A custom appender must implement `IAppender` interface. Also it may accept [Formatter](#formatter) and [Converter](#converter) as template parameters however this is optional.
+A custom appender must implement the `IAppender` interface. Also it may accept [Formatter](#formatter) and [Converter](#converter) as template parameters however this is optional.
 
 ```cpp
 namespace plog
@@ -995,14 +1001,16 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |Sample|Description|
 |------|-----------|
 |[Android](samples/Android)|Shows how to use [AndroidAppender](#androidappender).|
+|[Arduino](samples/Arduino)|Arduino sample - not finished yet!|
 |[Chained](samples/Chained)|Shows how to chain a logger in a shared library with the main logger (route messages).|
 |[ColorConsole](samples/ColorConsole)|Shows how to use [ColorConsoleAppender](#colorconsoleappender).|
 |[CustomAppender](samples/CustomAppender)|Shows how to implement a custom appender that stores log messages in memory.|
-|[CustomFormatter](samples/CustomFormatter)|Shows how to implement a custom formatter.|
 |[CustomConverter](samples/CustomConverter)|Shows how to implement a custom converter that encrypts log messages.|
+|[CustomFormatter](samples/CustomFormatter)|Shows how to implement a custom formatter.|
 |[CustomType](samples/CustomType)|Shows how to print a custom type to the log stream.|
 |[DebugOutput](samples/DebugOutput)|Shows how to use [DebugOutputAppender](#debugoutputappender) to write to the windows debug output.|
 |[Demo](samples/Demo)|Demonstrates log stream abilities, prints various types of messages.|
+|[DisableLogging](samples/DisableLogging)|Shows how to disable logging (so it will be stripped from the binary).|
 |[EventLog](samples/EventLog)|Shows how to use [EventLogAppender](#eventlogappender) to write to the windows event log.|
 |[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple logger instances (useful for big projects).|
 |[Hello](samples/Hello)|A minimal introduction sample, shows the basic 3 steps to start using plog.|
@@ -1010,6 +1018,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
 |[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
 |[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
+|[Path](samples/Path)|A test sample to check that `std::filesystem::path` can be logged.|
 |[Performance](samples/Performance)|Measures time per a log call.|
 |[SetFileName](samples/SetFileName)|Shows how to change a log file name at arbitrary moment.|
 |[Shared](samples/Shared)|Shows how to share logger instances across binary modules.|
@@ -1047,6 +1056,25 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
 
 # Version history
+
+## Version 1.1.6 (06 Feb 2022)
+- New: Ability to disable logging to reduce binary size (#130)
+- New: Ability to change `maxFiles`/`maxFileSize` after initialization
+- New: Logging `std::filesystem::path` without explicit conversion to `std::string` (#168, #185, #183)
+- New: Allow to choose `stdout`/`stderr` for console appender (#162, #117)
+- New: Ability to change log file name at runtime (#62)
+- New: Ability to control sharing across modules (#96, #152, #20)
+- New: Building on platforms without thread support (#161, #113)
+- Enh: Change color functions from private to protected (#163)
+- Enh: Do not include `plog/Init.h` in `plog/Log.h` (#127, #89)
+- Fix: WideCharToMultiByte bug (#202)
+- Fix: Building with Qt6 (#190)
+- Fix: Compiling on GCC 4.4-4.7 (#176)
+- Fix: Suppress UBSan false positive (#90)
+- Fix: Don't share handle/fd to child process (#170)
+- Fix: MSVC analyzer warnings (#148)
+- Fix: File size truncation > 2GB on Windows (#160)
+- Fix: [RTEMS](https://www.rtems.org) build on newer toolchain (#158, #159)
 
 ## Version 1.1.5 (21 Oct 2019)
 - New: Use `NativeEOLConverter` by default (#145)

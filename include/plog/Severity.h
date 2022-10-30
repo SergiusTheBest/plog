@@ -14,6 +14,9 @@ namespace plog
         verbose = 6
     };
 
+#ifdef _MSC_VER
+#   pragma warning(suppress: 26812) //  Prefer 'enum class' over 'enum'
+#endif
     inline const char* severityToString(Severity severity)
     {
         switch (severity)
