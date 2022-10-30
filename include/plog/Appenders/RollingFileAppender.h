@@ -10,7 +10,7 @@ namespace plog
     template<class Formatter, class Converter>
     class RollingDateFileAppender;
     template<class Formatter, class Converter = NativeEOLConverter<UTF8Converter> >
-    class RollingFileAppender : public IAppender
+    class PLOG_LINKAGE_HIDDEN RollingFileAppender : public IAppender
     {
         friend class RollingDateFileAppender<Formatter,Converter>;
     public:

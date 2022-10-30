@@ -5,7 +5,7 @@
 namespace plog
 {
     template<class Formatter>
-    class AndroidAppender : public IAppender
+    class PLOG_LINKAGE_HIDDEN AndroidAppender : public IAppender
     {
     public:
         AndroidAppender(const char* tag) : m_tag(tag)

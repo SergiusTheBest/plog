@@ -29,6 +29,7 @@
 #       define PLOG_LINKAGE __attribute__ ((visibility ("default")))
 #   elif defined(PLOG_LOCAL)
 #       define PLOG_LINKAGE __attribute__ ((visibility ("hidden")))
+#       define PLOG_LINKAGE_HIDDEN PLOG_LINKAGE
 #   endif
 #   if defined(PLOG_EXPORT) || defined(PLOG_IMPORT)
 #       error "PLOG_EXPORT/PLOG_IMPORT is supported only on Windows"
@@ -37,6 +38,10 @@
 
 #ifndef PLOG_LINKAGE
 #   define PLOG_LINKAGE
+#endif
+
+#ifndef PLOG_LINKAGE_HIDDEN
+#   define PLOG_LINKAGE_HIDDEN
 #endif
 
 #ifdef _WIN32
@@ -66,6 +71,12 @@
 #   define PLOG_NSTR(x)    _PLOG_NSTR(x)
 #else
 #   define PLOG_NSTR(x)    x
+#endif
+
+#ifdef _WIN32
+#   define PLOG_CDECL      __cdecl
+#else
+#   define PLOG_CDECL
 #endif
 
 namespace plog
@@ -202,11 +213,15 @@ namespace plog
 #ifdef _WIN32
     inline int vasprintf(char** strp, const char* format, va_list ap)
     {
+#if defined(__BORLANDC__)
+        int charCount = 0x1000; // there is no _vscprintf on Borland/Embarcadero
+#else
         int charCount = _vscprintf(format, ap);
         if (charCount < 0)
         {
             return -1;
         }
+#endif
 
         size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
 
@@ -216,7 +231,9 @@ namespace plog
             return -1;
         }
 
-#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+#if defined(__BORLANDC__)
+        int retval = vsnprintf_s(str, bufferCharCount, format, ap);
+#elif defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
         int retval = _vsnprintf(str, bufferCharCount, format, ap);
 #else
         int retval = _vsnprintf_s(str, bufferCharCount, charCount, format, ap);
@@ -233,11 +250,15 @@ namespace plog
 
     inline int vaswprintf(wchar_t** strp, const wchar_t* format, va_list ap)
     {
+#if defined(__BORLANDC__)
+        int charCount = 0x1000; // there is no _vscwprintf on Borland/Embarcadero
+#else
         int charCount = _vscwprintf(format, ap);
         if (charCount < 0)
         {
             return -1;
         }
+#endif
 
         size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
 
@@ -247,7 +268,9 @@ namespace plog
             return -1;
         }
 
-#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+#if defined(__BORLANDC__)
+        int retval = vsnwprintf_s(str, bufferCharCount, format, ap);
+#elif defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
         int retval = _vsnwprintf(str, bufferCharCount, format, ap);
 #else
         int retval = _vsnwprintf_s(str, bufferCharCount, charCount, format, ap);
@@ -304,12 +327,12 @@ namespace plog
 
         inline std::string toNarrow(const std::wstring& wstr, long page)
         {
-			int len = WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), 0, 0, 0, 0);
+            int len = WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), 0, 0, 0, 0);
             std::string str(len, 0);
 
             if (!str.empty())
             {
-                WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], len, 0, 0);              
+                WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], len, 0, 0);
             }
 
             return str;
@@ -379,7 +402,7 @@ namespace plog
             NonCopyable& operator=(const NonCopyable&);
         };
 
-        class File : NonCopyable
+        class PLOG_LINKAGE_HIDDEN File : NonCopyable
         {
         public:
             File() : m_file(-1)
@@ -475,7 +498,7 @@ namespace plog
             int m_file;
         };
 
-        class Mutex : NonCopyable
+        class PLOG_LINKAGE_HIDDEN Mutex : NonCopyable
         {
         public:
             Mutex()
@@ -538,7 +561,7 @@ namespace plog
 #endif
         };
 
-        class MutexLock : NonCopyable
+        class PLOG_LINKAGE_HIDDEN MutexLock : NonCopyable
         {
         public:
             MutexLock(Mutex& mutex) : m_mutex(mutex)
@@ -563,7 +586,7 @@ namespace plog
 #endif
         {
         public:
-#if defined(__clang__) || __GNUC__ >= 8
+#if (defined(__clang__) || defined(__GNUC__) && __GNUC__ >= 8) && !defined(__BORLANDC__)
             // This constructor is called before the `T` object is fully constructed, and
             // pointers are not dereferenced anyway, so UBSan shouldn't check vptrs.
             __attribute__((no_sanitize("vptr")))

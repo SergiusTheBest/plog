@@ -1,0 +1,27 @@
+name: nuget
+
+on:
+  push:
+    tags:
+      - '[0-9]*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: 'latest'
+
+    - name: Pack NuGet
+      run: nuget pack plog.nuspec -p version=${{github.ref_name}}
+
+    - name: Publish
+      run: nuget push *.nupkg -Source "https://nuget.pkg.github.com/SergiusTheBest/index.json" -SkipDuplicate -ApiKey "${{secrets.GITHUB_TOKEN}}"

@@ -27,6 +27,46 @@ namespace plog
 
             template<class T>
             struct enableIf<true, T> { typedef T type; };
+
+            struct No  { char a[1]; };
+            struct Yes { char a[2]; };
+
+            template <class From, class To>
+            struct isConvertible
+            {
+                // `+ sizeof(U*)` is required for GCC 4.5-4.7
+                template<class U>
+                static typename enableIf<!!(sizeof(static_cast<To>(meta::declval<U>())) + sizeof(U*)), Yes>::type test(int);
+
+                template<class U>
+                static No test(...);
+
+                enum { value = sizeof(test<From>(0)) == sizeof(Yes) };
+            };
+
+            template <class T>
+            struct isConvertibleToNString : isConvertible<T, util::nstring> {};
+
+            template <class T>
+            struct isConvertibleToString : isConvertible<T, std::string> {};
+
+            template <class T>
+            struct isContainer
+            {
+                template<class U>
+                static typename meta::enableIf<!!(sizeof(
+#if defined(_MSC_VER) && _MSC_VER < 1700 // MSVC 2010 doesn't understand `typename T::const_iterator`
+                    meta::declval<U>().begin()) + sizeof(meta::declval<U>().end()
+#else
+                    typename U::const_iterator
+#endif
+                    )), Yes>::type test(int);
+
+                template<class U>
+                static No test(...);
+
+                enum { value = sizeof(test<T>(0)) == sizeof(Yes) };
+            };
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -78,11 +118,43 @@ namespace plog
             plog::detail::operator<<(stream, data.c_str());
         }
 
-#if defined(__clang__) || !defined(__GNUC__) || __GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 4 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
-        template<typename T>
-        inline typename meta::enableIf<!!(sizeof(static_cast<std::basic_string<util::nchar> >(meta::declval<T>())) + sizeof(T*)), void>::type operator<<(util::nostringstream& stream, const T& data)
+        // Print `std::pair`
+        template<class T1, class T2>
+        inline void operator<<(util::nostringstream& stream, const std::pair<T1, T2>& data)
         {
-            plog::detail::operator<<(stream, static_cast<std::basic_string<util::nchar> >(data));
+            stream << data.first;
+            stream << ":";
+            stream << data.second;
+        }
+
+#if defined(__clang__) || !defined(__GNUC__) || __GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 4 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
+        // Print data that can be casted to `std::basic_string`.
+        template<class T>
+        inline typename meta::enableIf<meta::isConvertibleToNString<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)
+        {
+            plog::detail::operator<<(stream, static_cast<util::nstring>(data));
+        }
+
+        // Print std containers
+        template<class T>
+        inline typename meta::enableIf<meta::isContainer<T>::value && !meta::isConvertibleToNString<T>::value && !meta::isConvertibleToString<T>::value, void>::type
+            operator<<(util::nostringstream& stream, const T& data)
+        {
+            stream << "[";
+
+            for (typename T::const_iterator it = data.begin(); it != data.end();)
+            {
+                stream << *it;
+
+                if (++it == data.end())
+                {
+                    break;
+                }
+
+                stream << ", ";
+            }
+
+            stream << "]";
         }
 #endif
 
@@ -98,16 +170,16 @@ namespace plog
         namespace meta
         {
             template<class T, class Stream>
-            inline char operator<<(Stream&, const T&);
+            inline No operator<<(Stream&, const T&);
 
             template <class T, class Stream>
             struct isStreamable
             {
-                enum { value = sizeof(operator<<(meta::declval<Stream>(), meta::declval<const T>())) != sizeof(char) };
+                enum { value = sizeof(operator<<(meta::declval<Stream>(), meta::declval<const T>())) != sizeof(No) };
             };
 
             template <class Stream>
-            struct isStreamable<std::ios_base& (std::ios_base&), Stream>
+            struct isStreamable<std::ios_base& PLOG_CDECL (std::ios_base&), Stream>
             {
                 enum { value = true };
             };
@@ -167,7 +239,7 @@ namespace plog
 #endif
 
 #ifdef _WIN32
-        Record& operator<<(std::wostream& (*data)(std::wostream&))
+        Record& operator<<(std::wostream& (PLOG_CDECL *data)(std::wostream&))
 #else
         Record& operator<<(std::ostream& (*data)(std::ostream&))
 #endif

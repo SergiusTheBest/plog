@@ -11,7 +11,7 @@ namespace plog
     // RollingFileAppender with any Formatter
 
     template<class Formatter, int instanceId>
-    inline Logger<instanceId>& init(Severity maxSeverity, const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
+    PLOG_LINKAGE_HIDDEN inline Logger<instanceId>& init(Severity maxSeverity, const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
     {
         static RollingFileAppender<Formatter> rollingFileAppender(fileName, maxFileSize, maxFiles);
         return init<instanceId>(maxSeverity, &rollingFileAppender);

@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////
 //  Plog - portable and simple log for C++
 //  Documentation and sources: https://github.com/SergiusTheBest/plog
-//  License: MPL 2.0, http://mozilla.org/MPL/2.0/
+//  License: MIT, https://choosealicense.com/licenses/mit
 
 #pragma once
 #include <plog/Logger.h>
