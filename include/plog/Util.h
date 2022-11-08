@@ -440,6 +440,7 @@ namespace plog
             size_t write(const void* buf, size_t count)
             {
                 unsigned long written = 0;
+                (void)written;
                 return m_file != invalid_file() ? static_cast<size_t>(
 #if defined(_WIN32) && !defined(WINCE)
                     ::_write(m_file, buf, static_cast<unsigned int>(count))
