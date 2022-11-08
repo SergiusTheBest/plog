@@ -176,7 +176,9 @@ namespace plog
 
         inline unsigned int gettid()
         {
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(WINCE)
+            return GetCurrentThreadId();
+#elif defined(_WIN32) && defined(WINCE)
             return ::GetCurrentThreadId();
 #elif defined(__linux__)
             return static_cast<unsigned int>(::syscall(__NR_gettid));
