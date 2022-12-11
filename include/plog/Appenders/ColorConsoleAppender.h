@@ -30,7 +30,7 @@ namespace plog
         {}
 #endif
 
-        virtual void write(const Record& record)
+        virtual void write(const Record& record) PLOG_OVERRIDE
         {
             util::nstring str = Formatter::format(record);
             util::MutexLock lock(this->m_mutex);

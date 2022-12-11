@@ -25,7 +25,7 @@ namespace plog
             return *this;
         }
 
-        virtual void write(const Record& record)
+        virtual void write(const Record& record) PLOG_OVERRIDE
         {
             util::MutexLock lock(m_mutex);
 

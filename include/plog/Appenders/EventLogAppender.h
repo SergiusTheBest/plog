@@ -17,7 +17,7 @@ namespace plog
             DeregisterEventSource(m_eventSource);
         }
 
-        virtual void write(const Record& record)
+        virtual void write(const Record& record) PLOG_OVERRIDE
         {
             std::wstring str = Formatter::format(record);
             const wchar_t* logMessagePtr[] = { str.c_str() };
