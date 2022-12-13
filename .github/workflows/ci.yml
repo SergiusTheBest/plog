@@ -34,7 +34,10 @@ jobs:
           # clang
           { os: ubuntu-22.04,   cxx: clang++-14,  pkgs: '' },
           { os: ubuntu-20.04,   cxx: clang++-10,  pkgs: '' },
-          { os: ubuntu-18.04,   cxx: clang++-5.0, pkgs: 'clang-5.0' }
+          { os: ubuntu-18.04,   cxx: clang++-5.0, pkgs: 'clang-5.0' },
+          # msvc
+          { os: windows-2019,   cxx: 'vs2019',    pkgs: '' },
+          { os: windows-2022,   cxx: 'vs2022',    pkgs: '' }
         ]
 
     runs-on: ${{ matrix.os }}
@@ -56,6 +59,5 @@ jobs:
 
     - name: build
       run: |
-        cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
-        cd build
-        make -j 2
+        cmake -Bbuild -DCMAKE_BUILD_TYPE=Release .
+        cmake --build build --parallel
