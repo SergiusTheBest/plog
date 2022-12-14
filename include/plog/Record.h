@@ -141,7 +141,7 @@ namespace plog
             stream << data.second;
         }
 
-#if defined(__clang__) || !defined(__GNUC__) || __GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 4 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
+#if defined(__clang__) || !defined(__GNUC__) || (__GNUC__ * 100 + __GNUC_MINOR__) >= 405 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
         // Print data that can be casted to `std::basic_string`.
         template<class T>
         inline typename meta::enableIf<meta::isConvertibleToNString<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)

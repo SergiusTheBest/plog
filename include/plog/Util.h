@@ -83,6 +83,12 @@
 #   define PLOG_CDECL
 #endif
 
+#if __cplusplus >= 201103L || defined(_MSC_VER) && _MSC_VER >= 1700
+#   define PLOG_OVERRIDE override
+#else
+#   define PLOG_OVERRIDE
+#endif
+
 namespace plog
 {
     namespace util

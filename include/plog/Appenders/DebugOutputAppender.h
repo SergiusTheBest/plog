@@ -8,7 +8,7 @@ namespace plog
     class PLOG_LINKAGE_HIDDEN DebugOutputAppender : public IAppender
     {
     public:
-        virtual void write(const Record& record)
+        virtual void write(const Record& record) PLOG_OVERRIDE
         {
             OutputDebugStringW(Formatter::format(record).c_str());
         }
