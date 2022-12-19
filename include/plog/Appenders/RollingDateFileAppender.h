@@ -13,7 +13,7 @@
 namespace plog {
 
     template<class Formatter, class Converter = NativeEOLConverter <UTF8Converter> >
-    class RollingDateFileAppender : public RollingFileAppender<Formatter, Converter> {
+    class PLOG_LINKAGE_HIDDEN RollingDateFileAppender : public RollingFileAppender<Formatter, Converter> {
     private:
         time_t last_date;
         size_t m_fileSize;
