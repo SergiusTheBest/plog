@@ -75,7 +75,11 @@ namespace plog {
             if (record.getTime().time >= last_date) {
                 std::string path = util::get_file_name(m_fileName.c_str());
                 RollingFileAppender<Formatter, Converter>::setFileName(path.c_str());
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
+                if (path != util::toNarrow(m_fileName.c_str(),CP_UTF8) && m_fileSize > 0) {
+#else
                 if (path != m_fileName && m_fileSize > 0) {
+#endif
                     int size = (int) m_fileSize;
                     std::string lastFileName = util::get_file_name(m_fileName.c_str(), -size);
 #if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
