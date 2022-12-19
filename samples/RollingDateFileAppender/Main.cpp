@@ -19,7 +19,7 @@ int main() {
         PLOGD << "Hello log!"; // short macro
         PLOG_DEBUG << "Hello log!"; // long macro
         PLOG(plog::debug) << "Hello log!"; // function-style macro
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        PLOG(plog::debug) << "中文测试"; // function-style macro
     }
     return 0;
 }

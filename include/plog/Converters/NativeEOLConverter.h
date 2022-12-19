@@ -8,7 +8,7 @@ namespace plog
     class NativeEOLConverter : public NextConverter
     {
 #ifdef _WIN32
-    public:
+        public:
         static std::string header(const util::nstring& str)
         {
             return NextConverter::header(fixLineEndings(str));

@@ -4,11 +4,12 @@
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
+#include <ctime>
 #include <fcntl.h>
 #include <sys/stat.h>
 
 #ifndef PLOG_ENABLE_WCHAR_INPUT
-#   ifdef _WIN32
+#   if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
 #       define PLOG_ENABLE_WCHAR_INPUT 1
 #   else
 #       define PLOG_ENABLE_WCHAR_INPUT 0
@@ -29,7 +30,6 @@
 #       define PLOG_LINKAGE __attribute__ ((visibility ("default")))
 #   elif defined(PLOG_LOCAL)
 #       define PLOG_LINKAGE __attribute__ ((visibility ("hidden")))
-#       define PLOG_LINKAGE_HIDDEN PLOG_LINKAGE
 #   endif
 #   if defined(PLOG_EXPORT) || defined(PLOG_IMPORT)
 #       error "PLOG_EXPORT/PLOG_IMPORT is supported only on Windows"
@@ -50,23 +50,29 @@
 #   include <sys/timeb.h>
 #   include <io.h>
 #   include <share.h>
+#elif defined(__rtems__)
+#   include <unistd.h>
+#   include <rtems.h>
+#   if PLOG_ENABLE_WCHAR_INPUT
+#       include <iconv.h>
+#   endif
 #else
 #   include <unistd.h>
 #   include <sys/time.h>
 #   if defined(__linux__) || defined(__FreeBSD__)
-#       include <sys/syscall.h>
+#   include <sys/syscall.h>
 #   elif defined(__rtems__)
 #       include <rtems.h>
 #   endif
 #   if defined(_POSIX_THREADS)
-#       include <pthread.h>
+#   include <pthread.h>
 #   endif
 #   if PLOG_ENABLE_WCHAR_INPUT
 #       include <iconv.h>
 #   endif
 #endif
 
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
 #   define _PLOG_NSTR(x)   L##x
 #   define PLOG_NSTR(x)    _PLOG_NSTR(x)
 #else
@@ -89,7 +95,7 @@ namespace plog
 {
     namespace util
     {
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
         typedef std::wstring nstring;
         typedef std::wostringstream nostringstream;
         typedef std::wistringstream nistringstream;
@@ -125,50 +131,6 @@ namespace plog
 #else
             ::gmtime_r(time, t);
 #endif
-        }
-
-        inline static bool exists(const char *path_string) {
-            struct stat buffer = {};
-            return (stat(path_string, &buffer) == 0);
-        }
-        inline static time_t get_zero_time() {
-            time_t t = time(nullptr);
-            struct tm *tm = localtime(&t);
-            tm->tm_mday += 1;
-            tm->tm_hour = 0;
-            tm->tm_min = 0;
-            tm->tm_sec = 0;
-            return mktime(tm);
-        }
-
-#ifdef _WIN32
-        /**
-         * "%Y-%m-%d-%H-%M-%S"
-         * @param name
-         * @return
-         */
-        inline static std::string get_file_name(const util::nchar *name) {
-            return get_file_name(util::toNarrow(name,CP_UTF8).c_str());
-        }
-#endif
-
-        /**
-         * "%Y-%m-%d-%H-%M-%S"
-         * @param name
-         * @return
-         */
-        inline static std::string get_file_name(const char *name, int day = 0) {
-            std::stringstream str_time;
-            std::time_t current_time = std::time(nullptr);
-            if (day != 0) {
-                struct tm *tm = localtime(&current_time);
-                tm->tm_mday += day;
-                current_time = mktime(tm);
-            }
-            char tAll[255];
-            std::strftime(tAll, sizeof(tAll), name, std::localtime(&current_time));
-            str_time << tAll;
-            return str_time.str();
         }
 
 #ifdef _WIN32
@@ -217,7 +179,7 @@ namespace plog
         }
 
 #ifdef _WIN32
-    inline int vasprintf(char** strp, const char* format, va_list ap)
+        inline int vasprintf(char** strp, const char* format, va_list ap)
     {
 #if defined(__BORLANDC__)
         int charCount = 0x1000; // there is no _vscprintf on Borland/Embarcadero
@@ -316,7 +278,7 @@ namespace plog
         }
 #endif
 
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
         inline std::wstring toWide(const char* str)
         {
             size_t len = ::strlen(str);
@@ -344,6 +306,61 @@ namespace plog
             return str;
         }
 #endif
+
+        inline static bool exists(const char *path_string) {
+            struct stat buffer = {};
+            return (stat(path_string, &buffer) == 0);
+        }
+
+        inline static time_t get_zero_time() {
+            time_t t = time(NULL);
+            tm tm;
+            util::localtime_s(&tm, &t);
+
+            tm.tm_mday += 1;
+            tm.tm_hour = 0;
+            tm.tm_min = 0;
+            tm.tm_sec = 0;
+            return mktime(&tm);
+        }
+
+        /**
+         * "%Y-%m-%d-%H-%M-%S"
+         * @param name
+         * @return
+         */
+        inline static std::string get_file_name(const char *name, int day = 0) {
+            std::stringstream str_time;
+            std::time_t current_time = std::time(NULL);
+            if (day != 0) {
+                tm tm;
+                util::localtime_s(&tm, &current_time);
+                tm.tm_mday += day;
+                current_time = mktime(&tm);
+            }
+            char tAll[255];
+            tm t;
+            util::localtime_s(&t, &current_time);
+            std::strftime(tAll, sizeof(tAll), name, &t);
+            str_time << tAll;
+            return str_time.str();
+        }
+
+#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
+        inline static bool exists(const nchar *path_string) {
+            struct stat buffer = {};
+            return (wstat(path_string, &buffer) == 0);
+        }
+        /**
+         * "%Y-%m-%d-%H-%M-%S"
+         * @param name
+         * @return
+         */
+        inline static std::string get_file_name(const util::nchar *name, int day = 0) {
+            return get_file_name(util::toNarrow(name,CP_UTF8).c_str(),day);
+        }
+#endif
+
 
         inline std::string processFuncName(const char* func)
         {
@@ -373,7 +390,7 @@ namespace plog
 
         inline const nchar* findExtensionDot(const nchar* fileName)
         {
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
             return std::wcsrchr(fileName, L'.');
 #else
             return std::strrchr(fileName, '.');
@@ -427,9 +444,9 @@ namespace plog
 
             size_t open(const nchar* fileName)
             {
-#if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
+#if  !defined(PLOG_DISABLE_WCHAR_T) and (defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__)))
                 m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, SH_DENYWR, _S_IREAD | _S_IWRITE);
-#elif defined(_WIN32)
+#elif  !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
                 ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif defined(O_CLOEXEC)
                 m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -443,11 +460,11 @@ namespace plog
             {
                 return m_file != -1 ? static_cast<size_t>(
 #ifdef _WIN32
-                    ::_write(m_file, buf, static_cast<unsigned int>(count))
+                        ::_write(m_file, buf, static_cast<unsigned int>(count))
 #else
-                    ::write(m_file, buf, count)
+                        ::write(m_file, buf, count)
 #endif
-                    ) : static_cast<size_t>(-1);
+                ) : static_cast<size_t>(-1);
             }
 
             template<class CharType>
@@ -460,13 +477,13 @@ namespace plog
             {
                 return m_file != -1 ? static_cast<size_t>(
 #if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
-                    ::_lseek(m_file, static_cast<off_t>(offset), whence)
+                        ::_lseek(m_file, static_cast<off_t>(offset), whence)
 #elif defined(_WIN32)
-                    ::_lseeki64(m_file, static_cast<off_t>(offset), whence)
+                        ::_lseeki64(m_file, static_cast<off_t>(offset), whence)
 #else
-                    ::lseek(m_file, static_cast<off_t>(offset), whence)
+                        ::lseek(m_file, static_cast<off_t>(offset), whence)
 #endif
-                    ) : static_cast<size_t>(-1);
+                ) : static_cast<size_t>(-1);
             }
 
             void close()
@@ -484,7 +501,7 @@ namespace plog
 
             static int unlink(const nchar* fileName)
             {
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
                 return ::_wunlink(fileName);
 #else
                 return ::unlink(fileName);
@@ -493,7 +510,7 @@ namespace plog
 
             static int rename(const nchar* oldFilename, const nchar* newFilename)
             {
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
                 return MoveFileW(oldFilename, newFilename);
 #else
                 return ::rename(oldFilename, newFilename);

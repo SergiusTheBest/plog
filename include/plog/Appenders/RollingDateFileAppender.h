@@ -26,7 +26,7 @@ namespace plog {
         const util::nchar *m_fileName;
 
     public:
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         /**
          *
          * @param fileName "%Y-%m-%d-%H-%M-%S"

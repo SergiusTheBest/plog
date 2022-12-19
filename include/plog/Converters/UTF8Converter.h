@@ -13,7 +13,7 @@ namespace plog
             return std::string(kBOM) + convert(str);
         }
 
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         static std::string convert(const util::nstring& str)
         {
             return util::toNarrow(str, codePage::kUTF8);

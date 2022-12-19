@@ -48,7 +48,7 @@ namespace plog
     protected:
         void writestr(const util::nstring& str)
         {
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
             if (m_isatty)
             {
                 WriteConsoleW(m_outputHandle, str.c_str(), static_cast<DWORD>(str.size()), NULL, NULL);
