@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cassert>
 #include <cstring>
 #include <cstdio>
@@ -95,10 +96,8 @@
 #   define PLOG_OVERRIDE
 #endif
 
-namespace plog
-{
-    namespace util
-    {
+namespace plog {
+    namespace util {
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
         typedef std::wstring nstring;
         typedef std::wostringstream nostringstream;
@@ -111,8 +110,7 @@ namespace plog
         typedef char nchar;
 #endif
 
-        inline void localtime_s(struct tm* t, const time_t* time)
-        {
+        inline void localtime_s(struct tm *t, const time_t *time) {
 #if defined(_WIN32) && defined(__BORLANDC__)
             ::localtime_s(time, t);
 #elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
@@ -124,8 +122,7 @@ namespace plog
 #endif
         }
 
-        inline void gmtime_s(struct tm* t, const time_t* time)
-        {
+        inline void gmtime_s(struct tm *t, const time_t *time) {
 #if defined(_WIN32) && defined(__BORLANDC__)
             ::gmtime_s(time, t);
 #elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
@@ -145,24 +142,22 @@ namespace plog
             ::ftime(t);
         }
 #else
-        struct Time
-        {
+        struct Time {
             time_t time;
             unsigned short millitm;
         };
 
-        inline void ftime(Time* t)
-        {
+        inline void ftime(Time *t) {
             timeval tv;
             ::gettimeofday(&tv, NULL);
 
             t->time = tv.tv_sec;
             t->millitm = static_cast<unsigned short>(tv.tv_usec / 1000);
         }
+
 #endif
 
-        inline unsigned int gettid()
-        {
+        inline unsigned int gettid() {
 #ifdef _WIN32
             return GetCurrentThreadId();
 #elif defined(__linux__)
@@ -183,79 +178,79 @@ namespace plog
         }
 
 #ifdef _WIN32
-    inline int vasprintf(char** strp, const char* format, va_list ap)
-    {
-#if defined(__BORLANDC__)
-        int charCount = 0x1000; // there is no _vscprintf on Borland/Embarcadero
-#else
-        int charCount = _vscprintf(format, ap);
-        if (charCount < 0)
+        inline int vasprintf(char** strp, const char* format, va_list ap)
         {
-            return -1;
-        }
+#if defined(__BORLANDC__)
+            int charCount = 0x1000; // there is no _vscprintf on Borland/Embarcadero
+#else
+            int charCount = _vscprintf(format, ap);
+            if (charCount < 0)
+            {
+                return -1;
+            }
 #endif
 
-        size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
+            size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
 
-        char* str = static_cast<char*>(malloc(bufferCharCount));
-        if (!str)
-        {
-            return -1;
-        }
+            char* str = static_cast<char*>(malloc(bufferCharCount));
+            if (!str)
+            {
+                return -1;
+            }
 
 #if defined(__BORLANDC__)
-        int retval = vsnprintf_s(str, bufferCharCount, format, ap);
+            int retval = vsnprintf_s(str, bufferCharCount, format, ap);
 #elif defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
-        int retval = _vsnprintf(str, bufferCharCount, format, ap);
+            int retval = _vsnprintf(str, bufferCharCount, format, ap);
 #else
-        int retval = _vsnprintf_s(str, bufferCharCount, charCount, format, ap);
+            int retval = _vsnprintf_s(str, bufferCharCount, charCount, format, ap);
 #endif
-        if (retval < 0)
-        {
-            free(str);
-            return -1;
+            if (retval < 0)
+            {
+                free(str);
+                return -1;
+            }
+
+            *strp = str;
+            return retval;
         }
 
-        *strp = str;
-        return retval;
-    }
-
-    inline int vaswprintf(wchar_t** strp, const wchar_t* format, va_list ap)
-    {
+        inline int vaswprintf(wchar_t** strp, const wchar_t* format, va_list ap)
+        {
 #if defined(__BORLANDC__)
-        int charCount = 0x1000; // there is no _vscwprintf on Borland/Embarcadero
+            int charCount = 0x1000; // there is no _vscwprintf on Borland/Embarcadero
 #else
-        int charCount = _vscwprintf(format, ap);
-        if (charCount < 0)
-        {
-            return -1;
-        }
+            int charCount = _vscwprintf(format, ap);
+            if (charCount < 0)
+            {
+                return -1;
+            }
 #endif
 
-        size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
+            size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
 
-        wchar_t* str = static_cast<wchar_t*>(malloc(bufferCharCount * sizeof(wchar_t)));
-        if (!str)
-        {
-            return -1;
-        }
+            wchar_t* str = static_cast<wchar_t*>(malloc(bufferCharCount * sizeof(wchar_t)));
+            if (!str)
+            {
+                return -1;
+            }
 
 #if defined(__BORLANDC__)
-        int retval = vsnwprintf_s(str, bufferCharCount, format, ap);
+            int retval = vsnwprintf_s(str, bufferCharCount, format, ap);
 #elif defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
-        int retval = _vsnwprintf(str, bufferCharCount, format, ap);
+            int retval = _vsnwprintf(str, bufferCharCount, format, ap);
 #else
-        int retval = _vsnwprintf_s(str, bufferCharCount, charCount, format, ap);
+            int retval = _vsnwprintf_s(str, bufferCharCount, charCount, format, ap);
 #endif
-        if (retval < 0)
-        {
-            free(str);
-            return -1;
-        }
+            if (retval < 0)
+            {
+                free(str);
+                return -1;
+            }
 
-        *strp = str;
-        return retval;
-    }
+            *strp = str;
+            return retval;
+        }
 #endif
 
 #if PLOG_ENABLE_WCHAR_INPUT && !defined(_WIN32)
@@ -397,48 +392,39 @@ namespace plog
 #endif
         }
 
-        inline void splitFileName(const nchar* fileName, nstring& fileNameNoExt, nstring& fileExt)
-        {
-            const nchar* dot = findExtensionDot(fileName);
+        inline void splitFileName(const nchar *fileName, nstring &fileNameNoExt, nstring &fileExt) {
+            const nchar *dot = findExtensionDot(fileName);
 
-            if (dot)
-            {
+            if (dot) {
                 fileNameNoExt.assign(fileName, dot);
                 fileExt.assign(dot + 1);
-            }
-            else
-            {
+            } else {
                 fileNameNoExt.assign(fileName);
                 fileExt.clear();
             }
         }
 
-        class PLOG_LINKAGE NonCopyable
-        {
+        class PLOG_LINKAGE NonCopyable {
         protected:
-            NonCopyable()
-            {
+            NonCopyable() {
             }
 
         private:
-            NonCopyable(const NonCopyable&);
-            NonCopyable& operator=(const NonCopyable&);
+            NonCopyable(const NonCopyable &);
+
+            NonCopyable &operator=(const NonCopyable &);
         };
 
-        class File : NonCopyable
-        {
+        class File : NonCopyable {
         public:
-            File() : m_file(-1)
-            {
+            File() : m_file(-1) {
             }
 
-            File(const nchar* fileName) : m_file(-1)
-            {
+            File(const nchar *fileName) : m_file(-1) {
                 open(fileName);
             }
 
-            ~File()
-            {
+            ~File() {
                 close();
             }
 
@@ -552,8 +538,7 @@ namespace plog
 #endif
             }
 
-            void unlock()
-            {
+            void unlock() {
 #ifdef _WIN32
                 LeaveCriticalSection(&m_sync);
 #elif defined(__rtems__)
