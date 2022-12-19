@@ -97,6 +97,9 @@
 #   define PLOG_OVERRIDE
 #endif
 
+#ifndef CP_UTF8
+#define CP_UTF8 65001
+#endif
 namespace plog {
     namespace util {
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
@@ -348,8 +351,7 @@ namespace plog {
 
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
         inline static bool exists(const nchar *path_string) {
-            struct stat buffer;
-            return (wstat(path_string, &buffer) == 0);
+            return (access(path_string, F_OK ) != -1 );
         }
         /**
          * "%Y-%m-%d-%H-%M-%S"
