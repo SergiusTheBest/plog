@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 
 #ifndef PLOG_ENABLE_WCHAR_INPUT
-#   if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
+#   if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
 #       define PLOG_ENABLE_WCHAR_INPUT 1
 #   else
 #       define PLOG_ENABLE_WCHAR_INPUT 0
@@ -102,7 +102,7 @@
 #endif
 namespace plog {
     namespace util {
-#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         typedef std::wstring nstring;
         typedef std::wostringstream nostringstream;
         typedef std::wistringstream nistringstream;
@@ -281,7 +281,7 @@ namespace plog {
         }
 #endif
 
-#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         inline std::wstring toWide(const char* str)
         {
             size_t len = ::strlen(str);
@@ -349,9 +349,9 @@ namespace plog {
             return str_time.str();
         }
 
-#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         inline static bool exists(const nchar *path_string) {
-            return (access(path_string, F_OK ) != -1 );
+            return (access(path_string, 0 ) != -1 );
         }
         /**
          * "%Y-%m-%d-%H-%M-%S"
@@ -388,7 +388,7 @@ namespace plog {
         }
 
         inline const nchar *findExtensionDot(const nchar *fileName) {
-#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
             return std::wcsrchr(fileName, L'.');
 #else
             return std::strrchr(fileName, '.');
@@ -432,9 +432,9 @@ namespace plog {
             }
 
             size_t open(const nchar *fileName) {
-#if  !defined(PLOG_DISABLE_WCHAR_T) and (defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__)))
+#if  !defined(PLOG_DISABLE_WCHAR_T) && (defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__)))
                 m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, SH_DENYWR, _S_IREAD | _S_IWRITE);
-#elif  !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
+#elif  !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
                 ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif defined(O_CLOEXEC)
                 m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY | O_CLOEXEC,
@@ -484,7 +484,7 @@ namespace plog {
             }
 
             static int unlink(const nchar *fileName) {
-#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
                 return ::_wunlink(fileName);
 #else
                 return ::unlink(fileName);
@@ -492,7 +492,7 @@ namespace plog {
             }
 
             static int rename(const nchar *oldFilename, const nchar *newFilename) {
-#if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
                 return MoveFileW(oldFilename, newFilename);
 #else
                 return ::rename(oldFilename, newFilename);
