@@ -416,7 +416,7 @@ namespace plog {
             NonCopyable &operator=(const NonCopyable &);
         };
 
-        class File : NonCopyable {
+        class PLOG_LINKAGE_HIDDEN File : NonCopyable {
         public:
             File() : m_file(-1) {
             }
