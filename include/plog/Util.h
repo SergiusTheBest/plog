@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstring>
 #include <cstdio>
+#include <ctime>
 #include <cstdlib>
 #include <sstream>
 #include <fcntl.h>
