@@ -5,7 +5,6 @@
 #include <plog/Log.h> // Step1: include the header.
 #include <plog/Initializers/RollingFileInitializer.h>
 #include <plog/Appenders/RollingDateFileAppender.h>
-#include <thread>
 
 int main() {
     using plog::TxtFormatter;
