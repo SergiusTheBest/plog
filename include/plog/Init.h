@@ -24,7 +24,7 @@ namespace plog
     // Empty initializer / one appender
 
     template<int instanceId>
-    inline Logger<instanceId>& init(Severity maxSeverity = none, IAppender* appender = NULL)
+    PLOG_LINKAGE_HIDDEN inline Logger<instanceId>& init(Severity maxSeverity = none, IAppender* appender = NULL)
     {
         static Logger<instanceId> logger(maxSeverity);
         return appender ? logger.addAppender(appender) : logger;

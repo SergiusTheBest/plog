@@ -5,7 +5,7 @@
 namespace plog
 {
     template <class Formatter>
-    class EventLogAppender : public IAppender
+    class PLOG_LINKAGE_HIDDEN EventLogAppender : public IAppender
     {
     public:
         EventLogAppender(const wchar_t* sourceName) : m_eventSource(RegisterEventSourceW(NULL, sourceName))
@@ -17,7 +17,7 @@ namespace plog
             DeregisterEventSource(m_eventSource);
         }
 
-        virtual void write(const Record& record)
+        virtual void write(const Record& record) PLOG_OVERRIDE
         {
 #if  defined(PLOG_DISABLE_WCHAR_T)
             std::wostringstream _str ;

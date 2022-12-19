@@ -4,7 +4,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
-#include <ctime>
 #include <fcntl.h>
 #include <sys/stat.h>
 
@@ -30,6 +29,7 @@
 #       define PLOG_LINKAGE __attribute__ ((visibility ("default")))
 #   elif defined(PLOG_LOCAL)
 #       define PLOG_LINKAGE __attribute__ ((visibility ("hidden")))
+#       define PLOG_LINKAGE_HIDDEN PLOG_LINKAGE
 #   endif
 #   if defined(PLOG_EXPORT) || defined(PLOG_IMPORT)
 #       error "PLOG_EXPORT/PLOG_IMPORT is supported only on Windows"
@@ -38,6 +38,10 @@
 
 #ifndef PLOG_LINKAGE
 #   define PLOG_LINKAGE
+#endif
+
+#ifndef PLOG_LINKAGE_HIDDEN
+#   define PLOG_LINKAGE_HIDDEN
 #endif
 
 #ifdef _WIN32
@@ -53,10 +57,20 @@
 #       include <iconv.h>
 #   endif
 #else
+
 #   include <unistd.h>
-#   include <sys/syscall.h>
 #   include <sys/time.h>
+
+#   if defined(__linux__) || defined(__FreeBSD__)
+#   include <sys/syscall.h>
+#   elif defined(__rtems__)
+#       include <rtems.h>
+#   endif
+#   if defined(_POSIX_THREADS)
+
 #   include <pthread.h>
+
+#   endif
 #   if PLOG_ENABLE_WCHAR_INPUT
 #       include <iconv.h>
 #   endif
@@ -65,11 +79,20 @@
 #if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
 #   define _PLOG_NSTR(x)   L##x
 #   define PLOG_NSTR(x)    _PLOG_NSTR(x)
-#ifndef CP_UTF8
-#define CP_UTF8 65001
-#endif
 #else
 #   define PLOG_NSTR(x)    x
+#endif
+
+#ifdef _WIN32
+#   define PLOG_CDECL      __cdecl
+#else
+#   define PLOG_CDECL
+#endif
+
+#if __cplusplus >= 201103L || defined(_MSC_VER) && _MSC_VER >= 1700
+#   define PLOG_OVERRIDE override
+#else
+#   define PLOG_OVERRIDE
 #endif
 
 namespace plog
@@ -154,28 +177,38 @@ namespace plog
             uint64_t tid64;
             pthread_threadid_np(NULL, &tid64);
             return static_cast<unsigned int>(tid64);
+#else
+            return 0;
 #endif
         }
 
 #ifdef _WIN32
     inline int vasprintf(char** strp, const char* format, va_list ap)
     {
-        int len = _vscprintf(format, ap);
-        if (len < 0)
+#if defined(__BORLANDC__)
+        int charCount = 0x1000; // there is no _vscprintf on Borland/Embarcadero
+#else
+        int charCount = _vscprintf(format, ap);
+        if (charCount < 0)
         {
             return -1;
         }
+#endif
 
-        char* str = static_cast<char*>(malloc(len + 1));
+        size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
+
+        char* str = static_cast<char*>(malloc(bufferCharCount));
         if (!str)
         {
             return -1;
         }
 
-#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
-        int retval = _vsnprintf(str, len + 1, format, ap);
+#if defined(__BORLANDC__)
+        int retval = vsnprintf_s(str, bufferCharCount, format, ap);
+#elif defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+        int retval = _vsnprintf(str, bufferCharCount, format, ap);
 #else
-        int retval = _vsnprintf_s(str, len + 1, len, format, ap);
+        int retval = _vsnprintf_s(str, bufferCharCount, charCount, format, ap);
 #endif
         if (retval < 0)
         {
@@ -189,22 +222,30 @@ namespace plog
 
     inline int vaswprintf(wchar_t** strp, const wchar_t* format, va_list ap)
     {
-        int len = _vscwprintf(format, ap);
-        if (len < 0)
+#if defined(__BORLANDC__)
+        int charCount = 0x1000; // there is no _vscwprintf on Borland/Embarcadero
+#else
+        int charCount = _vscwprintf(format, ap);
+        if (charCount < 0)
         {
             return -1;
         }
+#endif
 
-        wchar_t* str = static_cast<wchar_t*>(malloc((len + 1) * sizeof(wchar_t)));
+        size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
+
+        wchar_t* str = static_cast<wchar_t*>(malloc(bufferCharCount * sizeof(wchar_t)));
         if (!str)
         {
             return -1;
         }
 
-#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
-        int retval = _vsnwprintf(str, len + 1, format, ap);
+#if defined(__BORLANDC__)
+        int retval = vsnwprintf_s(str, bufferCharCount, format, ap);
+#elif defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+        int retval = _vsnwprintf(str, bufferCharCount, format, ap);
 #else
-        int retval = _vsnwprintf_s(str, len + 1, len, format, ap);
+        int retval = _vsnwprintf_s(str, bufferCharCount, charCount, format, ap);
 #endif
         if (retval < 0)
         {
@@ -258,12 +299,12 @@ namespace plog
 
         inline std::string toNarrow(const std::wstring& wstr, long page)
         {
-            std::string str(wstr.size() * sizeof(wchar_t), 0);
+            int len = WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), 0, 0, 0, 0);
+            std::string str(len, 0);
 
             if (!str.empty())
             {
-                int len = WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], static_cast<int>(str.size()), 0, 0);
-                str.resize(len);
+                WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], len, 0, 0);
             }
 
             return str;
@@ -271,7 +312,7 @@ namespace plog
 #endif
 
         inline static bool exists(const char *path_string) {
-            struct stat buffer = {};
+            struct stat buffer;
             return (stat(path_string, &buffer) == 0);
         }
 
@@ -311,7 +352,7 @@ namespace plog
 
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
         inline static bool exists(const nchar *path_string) {
-            struct stat buffer = {};
+            struct stat buffer;
             return (wstat(path_string, &buffer) == 0);
         }
         /**
@@ -325,23 +366,20 @@ namespace plog
 #endif
 
 
-        inline std::string processFuncName(const char* func)
-        {
+        inline std::string processFuncName(const char *func) {
 #if (defined(_WIN32) && !defined(__MINGW32__)) || defined(__OBJC__)
             return std::string(func);
 #else
-            const char* funcBegin = func;
-            const char* funcEnd = ::strchr(funcBegin, '(');
+            const char *funcBegin = func;
+            const char *funcEnd = ::strchr(funcBegin, '(');
 
-            if (!funcEnd)
-            {
+            if (!funcEnd) {
                 return std::string(func);
             }
 
-            for (const char* i = funcEnd - 1; i >= funcBegin; --i) // search backwards for the first space char
+            for (const char *i = funcEnd - 1; i >= funcBegin; --i) // search backwards for the first space char
             {
-                if (*i == ' ')
-                {
+                if (*i == ' ') {
                     funcBegin = i + 1;
                     break;
                 }
@@ -351,8 +389,7 @@ namespace plog
 #endif
         }
 
-        inline const nchar* findExtensionDot(const nchar* fileName)
-        {
+        inline const nchar *findExtensionDot(const nchar *fileName) {
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
             return std::wcsrchr(fileName, L'.');
 #else
@@ -405,52 +442,49 @@ namespace plog
                 close();
             }
 
-            size_t open(const nchar* fileName)
-            {
+            size_t open(const nchar *fileName) {
 #if  !defined(PLOG_DISABLE_WCHAR_T) and (defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__)))
-                m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY, SH_DENYWR, _S_IREAD | _S_IWRITE);
+                m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif  !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
-                ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
+                ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, _SH_DENYWR, _S_IREAD | _S_IWRITE);
+#elif defined(O_CLOEXEC)
+                m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY | O_CLOEXEC,
+                                S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #else
-                m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+                m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
                 return seek(0, SEEK_END);
             }
 
-            size_t write(const void* buf, size_t count)
-            {
+            size_t write(const void *buf, size_t count) {
                 return m_file != -1 ? static_cast<size_t>(
 #ifdef _WIN32
-                    ::_write(m_file, buf, static_cast<unsigned int>(count))
+                        ::_write(m_file, buf, static_cast<unsigned int>(count))
 #else
-                    ::write(m_file, buf, count)
+                        ::write(m_file, buf, count)
 #endif
-                    ) : static_cast<size_t>(-1);
+                ) : static_cast<size_t>(-1);
             }
 
             template<class CharType>
-            size_t write(const std::basic_string<CharType>& str)
-            {
+            size_t write(const std::basic_string<CharType> &str) {
                 return write(str.data(), str.size() * sizeof(CharType));
             }
 
-            size_t seek(size_t offset, int whence)
-            {
+            size_t seek(size_t offset, int whence) {
                 return m_file != -1 ? static_cast<size_t>(
 #if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
-                    ::_lseek(m_file, static_cast<off_t>(offset), whence)
+                        ::_lseek(m_file, static_cast<off_t>(offset), whence)
 #elif defined(_WIN32)
-                    ::_lseeki64(m_file, static_cast<off_t>(offset), whence)
+                        ::_lseeki64(m_file, static_cast<off_t>(offset), whence)
 #else
-                    ::lseek(m_file, static_cast<off_t>(offset), whence)
+                        ::lseek(m_file, static_cast<off_t>(offset), whence)
 #endif
-                    ) : static_cast<size_t>(-1);
+                ) : static_cast<size_t>(-1);
             }
 
-            void close()
-            {
-                if (m_file != -1)
-                {
+            void close() {
+                if (m_file != -1) {
 #ifdef _WIN32
                     ::_close(m_file);
 #else
@@ -460,8 +494,7 @@ namespace plog
                 }
             }
 
-            static int unlink(const nchar* fileName)
-            {
+            static int unlink(const nchar *fileName) {
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
                 return ::_wunlink(fileName);
 #else
@@ -469,8 +502,7 @@ namespace plog
 #endif
             }
 
-            static int rename(const nchar* oldFilename, const nchar* newFilename)
-            {
+            static int rename(const nchar *oldFilename, const nchar *newFilename) {
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
                 return MoveFileW(oldFilename, newFilename);
 #else
@@ -482,11 +514,9 @@ namespace plog
             int m_file;
         };
 
-        class Mutex : NonCopyable
-        {
+        class PLOG_LINKAGE_HIDDEN Mutex : NonCopyable {
         public:
-            Mutex()
-            {
+            Mutex() {
 #ifdef _WIN32
                 InitializeCriticalSection(&m_sync);
 #elif defined(__rtems__)
@@ -494,18 +524,17 @@ namespace plog
                             RTEMS_PRIORITY |
                             RTEMS_BINARY_SEMAPHORE |
                             RTEMS_INHERIT_PRIORITY, 1, &m_sync);
-#else
+#elif defined(_POSIX_THREADS)
                 ::pthread_mutex_init(&m_sync, 0);
 #endif
             }
 
-            ~Mutex()
-            {
+            ~Mutex() {
 #ifdef _WIN32
                 DeleteCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_delete(m_sync);
-#else
+#elif defined(_POSIX_THREADS)
                 ::pthread_mutex_destroy(&m_sync);
 #endif
             }
@@ -513,13 +542,12 @@ namespace plog
             friend class MutexLock;
 
         private:
-            void lock()
-            {
+            void lock() {
 #ifdef _WIN32
                 EnterCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_obtain(m_sync, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
-#else
+#elif defined(_POSIX_THREADS)
                 ::pthread_mutex_lock(&m_sync);
 #endif
             }
@@ -530,7 +558,7 @@ namespace plog
                 LeaveCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_release(m_sync);
-#else
+#elif defined(_POSIX_THREADS)
                 ::pthread_mutex_unlock(&m_sync);
 #endif
             }
@@ -538,26 +566,25 @@ namespace plog
         private:
 #ifdef _WIN32
             CRITICAL_SECTION m_sync;
-#else
+#elif defined(__rtems__)
+            rtems_id m_sync;
+#elif defined(_POSIX_THREADS)
             pthread_mutex_t m_sync;
 #endif
         };
 
-        class MutexLock : NonCopyable
-        {
+        class PLOG_LINKAGE_HIDDEN MutexLock : NonCopyable {
         public:
-            MutexLock(Mutex& mutex) : m_mutex(mutex)
-            {
+            MutexLock(Mutex &mutex) : m_mutex(mutex) {
                 m_mutex.lock();
             }
 
-            ~MutexLock()
-            {
+            ~MutexLock() {
                 m_mutex.unlock();
             }
 
         private:
-            Mutex& m_mutex;
+            Mutex &m_mutex;
         };
 
         template<class T>
@@ -568,28 +595,31 @@ namespace plog
 #endif
         {
         public:
-            Singleton()
-            {
+#if (defined(__clang__) || defined(__GNUC__) && __GNUC__ >= 8) && !defined(__BORLANDC__)
+
+            // This constructor is called before the `T` object is fully constructed, and
+            // pointers are not dereferenced anyway, so UBSan shouldn't check vptrs.
+            __attribute__((no_sanitize("vptr")))
+#endif
+            Singleton() {
                 assert(!m_instance);
-                m_instance = static_cast<T*>(this);
+                m_instance = static_cast<T *>(this);
             }
 
-            ~Singleton()
-            {
+            ~Singleton() {
                 assert(m_instance);
                 m_instance = 0;
             }
 
-            static T* getInstance()
-            {
+            static T *getInstance() {
                 return m_instance;
             }
 
         private:
-            static T* m_instance;
+            static T *m_instance;
         };
 
         template<class T>
-        T* Singleton<T>::m_instance = NULL;
+        T *Singleton<T>::m_instance = NULL;
     }
 }

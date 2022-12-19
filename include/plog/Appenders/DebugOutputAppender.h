@@ -5,12 +5,11 @@
 namespace plog
 {
     template<class Formatter>
-    class DebugOutputAppender : public IAppender
+    class PLOG_LINKAGE_HIDDEN DebugOutputAppender : public IAppender
     {
     public:
-        virtual void write(const Record& record)
+        virtual void write(const Record& record) PLOG_OVERRIDE
         {
-
 #if defined(PLOG_DISABLE_WCHAR_T)
             std::wostringstream _str ;
             _str << Formatter::format(record).c_str();

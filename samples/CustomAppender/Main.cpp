@@ -13,7 +13,7 @@ namespace plog
     class MyAppender : public IAppender // All appenders MUST inherit IAppender interface.
     {
     public:
-        virtual void write(const Record& record) // This is a method from IAppender that MUST be implemented.
+        virtual void write(const Record& record) PLOG_OVERRIDE // This is a method from IAppender that MUST be implemented.
         {
             util::nstring str = Formatter::format(record); // Use the formatter to get a string from a record.
 

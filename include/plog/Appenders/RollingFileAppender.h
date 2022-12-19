@@ -7,18 +7,15 @@
 
 namespace plog
 {
-    template<class Formatter, class Converter>
-    class RollingDateFileAppender;
     template<class Formatter, class Converter = NativeEOLConverter<UTF8Converter> >
-    class RollingFileAppender : public IAppender
+    class PLOG_LINKAGE_HIDDEN RollingFileAppender : public IAppender
     {
-        friend class RollingDateFileAppender<Formatter,Converter>;
     public:
         RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
-            : m_fileSize()
-            , m_maxFileSize()
-            , m_maxFiles(maxFiles)
-            , m_firstWrite(true)
+                : m_fileSize()
+                , m_maxFileSize()
+                , m_maxFiles(maxFiles)
+                , m_firstWrite(true)
         {
             setFileName(fileName);
             setMaxFileSize(maxFileSize);
@@ -36,7 +33,7 @@ namespace plog
         }
 #endif
 
-        virtual void write(const Record& record)
+        virtual void write(const Record& record) PLOG_OVERRIDE
         {
             util::MutexLock lock(m_mutex);
 

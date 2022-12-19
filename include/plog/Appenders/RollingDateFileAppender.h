@@ -5,11 +5,6 @@
 #ifndef TERMINALSERVICE_ROLLINGDATEFILEAPPENDER_H
 #define TERMINALSERVICE_ROLLINGDATEFILEAPPENDER_H
 
-#include <string>
-#include <plog/Log.h>
-#include <plog/Appenders/IAppender.h>
-#include <plog/Converters/UTF8Converter.h>
-#include <plog/Converters/NativeEOLConverter.h>
 #include <plog/Appenders/RollingFileAppender.h>
 
 #ifdef _WIN32
@@ -18,7 +13,7 @@
 namespace plog {
 
     template<class Formatter, class Converter = NativeEOLConverter <UTF8Converter> >
-    class RollingDateFileAppender : public RollingFileAppender<Formatter, Converter> {
+    class PLOG_LINKAGE_HIDDEN RollingDateFileAppender : public RollingFileAppender<Formatter, Converter> {
     private:
         time_t last_date;
         size_t m_fileSize;
@@ -76,7 +71,7 @@ namespace plog {
             m_fileSize = maxFiles;
         }
 
-        inline void write(const Record &record) {
+        inline void write(const Record &record)  PLOG_OVERRIDE {
             if (record.getTime().time >= last_date) {
                 std::string path = util::get_file_name(m_fileName.c_str());
                 RollingFileAppender<Formatter, Converter>::setFileName(path.c_str());

@@ -1,5 +1,6 @@
 # Plog - portable, simple and extensible C++ logging library
-Pretty powerful logging library in about 1000 lines of code [![Build Status](https://travis-ci.com/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.com/SergiusTheBest/plog) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master) [![CircleCI](https://circleci.com/gh/SergiusTheBest/plog.svg?style=svg)](https://circleci.com/gh/SergiusTheBest/plog) [![Build Status](https://api.cirrus-ci.com/github/SergiusTheBest/plog.svg)](https://cirrus-ci.com/github/SergiusTheBest/plog)
+Pretty powerful logging library in about 1000 lines of code [![CI](https://github.com/SergiusTheBest/plog/actions/workflows/ci.yml/badge.svg)](https://github.com/SergiusTheBest/plog/actions/workflows/ci.yml) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master) [![CircleCI](https://circleci.com/gh/SergiusTheBest/plog.svg?style=svg)](https://circleci.com/gh/SergiusTheBest/plog) [![Build Status](https://api.cirrus-ci.com/github/SergiusTheBest/plog.svg)](https://cirrus-ci.com/github/SergiusTheBest/plog)
+
 
 - [Introduction](#introduction)
   - [Hello log!](#hello-log)
@@ -39,6 +40,7 @@ Pretty powerful logging library in about 1000 lines of code [![Build Status](htt
     - [AndroidAppender](#androidappender)
     - [EventLogAppender](#eventlogappender)
     - [DebugOutputAppender](#debugoutputappender)
+    - [DynamicAppender](#dynamicappender)
 - [Miscellaneous notes](#miscellaneous-notes)
   - [Lazy stream evaluation](#lazy-stream-evaluation)
   - [Stream improvements over std::ostream](#stream-improvements-over-stdostream)
@@ -109,7 +111,7 @@ And its output:
 - Cross-platform: Windows, Linux, FreeBSD, macOS, Android, RTEMS (gcc, clang, msvc, mingw, mingw-w64, icc, c++builder)
 - Thread and type safe
 - Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter), [MessageOnly](#messageonlyformatter)
-- Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender), [EventLog](#eventlogappender), [DebugOutput](#debugoutputappender)
+- Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender), [EventLog](#eventlogappender), [DebugOutput](#debugoutputappender), [DynamicAppender](#dynamicappender)
 - [Automatic 'this' pointer capture](#automatic-this-pointer-capture) (supported only on msvc)
 - [Lazy stream evaluation](#lazy-stream-evaluation)
 - [Unicode aware](#unicode), files are stored in UTF8
@@ -150,7 +152,7 @@ enum Severity
 };
 ```
 
-*Note: messages with severity level `none` will always be printed.*
+> **Note** Messages with severity level `none` will always be printed.
 
 The log format is determined automatically by `fileName` file extension:
 
@@ -172,7 +174,7 @@ plog::init(plog::warning, "c:\\logs\\log.csv", 1000000, 5);
 
 Here the logger is initialized to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1'000'000 bytes and 5 log files are kept.
 
-*Note: see [Custom initialization](#custom-initialization) for advanced usage.*
+> **Note** See [Custom initialization](#custom-initialization) for advanced usage.
 
 ## Step 3: Logging
 Logging is performed with the help of special macros. A log message is constructed using stream output operators `<<`. Thus it is type-safe and extendable in contrast to a format string output.
@@ -293,7 +295,7 @@ Logger& init(Severity maxSeverity = none, IAppender* appender = NULL);
 
 You have to construct an [Appender](#appender) parameterized with a [Formatter](#formatter) and pass it to the `plog::init` function.
 
-*Note: the appender lifetime should be static!*
+> **Note** The appender lifetime should be static!
 
 Sample:
 
@@ -439,77 +441,44 @@ int main()
 ## Overview
 Plog is designed to be small but flexible, so it prefers templates to interface inheritance. All main entities are shown on the following UML diagram:
 
-![Plog class diagram](http://gravizo.com/svg?@startuml;class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};package%20Appenders%20<<Frame>>%20{;%20%20%20%20interface%20IAppender%20{;%20%20%20%20%20%20%20%20+write%28%29;%20%20%20%20};%20%20%20%20;%20%20%20%20class%20RollingFileAppender<Formatter,%20Converter>;%20%20%20%20class%20ConsoleAppender<Formatter>;%20%20%20%20class%20ColorConsoleAppender<Formatter>;%20%20%20%20class%20AndroidAppender<Formatter>;%20%20%20%20class%20EventLogAppender<Formatter>;%20%20%20%20class%20DebugOutputAppender<Formatter>;%20%20%20%20ConsoleAppender%20<|--%20ColorConsoleAppender;%20%20%20%20IAppender%20<|-u-%20Logger;%20%20%20%20IAppender%20<|--%20RollingFileAppender;%20%20%20%20IAppender%20<|--%20ConsoleAppender;%20%20%20%20IAppender%20<|--%20AndroidAppender;%20%20%20%20IAppender%20<|--%20EventLogAppender;%20%20%20%20IAppender%20<|--%20DebugOutputAppender;%20%20%20%20;%20%20%20%20Logger%20"1"%20o--%20"0..n"%20IAppender;};package%20Formatters%20<<Frame>>%20{;%20%20%20%20class%20CsvFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};%20%20%20%20class%20TxtFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};%20%20%20%20class%20FuncMessageFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};%20%20%20%20class%20MessageOnlyFormatter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20format%28%29;%20%20%20%20};};package%20Converters%20<<Frame>>%20{;%20%20%20%20class%20UTF8Converter%20{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20convert%28%29;%20%20%20%20};%20%20%20%20class%20NativeEOLConverter%20<NextConverter>{;%20%20%20%20%20%20%20%20{static}%20header%28%29;%20%20%20%20%20%20%20%20{static}%20convert%28%29;%20%20%20%20};};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-file;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
-<!--
-@startuml
+```mermaid
+classDiagram
 
-class Logger<int instance> <<singleton>> {
-    +addAppender();
-    +getMaxSeverity();
-    +setMaxSeverity();
-    +checkSeverity();
-    -maxSeverity;
-    -appenders;
+class Logger~instanceId~ {
+    <<singleton>>
+    +addAppender()
+    +getMaxSeverity()
+    +setMaxSeverity()
+    +checkSeverity()
+    -maxSeverity
+    -appenders
 }
 
-package Appenders <<Frame>> {
-    interface IAppender {
-        +write();
-    }
-
-    class RollingFileAppender<Formatter, Converter>
-    class ConsoleAppender<Formatter>
-    class ColorConsoleAppender<Formatter>
-    class AndroidAppender<Formatter>
-    class EventLogAppender<Formatter>
-    class DebugOutputAppender<Formatter>
-
-    ConsoleAppender <|-- ColorConsoleAppender
-    IAppender <|-u- Logger
-    IAppender <|-- RollingFileAppender
-    IAppender <|-- ConsoleAppender
-    IAppender <|-- AndroidAppender
-    IAppender <|-- EventLogAppender
-    IAppender <|-- DebugOutputAppender
-
-    Logger "1" o-- "0..n" IAppender
+class IAppender {
+    <<interface>>
+    +write()
 }
 
-package Formatters <<Frame>> {
-    class CsvFormatter {
-        {static} header();
-        {static} format();
-    }
+Logger --|> IAppender
+Logger "1" o-- "*" IAppender
 
-    class TxtFormatter {
-        {static} header();
-        {static} format();
-    }
+IAppender <|-- RollingFileAppender~Formatter, Converter~
+IAppender <|-- ConsoleAppender~Formatter~
+IAppender <|-- AndroidAppender~Formatter~
+IAppender <|-- EventLogAppender~Formatter~
+IAppender <|-- DebugOutputAppender~Formatter~
+IAppender <|-- DynamicAppender
 
-    class FuncMessageFormatter {
-        {static} header();
-        {static} format();
-    }
+ConsoleAppender <|-- ColorConsoleAppender~Formatter~
 
-    class MessageOnlyFormatter {
-        {static} header();
-        {static} format();
-    }
-}
+DynamicAppender "1" o-- "*" IAppender
+```
+    
+```mermaid    
+classDiagram
 
-package Converters <<Frame>> {
-    class UTF8Converter {
-        {static} header();
-        {static} convert();
-    }
-
-    class NativeEOLConverter <NextConverter>{
-        {static} header();
-        {static} convert();
-    }
-}
-
-enum Severity {
+class Severity {
+    <<enumeration>>
     none,
     fatal,
     error,
@@ -520,21 +489,57 @@ enum Severity {
 }
 
 class Record {
-    +operator<<();
-    -time;
-    -severity;
-    -tid;
-    -object;
-    -line;
-    -file;
-    -message;
-    -func;
+    +operator<<()
+    +printf()
+    -time
+    -severity
+    -tid
+    -object
+    -line
+    -message
+    -func
+    -file
+    -instanceId
+}    
+```
+
+```mermaid
+classDiagram
+
+class CsvFormatter {
+    +header()$
+    +format()$
 }
 
-hide empty members
-hide empty fields
-@enduml
--->
+class TxtFormatter {
+    +header()$
+    +format()$
+}
+
+class FuncMessageFormatter {
+    +header()$
+    +format()$
+}
+
+class MessageOnlyFormatter {
+    +header()$
+    +format()$
+}
+```
+
+```mermaid
+classDiagram
+
+class UTF8Converter {
+    +header()$
+    +convert()$
+}
+
+class NativeEOLConverter~NextConverter~{
+    +header()$
+    +convert()$
+}
+```
 
 There are 5 functional parts:
 
@@ -546,19 +551,12 @@ There are 5 functional parts:
 
 The log data flow is shown below:
 
-![Log data flow](http://gravizo.com/g?@startuml;%28*%29%20-r->%20"PLOG%20macro";-r->%20"Record";-r->%20"Logger";-r-->%20"Appender";-d->%20"Formatter";-d->%20"Converter";-u->%20"Appender";-r->%20%28*%29;@enduml)
-<!--
-@startuml
-(*) -r-> "PLOG macro"
--r-> "Record"
--r-> "Logger"
--r-> "Appender"
--d-> "Formatter"
--d-> "Converter"
--u-> "Appender"
--r-> (*)
-@enduml
--->
+```mermaid
+flowchart LR;
+    ST((start)) --> P[PLOG macro] --> R[Record] --> L[Logger] --> A[Appender]
+    A -->|record| F[Formatter] -->|text| C[Converter] -->|binary| A
+    A --> FIN(((finish)))
+```
 
 ## Logger
 [Logger](#logger) is a center object of the whole logging system. It is a singleton and thus it forms a known single entry point for configuration and processing log data. [Logger](#logger) can act as [Appender](#appender) for another [Logger](#logger) because it implements `IAppender` interface. Also there can be several independent loggers that are parameterized by an integer instanceId number. The default instanceId is 0.
@@ -593,7 +591,7 @@ public:
 - function name
 - message
 
-*Note: Source file name isn't captured by default. To enable it define PLOG_CAPTURE_FILE.*
+> **Note** Source file name isn't captured by default. To enable it define PLOG_CAPTURE_FILE.
 
 Also [Record](#record) has a number of overloaded stream output operators to construct a message.
 
@@ -677,7 +675,7 @@ Date;Time;Severity;TID;This;Function;Message
 2014/11/14;15:22:25.048;DEBUG;4188;002EF4E3;Object::~Object@13;
 ```
 
-*Note: message size is limited to 32000 chars.*
+> **Note** Message size is limited to 32000 chars.
 
 ### CsvFormatterUtcTime
 This is a variant of [CsvFormatter](#csvformatter) that uses UTC time instead of local time.
@@ -771,9 +769,9 @@ The sample file names produced by this appender:
 
 A file name can be changed at an arbitrary moment by calling `setFileName` as well as `maxFiles` and `maxFileSize` can be changed by calling `setMaxFiles` and `setMaxFileSize`.
 
-*Note: the lowest `maxFileSize` is 1000 bytes.*
+> **Note** The lowest `maxFileSize` is 1000 bytes.
 
-*Note: a log file is created on the first log message.*
+> **Note** A log file is created on the first log message.
 
 ### ConsoleAppender
 This appender outputs log data to `stdout` or `stderr`.  As a template parameter it accepts [Formatter](#formatter).
@@ -819,6 +817,16 @@ Registry operations are system-wide and require administrator rights. Also they 
 ```cpp
 DebugOutputAppender<Formatter>::DebugOutputAppender();
 ```
+
+### DynamicAppender
+[DynamicAppender](#dynamicappender) is a wrapper that can add/remove appenders dynamically (at any point of time) in a thread-safe manner.
+
+```cpp
+DynamicAppender& DynamicAppender::addAppender(IAppender* appender);
+DynamicAppender& DynamicAppender::removeAppender(IAppender* appender);
+```
+
+*Refer to [DynamicAppender sample](samples/DynamicAppender) for a complete sample.*
 
 # Miscellaneous notes
 
@@ -883,7 +891,7 @@ By default all log files are stored in UTF-8 with BOM thanks to [UTF8Converter](
 
 Whether `wchar_t`, `wchar_t*`, `std::wstring` can be streamed to log messages or not is controlled by the `PLOG_ENABLE_WCHAR_INPUT` macro. Set it to a non-zero value to enable wide string support. By default wide string support is enabled for Windows and disabled for all non-Windows systems.
 
-*Note: wide string support requires linking to `iconv` on macOS.*
+> **Note** Wide string support requires linking to `iconv` on macOS.
 
 ## Performance
 Plog is not using any asynchronous techniques so it may slow down your application on large volumes of log messages.
@@ -1002,26 +1010,32 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |------|-----------|
 |[Android](samples/Android)|Shows how to use [AndroidAppender](#androidappender).|
 |[Arduino](samples/Arduino)|Arduino sample - not finished yet!|
+|[AscDump](samples/AscDump)|Shows how to use `plog::ascdump` to dump binary buffers into ASCII.|
 |[Chained](samples/Chained)|Shows how to chain a logger in a shared library with the main logger (route messages).|
 |[ColorConsole](samples/ColorConsole)|Shows how to use [ColorConsoleAppender](#colorconsoleappender).|
 |[CustomAppender](samples/CustomAppender)|Shows how to implement a custom appender that stores log messages in memory.|
 |[CustomConverter](samples/CustomConverter)|Shows how to implement a custom converter that encrypts log messages.|
 |[CustomFormatter](samples/CustomFormatter)|Shows how to implement a custom formatter.|
 |[CustomType](samples/CustomType)|Shows how to print a custom type to the log stream.|
+|[CXX11](samples/CXX11)|Demonstrates log stream abilities for C++11 features.|
+|[CXX17](samples/CXX17)|Demonstrates log stream abilities for C++17 features.|
 |[DebugOutput](samples/DebugOutput)|Shows how to use [DebugOutputAppender](#debugoutputappender) to write to the windows debug output.|
 |[Demo](samples/Demo)|Demonstrates log stream abilities, prints various types of messages.|
 |[DisableLogging](samples/DisableLogging)|Shows how to disable logging (so it will be stripped from the binary).|
+|[DynamicAppender](samples/DynamicAppender)|Shows how to add/remove appenders dynamically).|
 |[EventLog](samples/EventLog)|Shows how to use [EventLogAppender](#eventlogappender) to write to the windows event log.|
 |[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple logger instances (useful for big projects).|
 |[Hello](samples/Hello)|A minimal introduction sample, shows the basic 3 steps to start using plog.|
+|[HexDump](samples/HexDump)|Shows how to use `plog::hexdump` to dump binary buffers into hex.|
 |[Library](samples/Library)|Shows plog usage in static libraries.|
 |[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
 |[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
+|[NotShared](samples/NotShared)|Shows how to make logger instances local across binary modules (this is the default behavior on Windows but not on other platforms, so be careful).|
 |[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
 |[Path](samples/Path)|A test sample to check that `std::filesystem::path` can be logged.|
 |[Performance](samples/Performance)|Measures time per a log call.|
 |[SetFileName](samples/SetFileName)|Shows how to change a log file name at arbitrary moment.|
-|[Shared](samples/Shared)|Shows how to share logger instances across binary modules.|
+|[Shared](samples/Shared)|Shows how to share logger instances across binary modules (this is the default behavior on everything except Windows, so be careful)|
 |[SkipNativeEOL](samples/SkipNativeEOL)|Shows how to skip [NativeEOLConverter](#nativeeolconverter).|
 |[UtcTime](samples/UtcTime)|Shows how to use UTC time instead of local time.|
 
@@ -1047,15 +1061,41 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 
 - [__if_exists Statement](https://msdn.microsoft.com/en-us/library/x7wy9xh3.aspx)
 - [Controlling Symbol Visibility](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html)
-- [Gravizo](http://gravizo.com)
-- [PlantUML](http://plantuml.sourceforge.net)
+- [Mermaid](https://mermaid-js.github.io/mermaid/)
 - [DocToc](https://github.com/thlorenz/doctoc)
 - [CMake](http://www.cmake.org)
+- [Compiler support for C++11](https://en.cppreference.com/w/cpp/compiler_support/11)
+- [Guide to predefined macros in C++ compilers (gcc, clang, msvc etc.)](https://blog.kowalczyk.info/article/j/guide-to-predefined-macros-in-c-compilers-gcc-clang-msvc-etc..html)
 
 # License
-Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
+This version of plog is licensed under the [MIT license](https://choosealicense.com/licenses/mit). You can freely use it in your commercial or opensource software.
 
 # Version history
+
+## Version 1.1.9 (16 Dec 2022)
+- New: Add ability to truncate log file using `>` in shell (#155)
+- New: Add override specifier (to be able to build with `-Wsuggest-override`) (#231)
+- New: Add nuget specs (#86)
+- New: Add ability to add/remove appenders (#226)
+- Fix: Printing `boost::filesystem::path` (#227)
+- Fix: Building on C++ Builder 10.4 (#225)
+- Fix: `PLOG_LOCAL` mode if symbol visibility set to default (#219)
+
+## Version 1.1.8 (10 Jun 2022)
+- Fix: 'operator <<' is ambiguous for string_view on Windows (#217)
+- Fix: CMake + vcpkg: find_package (#211)
+    
+## Version 1.1.7 (09 Jun 2022)
+- New: Add hex dumper (#111)
+- New: Add ASCII dumper (#213)
+- New: Add support for printing std containers (#207)
+- New: Add console initializer
+- New: Add PrintVar helper
+- New: Add CMake find_package support (#171)
+- Enh: Change license to MIT (#212)
+- Fix: Specify calling convention for std stream manipulators (#210)
+- Fix: Compilation on VS2010 (#207)
+- Fix: Use add_custom_target for pseudo-project with headers (#216)
 
 ## Version 1.1.6 (06 Feb 2022)
 - New: Ability to disable logging to reduce binary size (#130)

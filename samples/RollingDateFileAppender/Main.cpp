@@ -3,13 +3,9 @@
 //
 
 #include <plog/Log.h> // Step1: include the header.
-#include <plog/Init.h>
-#include <plog/Formatters/TxtFormatter.h>
-#include <plog/Converters/NativeEOLConverter.h>
-#include <plog/Converters/UTF8Converter.h>
-#include <plog/Appenders/RollingFileAppender.h>
-#include <plog/Appenders/ColorConsoleAppender.h>
+#include <plog/Initializers/RollingFileInitializer.h>
 #include <plog/Appenders/RollingDateFileAppender.h>
+
 
 int main() {
     static plog::RollingDateFileAppender<plog::TxtFormatter, plog::UTF8Converter> dateFileAppender("");

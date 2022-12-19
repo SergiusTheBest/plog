@@ -1,51 +1,80 @@
 cmake_minimum_required(VERSION 3.0)
 
-option(PLOG_BUILD_SAMPLES "Build plog's samples." ON)
-option(PLOG_DISABLE_WCHAR_T "disable wchar_t ." OFF)
+project(plog VERSION 1.1.9 LANGUAGES CXX)
 
-project(plog LANGUAGES CXX)
+# check if building as a stand-alone project
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    set(IS_TOPLEVEL_PROJECT TRUE)
+else()
+    set(IS_TOPLEVEL_PROJECT FALSE)
+endif()
+
+# options
+option(PLOG_BUILD_SAMPLES "Build ${PROJECT_NAME} samples" ${IS_TOPLEVEL_PROJECT})
+option(PLOG_DISABLE_WCHAR_T "disable wchar_t ." OFF)
+option(PLOG_INSTALL "Generate ${PROJECT_NAME} install target" ${IS_TOPLEVEL_PROJECT})
 
 if(PLOG_DISABLE_WCHAR_T)
     add_definitions(-DPLOG_DISABLE_WCHAR_T)
 endif()
+# make sure install paths work on all platforms
+include(GNUInstallDirs)
 
-# Make sure install paths work on all platforms.
-if(NOT CMAKE_INSTALL_INCLUDEDIR)
-    include(GNUInstallDirs)
-endif()
+add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-add_library(plog INTERFACE)
-target_include_directories(plog
+target_include_directories(${PROJECT_NAME}
     INTERFACE
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 if(ANDROID)
-    target_link_libraries(plog INTERFACE log)
+    target_link_libraries(${PROJECT_NAME} INTERFACE log)
 endif()
 
-add_library(plog::plog ALIAS plog)
-
-#making sure we can build standalone under windows
-get_filename_component(CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}   ABSOLUTE)
-get_filename_component(SOURCE_DIR ${CMAKE_SOURCE_DIR} ABSOLUTE)
-
-# check if building as a stand-alone project
-if(${CURRENT_SOURCE_DIR} STREQUAL ${SOURCE_DIR} AND PLOG_BUILD_SAMPLES)
+if(PLOG_BUILD_SAMPLES)
     # add a pseudo-project to make plog headers visible in IDE
-    file(GLOB_RECURSE PLOG_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
-    add_library(plog-headers STATIC ${PLOG_HEADERS})
-    set_target_properties(plog-headers PROPERTIES LINKER_LANGUAGE CXX)
-    set_target_properties(plog-headers PROPERTIES FOLDER Include)
+    file(GLOB_RECURSE ${PROJECT_NAME}_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+    add_custom_target(${PROJECT_NAME}-headers SOURCES ${${PROJECT_NAME}_HEADERS})
+    set_target_properties(${PROJECT_NAME}-headers PROPERTIES FOLDER Include)
 
     # add samples
     add_subdirectory(samples)
 endif()
 
-install(
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/plog
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    FILES_MATCHING # headers only
-    PATTERN "*.h"
-)
+if(PLOG_INSTALL)
+    install(
+        TARGETS ${PROJECT_NAME}
+        EXPORT ${PROJECT_NAME}Config
+    )
+
+    install(
+        EXPORT ${PROJECT_NAME}Config
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+        NAMESPACE ${PROJECT_NAME}::
+    )
+
+    install(
+        DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+
+    install(
+        FILES
+            ${CMAKE_CURRENT_SOURCE_DIR}/README.md
+            ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
+        DESTINATION ${CMAKE_INSTALL_DOCDIR}
+    )
+
+    include(CMakePackageConfigHelpers)
+    write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+        COMPATIBILITY AnyNewerVersion
+    )
+
+    install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+    )
+endif()

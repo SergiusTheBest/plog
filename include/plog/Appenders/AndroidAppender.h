@@ -5,14 +5,14 @@
 namespace plog
 {
     template<class Formatter>
-    class AndroidAppender : public IAppender
+    class PLOG_LINKAGE_HIDDEN AndroidAppender : public IAppender
     {
     public:
         AndroidAppender(const char* tag) : m_tag(tag)
         {
         }
 
-        virtual void write(const Record& record)
+        virtual void write(const Record& record) PLOG_OVERRIDE
         {
             std::string str = Formatter::format(record);
 

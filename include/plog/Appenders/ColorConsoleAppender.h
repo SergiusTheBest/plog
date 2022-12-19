@@ -5,14 +5,14 @@
 namespace plog
 {
     template<class Formatter>
-    class ColorConsoleAppender : public ConsoleAppender<Formatter>
+    class PLOG_LINKAGE_HIDDEN ColorConsoleAppender : public ConsoleAppender<Formatter>
     {
     public:
 #ifdef _WIN32
 #   ifdef _MSC_VER
 #       pragma warning(suppress: 26812) //  Prefer 'enum class' over 'enum'
 #   endif
-        ColorConsoleAppender(OutputStream outStream = streamStdOut) 
+        ColorConsoleAppender(OutputStream outStream = streamStdOut)
             : ConsoleAppender<Formatter>(outStream)
             , m_originalAttr()
         {
@@ -25,12 +25,12 @@ namespace plog
             }
         }
 #else
-        ColorConsoleAppender(OutputStream outStream = streamStdOut) 
+        ColorConsoleAppender(OutputStream outStream = streamStdOut)
             : ConsoleAppender<Formatter>(outStream)
         {}
 #endif
 
-        virtual void write(const Record& record)
+        virtual void write(const Record& record) PLOG_OVERRIDE
         {
             util::nstring str = Formatter::format(record);
             util::MutexLock lock(this->m_mutex);

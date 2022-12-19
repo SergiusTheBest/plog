@@ -13,7 +13,7 @@ namespace plog
     };
 
     template<class Formatter>
-    class ConsoleAppender : public IAppender
+    class PLOG_LINKAGE_HIDDEN ConsoleAppender : public IAppender
     {
     public:
 #ifdef _WIN32
@@ -31,13 +31,13 @@ namespace plog
             }
         }
 #else
-        ConsoleAppender(OutputStream outStream = streamStdOut) 
-            : m_isatty(!!isatty(fileno(outStream == streamStdOut ? stdout : stderr))) 
+        ConsoleAppender(OutputStream outStream = streamStdOut)
+            : m_isatty(!!isatty(fileno(outStream == streamStdOut ? stdout : stderr)))
             , m_outputStream(outStream == streamStdOut ? std::cout : std::cerr)
         {}
 #endif
 
-        virtual void write(const Record& record)
+        virtual void write(const Record& record) PLOG_OVERRIDE
         {
             util::nstring str = Formatter::format(record);
             util::MutexLock lock(m_mutex);
