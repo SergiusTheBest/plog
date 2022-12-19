@@ -5,13 +5,7 @@
 #ifndef TERMINALSERVICE_ROLLINGDATEFILEAPPENDER_H
 #define TERMINALSERVICE_ROLLINGDATEFILEAPPENDER_H
 
-#include <string>
-#include <plog/Log.h>
-#include <plog/Appenders/IAppender.h>
-#include <plog/Converters/UTF8Converter.h>
-#include <plog/Converters/NativeEOLConverter.h>
 #include <plog/Appenders/RollingFileAppender.h>
-#include <iostream>
 
 #ifdef _WIN32
 #include <windows.h>
