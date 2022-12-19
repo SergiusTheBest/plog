@@ -1,0 +1,63 @@
+name: CI
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+
+jobs:
+  build:
+    name: ${{ matrix.cxx }}, ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include: [
+          # You can access the following values via ${{ matrix.??? }}
+          #
+          #   pkgs         : apt-get package names separated by space
+          #   cxx          : C++ compiler executable
+          #   os           : GitHub Actions YAML workflow label.  See https://github.com/actions/virtual-environments#available-environments
+
+          # gcc
+          { os: ubuntu-22.04,   cxx: g++-12,      pkgs: '' },
+          { os: ubuntu-22.04,   cxx: g++-11,      pkgs: '' }, # (default on Jammy 22.04)
+          { os: ubuntu-22.04,   cxx: g++-9,       pkgs: '' }, # (default on Focal 20.04)
+          { os: ubuntu-20.04,   cxx: g++-7,       pkgs: 'g++-7' }, # (default on Bionic 18.04)
+          { os: ubuntu-18.04,   cxx: g++-5,       pkgs: 'g++-5' }, # (default on Xenial 16.04)
+          { os: ubuntu-18.04,   cxx: g++-4.8,     pkgs: 'g++-4.8' }, # (default on Trusty 14.04)
+          #{ os: ubuntu-18.04,   cxx: g++-4.6,     pkgs: 'g++-4.6' }, # (default on Precise 12.04) # need to get package from xenial
+          # clang
+          { os: ubuntu-22.04,   cxx: clang++-14,  pkgs: '' },
+          { os: ubuntu-20.04,   cxx: clang++-10,  pkgs: '' },
+          { os: ubuntu-18.04,   cxx: clang++-5.0, pkgs: 'clang-5.0' },
+          # msvc
+          { os: windows-2019,   cxx: 'vs2019',    pkgs: '' },
+          { os: windows-2022,   cxx: 'vs2022',    pkgs: '' }
+        ]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CXX: ${{ matrix.cxx }}
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: apt-get install
+      if: ${{ matrix.pkgs != '' }}
+      run: |
+        sudo apt-get update
+        sudo apt-get install ${{ matrix.pkgs }}
+
+    - name: build
+      run: |
+        cmake -Bbuild -DCMAKE_BUILD_TYPE=Release .
+        cmake --build build --parallel

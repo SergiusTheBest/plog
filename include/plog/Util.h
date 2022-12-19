@@ -79,6 +79,12 @@
 #   define PLOG_CDECL
 #endif
 
+#if __cplusplus >= 201103L || defined(_MSC_VER) && _MSC_VER >= 1700
+#   define PLOG_OVERRIDE override
+#else
+#   define PLOG_OVERRIDE
+#endif
+
 namespace plog
 {
     namespace util
@@ -426,9 +432,9 @@ namespace plog
 #elif defined(_WIN32)
                 ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif defined(O_CLOEXEC)
-                m_file = ::open(fileName, O_CREAT | O_WRONLY | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+                m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #else
-                m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+                m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
                 return seek(0, SEEK_END);
             }

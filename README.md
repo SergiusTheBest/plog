@@ -1,5 +1,6 @@
 # Plog - portable, simple and extensible C++ logging library
-Pretty powerful logging library in about 1000 lines of code [![Build Status](https://travis-ci.com/SergiusTheBest/plog.svg?branch=master)](https://travis-ci.com/SergiusTheBest/plog) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master) [![CircleCI](https://circleci.com/gh/SergiusTheBest/plog.svg?style=svg)](https://circleci.com/gh/SergiusTheBest/plog) [![Build Status](https://api.cirrus-ci.com/github/SergiusTheBest/plog.svg)](https://cirrus-ci.com/github/SergiusTheBest/plog)
+Pretty powerful logging library in about 1000 lines of code [![CI](https://github.com/SergiusTheBest/plog/actions/workflows/ci.yml/badge.svg)](https://github.com/SergiusTheBest/plog/actions/workflows/ci.yml) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master) [![CircleCI](https://circleci.com/gh/SergiusTheBest/plog.svg?style=svg)](https://circleci.com/gh/SergiusTheBest/plog) [![Build Status](https://api.cirrus-ci.com/github/SergiusTheBest/plog.svg)](https://cirrus-ci.com/github/SergiusTheBest/plog)
+
 
 - [Introduction](#introduction)
   - [Hello log!](#hello-log)
@@ -1063,13 +1064,22 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 - [Mermaid](https://mermaid-js.github.io/mermaid/)
 - [DocToc](https://github.com/thlorenz/doctoc)
 - [CMake](http://www.cmake.org)
+- [Compiler support for C++11](https://en.cppreference.com/w/cpp/compiler_support/11)
+- [Guide to predefined macros in C++ compilers (gcc, clang, msvc etc.)](https://blog.kowalczyk.info/article/j/guide-to-predefined-macros-in-c-compilers-gcc-clang-msvc-etc..html)
 
 # License
 This version of plog is licensed under the [MIT license](https://choosealicense.com/licenses/mit). You can freely use it in your commercial or opensource software.
 
 # Version history
 
-## Version 1.1.9 (TBD)
+## Version 1.1.9 (16 Dec 2022)
+- New: Add ability to truncate log file using `>` in shell (#155)
+- New: Add override specifier (to be able to build with `-Wsuggest-override`) (#231)
+- New: Add nuget specs (#86)
+- New: Add ability to add/remove appenders (#226)
+- Fix: Printing `boost::filesystem::path` (#227)
+- Fix: Building on C++ Builder 10.4 (#225)
+- Fix: `PLOG_LOCAL` mode if symbol visibility set to default (#219)
 
 ## Version 1.1.8 (10 Jun 2022)
 - Fix: 'operator <<' is ambiguous for string_view on Windows (#217)
