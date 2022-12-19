@@ -6,6 +6,7 @@
 #include <plog/Initializers/RollingFileInitializer.h>
 #include <plog/Appenders/RollingDateFileAppender.h>
 
+
 int main() {
     using plog::TxtFormatter;
     static plog::RollingDateFileAppender<TxtFormatter> dateFileAppender("Hello_date.%Y-%m-%d.log");

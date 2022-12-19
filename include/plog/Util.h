@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cassert>
 #include <cstring>
 #include <cstdio>
@@ -30,6 +31,7 @@
 #       define PLOG_LINKAGE __attribute__ ((visibility ("default")))
 #   elif defined(PLOG_LOCAL)
 #       define PLOG_LINKAGE __attribute__ ((visibility ("hidden")))
+#       define PLOG_LINKAGE_HIDDEN PLOG_LINKAGE
 #   endif
 #   if defined(PLOG_EXPORT) || defined(PLOG_IMPORT)
 #       error "PLOG_EXPORT/PLOG_IMPORT is supported only on Windows"
@@ -57,15 +59,19 @@
 #       include <iconv.h>
 #   endif
 #else
+
 #   include <unistd.h>
 #   include <sys/time.h>
+
 #   if defined(__linux__) || defined(__FreeBSD__)
 #   include <sys/syscall.h>
 #   elif defined(__rtems__)
 #       include <rtems.h>
 #   endif
 #   if defined(_POSIX_THREADS)
+
 #   include <pthread.h>
+
 #   endif
 #   if PLOG_ENABLE_WCHAR_INPUT
 #       include <iconv.h>
@@ -91,10 +97,8 @@
 #   define PLOG_OVERRIDE
 #endif
 
-namespace plog
-{
-    namespace util
-    {
+namespace plog {
+    namespace util {
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
         typedef std::wstring nstring;
         typedef std::wostringstream nostringstream;
@@ -107,8 +111,7 @@ namespace plog
         typedef char nchar;
 #endif
 
-        inline void localtime_s(struct tm* t, const time_t* time)
-        {
+        inline void localtime_s(struct tm *t, const time_t *time) {
 #if defined(_WIN32) && defined(__BORLANDC__)
             ::localtime_s(time, t);
 #elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
@@ -120,8 +123,7 @@ namespace plog
 #endif
         }
 
-        inline void gmtime_s(struct tm* t, const time_t* time)
-        {
+        inline void gmtime_s(struct tm *t, const time_t *time) {
 #if defined(_WIN32) && defined(__BORLANDC__)
             ::gmtime_s(time, t);
 #elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
@@ -141,24 +143,22 @@ namespace plog
             ::ftime(t);
         }
 #else
-        struct Time
-        {
+        struct Time {
             time_t time;
             unsigned short millitm;
         };
 
-        inline void ftime(Time* t)
-        {
+        inline void ftime(Time *t) {
             timeval tv;
             ::gettimeofday(&tv, NULL);
 
             t->time = tv.tv_sec;
             t->millitm = static_cast<unsigned short>(tv.tv_usec / 1000);
         }
+
 #endif
 
-        inline unsigned int gettid()
-        {
+        inline unsigned int gettid() {
 #ifdef _WIN32
             return GetCurrentThreadId();
 #elif defined(__linux__)
@@ -308,7 +308,7 @@ namespace plog
 #endif
 
         inline static bool exists(const char *path_string) {
-            struct stat buffer = {};
+            struct stat buffer;
             return (stat(path_string, &buffer) == 0);
         }
 
@@ -348,7 +348,7 @@ namespace plog
 
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
         inline static bool exists(const nchar *path_string) {
-            struct stat buffer = {};
+            struct stat buffer;
             return (wstat(path_string, &buffer) == 0);
         }
         /**
@@ -362,23 +362,20 @@ namespace plog
 #endif
 
 
-        inline std::string processFuncName(const char* func)
-        {
+        inline std::string processFuncName(const char *func) {
 #if (defined(_WIN32) && !defined(__MINGW32__)) || defined(__OBJC__)
             return std::string(func);
 #else
-            const char* funcBegin = func;
-            const char* funcEnd = ::strchr(funcBegin, '(');
+            const char *funcBegin = func;
+            const char *funcEnd = ::strchr(funcBegin, '(');
 
-            if (!funcEnd)
-            {
+            if (!funcEnd) {
                 return std::string(func);
             }
 
-            for (const char* i = funcEnd - 1; i >= funcBegin; --i) // search backwards for the first space char
+            for (const char *i = funcEnd - 1; i >= funcBegin; --i) // search backwards for the first space char
             {
-                if (*i == ' ')
-                {
+                if (*i == ' ') {
                     funcBegin = i + 1;
                     break;
                 }
@@ -388,8 +385,7 @@ namespace plog
 #endif
         }
 
-        inline const nchar* findExtensionDot(const nchar* fileName)
-        {
+        inline const nchar *findExtensionDot(const nchar *fileName) {
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
             return std::wcsrchr(fileName, L'.');
 #else
@@ -397,67 +393,57 @@ namespace plog
 #endif
         }
 
-        inline void splitFileName(const nchar* fileName, nstring& fileNameNoExt, nstring& fileExt)
-        {
-            const nchar* dot = findExtensionDot(fileName);
+        inline void splitFileName(const nchar *fileName, nstring &fileNameNoExt, nstring &fileExt) {
+            const nchar *dot = findExtensionDot(fileName);
 
-            if (dot)
-            {
+            if (dot) {
                 fileNameNoExt.assign(fileName, dot);
                 fileExt.assign(dot + 1);
-            }
-            else
-            {
+            } else {
                 fileNameNoExt.assign(fileName);
                 fileExt.clear();
             }
         }
 
-        class PLOG_LINKAGE NonCopyable
-        {
+        class PLOG_LINKAGE NonCopyable {
         protected:
-            NonCopyable()
-            {
+            NonCopyable() {
             }
 
         private:
-            NonCopyable(const NonCopyable&);
-            NonCopyable& operator=(const NonCopyable&);
+            NonCopyable(const NonCopyable &);
+
+            NonCopyable &operator=(const NonCopyable &);
         };
 
-        class PLOG_LINKAGE_HIDDEN File : NonCopyable
-        {
+        class PLOG_LINKAGE_HIDDEN File : NonCopyable {
         public:
-            File() : m_file(-1)
-            {
+            File() : m_file(-1) {
             }
 
-            File(const nchar* fileName) : m_file(-1)
-            {
+            File(const nchar *fileName) : m_file(-1) {
                 open(fileName);
             }
 
-            ~File()
-            {
+            ~File() {
                 close();
             }
 
-            size_t open(const nchar* fileName)
-            {
+            size_t open(const nchar *fileName) {
 #if  !defined(PLOG_DISABLE_WCHAR_T) and (defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__)))
                 m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif  !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
                 ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif defined(O_CLOEXEC)
-                m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+                m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY | O_CLOEXEC,
+                                S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #else
                 m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
                 return seek(0, SEEK_END);
             }
 
-            size_t write(const void* buf, size_t count)
-            {
+            size_t write(const void *buf, size_t count) {
                 return m_file != -1 ? static_cast<size_t>(
 #ifdef _WIN32
                         ::_write(m_file, buf, static_cast<unsigned int>(count))
@@ -468,13 +454,11 @@ namespace plog
             }
 
             template<class CharType>
-            size_t write(const std::basic_string<CharType>& str)
-            {
+            size_t write(const std::basic_string<CharType> &str) {
                 return write(str.data(), str.size() * sizeof(CharType));
             }
 
-            size_t seek(size_t offset, int whence)
-            {
+            size_t seek(size_t offset, int whence) {
                 return m_file != -1 ? static_cast<size_t>(
 #if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
                         ::_lseek(m_file, static_cast<off_t>(offset), whence)
@@ -486,10 +470,8 @@ namespace plog
                 ) : static_cast<size_t>(-1);
             }
 
-            void close()
-            {
-                if (m_file != -1)
-                {
+            void close() {
+                if (m_file != -1) {
 #ifdef _WIN32
                     ::_close(m_file);
 #else
@@ -499,8 +481,7 @@ namespace plog
                 }
             }
 
-            static int unlink(const nchar* fileName)
-            {
+            static int unlink(const nchar *fileName) {
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
                 return ::_wunlink(fileName);
 #else
@@ -508,8 +489,7 @@ namespace plog
 #endif
             }
 
-            static int rename(const nchar* oldFilename, const nchar* newFilename)
-            {
+            static int rename(const nchar *oldFilename, const nchar *newFilename) {
 #if !defined(PLOG_DISABLE_WCHAR_T) and defined(_WIN32)
                 return MoveFileW(oldFilename, newFilename);
 #else
@@ -521,11 +501,9 @@ namespace plog
             int m_file;
         };
 
-        class PLOG_LINKAGE_HIDDEN Mutex : NonCopyable
-        {
+        class PLOG_LINKAGE_HIDDEN Mutex : NonCopyable {
         public:
-            Mutex()
-            {
+            Mutex() {
 #ifdef _WIN32
                 InitializeCriticalSection(&m_sync);
 #elif defined(__rtems__)
@@ -538,8 +516,7 @@ namespace plog
 #endif
             }
 
-            ~Mutex()
-            {
+            ~Mutex() {
 #ifdef _WIN32
                 DeleteCriticalSection(&m_sync);
 #elif defined(__rtems__)
@@ -552,8 +529,7 @@ namespace plog
             friend class MutexLock;
 
         private:
-            void lock()
-            {
+            void lock() {
 #ifdef _WIN32
                 EnterCriticalSection(&m_sync);
 #elif defined(__rtems__)
@@ -563,8 +539,7 @@ namespace plog
 #endif
             }
 
-            void unlock()
-            {
+            void unlock() {
 #ifdef _WIN32
                 LeaveCriticalSection(&m_sync);
 #elif defined(__rtems__)
@@ -584,21 +559,18 @@ namespace plog
 #endif
         };
 
-        class PLOG_LINKAGE_HIDDEN MutexLock : NonCopyable
-        {
+        class PLOG_LINKAGE_HIDDEN MutexLock : NonCopyable {
         public:
-            MutexLock(Mutex& mutex) : m_mutex(mutex)
-            {
+            MutexLock(Mutex &mutex) : m_mutex(mutex) {
                 m_mutex.lock();
             }
 
-            ~MutexLock()
-            {
+            ~MutexLock() {
                 m_mutex.unlock();
             }
 
         private:
-            Mutex& m_mutex;
+            Mutex &m_mutex;
         };
 
         template<class T>
@@ -610,32 +582,30 @@ namespace plog
         {
         public:
 #if (defined(__clang__) || defined(__GNUC__) && __GNUC__ >= 8) && !defined(__BORLANDC__)
+
             // This constructor is called before the `T` object is fully constructed, and
             // pointers are not dereferenced anyway, so UBSan shouldn't check vptrs.
             __attribute__((no_sanitize("vptr")))
 #endif
-            Singleton()
-            {
+            Singleton() {
                 assert(!m_instance);
-                m_instance = static_cast<T*>(this);
+                m_instance = static_cast<T *>(this);
             }
 
-            ~Singleton()
-            {
+            ~Singleton() {
                 assert(m_instance);
                 m_instance = 0;
             }
 
-            static T* getInstance()
-            {
+            static T *getInstance() {
                 return m_instance;
             }
 
         private:
-            static T* m_instance;
+            static T *m_instance;
         };
 
         template<class T>
-        T* Singleton<T>::m_instance = NULL;
+        T *Singleton<T>::m_instance = NULL;
     }
 }
