@@ -351,7 +351,7 @@ namespace plog {
 
 #if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         inline static bool exists(const nchar *path_string) {
-            return (access(path_string, 0 ) != -1 );
+            return exists(util::toNarrow(name,CP_UTF8).c_str());
         }
         /**
          * "%Y-%m-%d-%H-%M-%S"
