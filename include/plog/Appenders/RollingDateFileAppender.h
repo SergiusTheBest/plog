@@ -51,7 +51,7 @@ namespace plog {
             last_date = 0;
         }
 
-        inline void write(const Record &record) {
+        inline void write(const Record &record)  PLOG_OVERRIDE {
             if (record.getTime().time >= last_date) {
                 std::string path = util::get_file_name(m_fileName);
                 this->setFileName(path.c_str());
