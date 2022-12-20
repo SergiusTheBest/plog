@@ -436,9 +436,9 @@ namespace plog
 #elif defined(_WIN32) && defined(WINCE)
                 m_file = ::CreateFileW(fileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 #elif defined(O_CLOEXEC)
-                m_file = ::open(fileName, O_CREAT | O_WRONLY | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+                m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #else
-                m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+                m_file = ::open(fileName, O_CREAT | O_APPEND | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
                 return seek(0, SEEK_END);
             }

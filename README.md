@@ -1072,7 +1072,14 @@ This version of plog is licensed under the [MIT license](https://choosealicense.
 
 # Version history
 
-## Version 1.1.9 (TBD)
+## Version 1.1.9 (16 Dec 2022)
+- New: Add ability to truncate log file using `>` in shell (#155)
+- New: Add override specifier (to be able to build with `-Wsuggest-override`) (#231)
+- New: Add nuget specs (#86)
+- New: Add ability to add/remove appenders (#226)
+- Fix: Printing `boost::filesystem::path` (#227)
+- Fix: Building on C++ Builder 10.4 (#225)
+- Fix: `PLOG_LOCAL` mode if symbol visibility set to default (#219)
 
 ## Version 1.1.8 (10 Jun 2022)
 - Fix: 'operator <<' is ambiguous for string_view on Windows (#217)
