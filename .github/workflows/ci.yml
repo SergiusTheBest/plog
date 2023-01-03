@@ -1,13 +1,31 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - .circleci/
+      - .appveyor.yml
+      - .cirrus.yml
+      - .editorconfig
+      - .gitignore
+      - LICENSE
+      - plog.nuspec
+      - plog.targets
+      - README.md
+  pull_request:
+    paths-ignore:
+      - .circleci/
+      - .appveyor.yml
+      - .cirrus.yml
+      - .editorconfig
+      - .gitignore
+      - LICENSE
+      - plog.nuspec
+      - plog.targets
+      - README.md
 
 permissions:
   contents: read
-
-concurrency:
-  cancel-in-progress: true
-  group: ${{ github.workflow }}-${{ github.head_ref }}
 
 jobs:
   build:
