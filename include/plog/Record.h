@@ -11,6 +11,7 @@ namespace plog
 {
     namespace detail
     {
+#if !defined(_MSC_VER) || _MSC_VER > 1400 // MSVC 2005 doesn't understand `enableIf`, so drop all `meta`
         namespace meta
         {
             template<class T>
@@ -82,6 +83,7 @@ namespace plog
                 enum { value = sizeof(test<T>(0)) == sizeof(Yes) };
             };
         }
+#endif
 
         //////////////////////////////////////////////////////////////////////////
         // Stream output operators as free functions
@@ -142,6 +144,7 @@ namespace plog
         }
 
 #if defined(__clang__) || !defined(__GNUC__) || (__GNUC__ * 100 + __GNUC_MINOR__) >= 405 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
+#if !defined(_MSC_VER) || _MSC_VER > 1400 // MSVC 2005 doesn't understand `enableIf`, so drop all `meta`
         // Print data that can be casted to `std::basic_string`.
         template<class T>
         inline typename meta::enableIf<meta::isConvertibleToNString<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)
@@ -173,6 +176,7 @@ namespace plog
             stream << "]";
         }
 #endif
+#endif
 
 #ifdef __cplusplus_cli
         inline void operator<<(util::nostringstream& stream, System::String^ data)
@@ -182,7 +186,7 @@ namespace plog
         }
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32) && (!defined(_MSC_VER) || _MSC_VER > 1400) // MSVC 2005 doesn't understand `enableIf`, so drop all `meta`
         namespace meta
         {
             template<class T, class Stream>
