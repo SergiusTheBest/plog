@@ -192,26 +192,33 @@ namespace plog
             template<class T, class Stream>
             inline No operator<<(Stream&, const T&);
 
-            template <class T, class Stream>
+            template<class T, class Stream>
             struct isStreamable
             {
                 enum { value = sizeof(operator<<(meta::declval<Stream>(), meta::declval<const T>())) != sizeof(No) };
             };
 
-            template <class Stream>
+            template<class Stream>
             struct isStreamable<std::ios_base& PLOG_CDECL (std::ios_base&), Stream>
             {
                 enum { value = true };
             };
 
-            template <class Stream, size_t N>
+            template<class Stream, size_t N>
             struct isStreamable<wchar_t[N], Stream>
             {
                 enum { value = false };
             };
 
-            template <class Stream, size_t N>
+            template<class Stream, size_t N>
             struct isStreamable<const wchar_t[N], Stream>
+            {
+                enum { value = false };
+            };
+
+            // meta doesn't work well for deleted functions and C++20 has `operator<<(std::ostream&, const wchar_t*) = delete` so exlicitly define it
+            template<>
+            struct isStreamable<const wchar_t*, std::ostream>
             {
                 enum { value = false };
             };
