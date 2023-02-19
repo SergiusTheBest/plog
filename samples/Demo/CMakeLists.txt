@@ -6,7 +6,7 @@ if(MSVC AND NOT (MSVC_VERSION LESS 1700)) # Visual Studio 2012 and higher
     add_executable(DemoManaged Main.cpp MyClass.h MyClass.cpp Customer.h)
     target_link_libraries(DemoManaged plog)
     set_property(TARGET DemoManaged PROPERTY COMPILE_FLAGS "/clr /EHa")
-    set_target_properties(DemoManaged PROPERTIES FOLDER Samples)
+    set_target_properties(DemoManaged PROPERTIES FOLDER Samples CXX_STANDARD 17 CXX_STANDARD_REQUIRED OFF) # the latest standard supported by CLR is C++17
 endif()
 
 if(NOT WIN32)
