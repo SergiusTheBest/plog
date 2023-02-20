@@ -12,16 +12,16 @@ namespace plog
     {
     public:
         RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
-            : m_fileSize()
-            , m_maxFileSize()
-            , m_maxFiles(maxFiles)
-            , m_firstWrite(true)
+                : m_fileSize()
+                , m_maxFileSize()
+                , m_maxFiles(maxFiles)
+                , m_firstWrite(true)
         {
             setFileName(fileName);
             setMaxFileSize(maxFileSize);
         }
 
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
             : m_fileSize()
             , m_maxFileSize()
@@ -65,7 +65,7 @@ namespace plog
             m_firstWrite = true;
         }
 
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         void setFileName(const char* fileName)
         {
             setFileName(util::toWide(fileName).c_str());

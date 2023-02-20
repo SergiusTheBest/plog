@@ -11,8 +11,12 @@ endif()
 
 # options
 option(PLOG_BUILD_SAMPLES "Build ${PROJECT_NAME} samples" ${IS_TOPLEVEL_PROJECT})
+option(PLOG_DISABLE_WCHAR_T "disable wchar_t ." OFF)
 option(PLOG_INSTALL "Generate ${PROJECT_NAME} install target" ${IS_TOPLEVEL_PROJECT})
 
+if(PLOG_DISABLE_WCHAR_T)
+    add_definitions(-DPLOG_DISABLE_WCHAR_T)
+endif()
 # make sure install paths work on all platforms
 include(GNUInstallDirs)
 

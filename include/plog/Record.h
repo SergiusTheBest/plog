@@ -88,7 +88,7 @@ namespace plog
         //////////////////////////////////////////////////////////////////////////
         // Stream output operators as free functions
 
-#if PLOG_ENABLE_WCHAR_INPUT
+#if !defined(PLOG_DISABLE_WCHAR_T) && PLOG_ENABLE_WCHAR_INPUT
         inline void operator<<(util::nostringstream& stream, const wchar_t* data)
         {
             data = data ? data : L"(null)";
@@ -115,9 +115,9 @@ namespace plog
         {
             data = data ? data : "(null)";
 
-#if defined(_WIN32) && defined(__BORLANDC__)
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32) && defined(__BORLANDC__)
             stream << util::toWide(data);
-#elif defined(_WIN32)
+#elif !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
             std::operator<<(stream, util::toWide(data));
 #else
             std::operator<<(stream, data);
@@ -257,7 +257,7 @@ namespace plog
             return *this << str;
         }
 
-#if PLOG_ENABLE_WCHAR_INPUT
+#if !defined(PLOG_DISABLE_WCHAR_T) && PLOG_ENABLE_WCHAR_INPUT
         Record& operator<<(wchar_t data)
         {
             wchar_t str[] = { data, 0 };
@@ -265,7 +265,7 @@ namespace plog
         }
 #endif
 
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         Record& operator<<(std::wostream& (PLOG_CDECL *data)(std::wostream&))
 #else
         Record& operator<<(std::ostream& (*data)(std::ostream&))
@@ -328,7 +328,7 @@ namespace plog
             return *this;
         }
 
-#ifdef _WIN32
+#if !defined(PLOG_DISABLE_WCHAR_T) && defined(_WIN32)
         Record& printf(const wchar_t* format, ...)
         {
             using namespace util;
