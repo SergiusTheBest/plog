@@ -10,7 +10,7 @@ namespace plog
     public:
         virtual void write(const Record& record) PLOG_OVERRIDE
         {
-            OutputDebugStringW(Formatter::format(record).c_str());
+            OutputDebugStringW(util::toWide(Formatter::format(record)).c_str());
         }
     };
 }

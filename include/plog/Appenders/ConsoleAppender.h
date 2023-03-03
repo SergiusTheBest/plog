@@ -51,11 +51,16 @@ namespace plog
 #ifdef _WIN32
             if (m_isatty)
             {
-                WriteConsoleW(m_outputHandle, str.c_str(), static_cast<DWORD>(str.size()), NULL, NULL);
+                const std::wstring& wstr = util::toWide(str);
+                WriteConsoleW(m_outputHandle, wstr.c_str(), static_cast<DWORD>(wstr.size()), NULL, NULL);
             }
             else
             {
+#   if PLOG_CHAR_IS_UTF8
+                m_outputStream << str << std::flush;
+#   else
                 m_outputStream << util::toNarrow(str, codePage::kActive) << std::flush;
+#   endif
             }
 #else
             m_outputStream << str << std::flush;

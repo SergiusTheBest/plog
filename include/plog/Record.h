@@ -94,7 +94,11 @@ namespace plog
             data = data ? data : L"(null)";
 
 #   ifdef _WIN32
+#       if PLOG_CHAR_IS_UTF8
+            std::operator<<(stream, util::toNarrow(data, codePage::kUTF8));
+#       else
             std::operator<<(stream, data);
+#       endif
 #   else
             std::operator<<(stream, util::toNarrow(data));
 #   endif
@@ -116,9 +120,17 @@ namespace plog
             data = data ? data : "(null)";
 
 #if defined(_WIN32) && defined(__BORLANDC__)
+#   if PLOG_CHAR_IS_UTF8
+            stream << data;
+#   else
             stream << util::toWide(data);
+#   endif
 #elif defined(_WIN32)
+#   if PLOG_CHAR_IS_UTF8
+            std::operator<<(stream, data);
+#   else
             std::operator<<(stream, util::toWide(data));
+#   endif
 #else
             std::operator<<(stream, data);
 #endif
@@ -265,11 +277,7 @@ namespace plog
         }
 #endif
 
-#ifdef _WIN32
-        Record& operator<<(std::wostream& (PLOG_CDECL *data)(std::wostream&))
-#else
-        Record& operator<<(std::ostream& (*data)(std::ostream&))
-#endif
+        Record& operator<<(util::nostream& (PLOG_CDECL *data)(util::nostream&))
         {
             m_message << data;
             return *this;
@@ -278,10 +286,10 @@ namespace plog
 #ifdef QT_VERSION
         Record& operator<<(const QString& data)
         {
-#   ifdef _WIN32
-            return *this << data.toStdWString();
-#   else
+#   if PLOG_CHAR_IS_UTF8
             return *this << data.toStdString();
+#   else
+            return *this << data.toStdWString();
 #   endif
         }
 
