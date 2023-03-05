@@ -1,6 +1,7 @@
 # Plog - portable, simple and extensible C++ logging library
 Pretty powerful logging library in about 1000 lines of code [![CI](https://github.com/SergiusTheBest/plog/actions/workflows/ci.yml/badge.svg)](https://github.com/SergiusTheBest/plog/actions/workflows/ci.yml) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master) [![CircleCI](https://circleci.com/gh/SergiusTheBest/plog.svg?style=svg)](https://circleci.com/gh/SergiusTheBest/plog) [![Build Status](https://api.cirrus-ci.com/github/SergiusTheBest/plog.svg)](https://cirrus-ci.com/github/SergiusTheBest/plog)
 
+![image](doc/color-console.png)
 
 - [Introduction](#introduction)
   - [Hello log!](#hello-log)
@@ -114,11 +115,13 @@ And its output:
 - Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender), [EventLog](#eventlogappender), [DebugOutput](#debugoutputappender), [DynamicAppender](#dynamicappender)
 - [Automatic 'this' pointer capture](#automatic-this-pointer-capture) (supported only on msvc)
 - [Lazy stream evaluation](#lazy-stream-evaluation)
-- [Unicode aware](#unicode), files are stored in UTF8
+- [Unicode aware](#unicode), files are stored in UTF-8, supports [Utf8Everywhere](http://utf8everywhere.org)
 - Doesn't require C++11
 - [Extendable](#extending)
 - No `windows.h` dependency
 - Can use UTC or local time
+- Can print buffers in HEX or ASCII
+- Can print `std` containers
 - Uses modern CMake
 
 # Usage
@@ -863,25 +866,35 @@ Core components are:
 ## Unicode
 Plog is unicode aware and wide string friendly. All messages are converted to a system native char type:
 
-- `wchar_t` - on Windows
-- `char` - on all other systems
+- Windows
+  - `wchar_t` - by default 
+  - `char` - if compiling with `/utf-8` switch or set `PLOG_CHAR_IS_UTF8` to 1
+- all other systems
+  - `char`
 
 Also `char` is treated as:
 
-- active code page - on Windows
-- UTF-8 - on all other systems
+- Windows
+  - active code page - be default
+  - UTF-8 - if compiling with `/utf-8` switch or set `PLOG_CHAR_IS_UTF8` to 1
+- all other systems  
+  - UTF-8
 
 Internally plog uses `nstring`, `nstringstream` and `nchar` ('n' for native) that are defined as:
 
 ```cpp
-#ifdef _WIN32
-    typedef std::wstring nstring;
-    typedef std::wstringstream nstringstream;
-    typedef wchar_t nchar;
-#else
+#if PLOG_CHAR_IS_UTF8
     typedef std::string nstring;
-    typedef std::stringstream nstringstream;
+    typedef std::ostringstream nostringstream;
+    typedef std::istringstream nistringstream;
+    typedef std::ostream nostream;
     typedef char nchar;
+#else
+    typedef std::wstring nstring;
+    typedef std::wostringstream nostringstream;
+    typedef std::wistringstream nistringstream;
+    typedef std::wostream nostream;
+    typedef wchar_t nchar;
 #endif
 ```
 
@@ -1034,10 +1047,12 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[ObjectiveC](samples/ObjectiveC)|Shows that plog can be used in ObjectiveC++.|
 |[Path](samples/Path)|A test sample to check that `std::filesystem::path` can be logged.|
 |[Performance](samples/Performance)|Measures time per a log call.|
+|[PrintVar](samples/PrintVar)|Shows how to use `PLOG_PRINT_VAR` to print variables.|
 |[SetFileName](samples/SetFileName)|Shows how to change a log file name at arbitrary moment.|
 |[Shared](samples/Shared)|Shows how to share logger instances across binary modules (this is the default behavior on everything except Windows, so be careful)|
 |[SkipNativeEOL](samples/SkipNativeEOL)|Shows how to skip [NativeEOLConverter](#nativeeolconverter).|
 |[UtcTime](samples/UtcTime)|Shows how to use UTC time instead of local time.|
+|[Utf8Everywhere](samples/Utf8Everywhere)|Demonstrates how to use http://utf8everywhere.org on Windows.|
 
 # References
 
