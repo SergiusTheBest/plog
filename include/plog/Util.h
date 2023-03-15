@@ -189,18 +189,17 @@ namespace plog
 #endif
         }
 
-#ifdef _WIN32
+#ifndef _GNU_SOURCE
     inline int vasprintf(char** strp, const char* format, va_list ap)
     {
-#if defined(__BORLANDC__)
-        int charCount = 0x1000; // there is no _vscprintf on Borland/Embarcadero
-#else
-        int charCount = _vscprintf(format, ap);
+        va_list ap_copy;
+        va_copy(ap_copy, ap);
+        int charCount = vsnprintf(NULL, 0, format, ap_copy);
+        va_end(ap_copy);
         if (charCount < 0)
         {
             return -1;
         }
-#endif
 
         size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
 
@@ -210,13 +209,7 @@ namespace plog
             return -1;
         }
 
-#if defined(__BORLANDC__)
-        int retval = vsnprintf_s(str, bufferCharCount, format, ap);
-#elif defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
-        int retval = _vsnprintf(str, bufferCharCount, format, ap);
-#else
-        int retval = _vsnprintf_s(str, bufferCharCount, charCount, format, ap);
-#endif
+        int retval = vsnprintf(str, bufferCharCount, format, ap);
         if (retval < 0)
         {
             free(str);
@@ -226,7 +219,9 @@ namespace plog
         *strp = str;
         return retval;
     }
+#endif
 
+#ifdef _WIN32
     inline int vaswprintf(wchar_t** strp, const wchar_t* format, va_list ap)
     {
 #if defined(__BORLANDC__)
