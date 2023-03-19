@@ -146,6 +146,17 @@ namespace plog
             plog::detail::operator<<(stream, data.c_str());
         }
 
+#ifdef __cpp_char8_t
+        inline void operator<<(util::nostringstream& stream, const char8_t* data)
+        {
+#   if PLOG_CHAR_IS_UTF8
+            plog::detail::operator<<(stream, reinterpret_cast<const char*>(data));
+#   else
+            plog::detail::operator<<(stream, util::toWide(reinterpret_cast<const char*>(data), codePage::kUTF8));
+#   endif
+        }
+#endif //__cpp_char8_t
+
         // Print `std::pair`
         template<class T1, class T2>
         inline void operator<<(util::nostringstream& stream, const std::pair<T1, T2>& data)
@@ -201,39 +212,36 @@ namespace plog
 #if defined(_WIN32) && (!defined(_MSC_VER) || _MSC_VER > 1400) // MSVC 2005 doesn't understand `enableIf`, so drop all `meta`
         namespace meta
         {
+            template<bool Value>
+            struct valueType { enum { value = Value }; };
+
             template<class T, class Stream>
             inline No operator<<(Stream&, const T&);
 
             template<class T, class Stream>
-            struct isStreamable
-            {
-                enum { value = sizeof(operator<<(meta::declval<Stream>(), meta::declval<const T>())) != sizeof(No) };
-            };
+            struct isStreamable : valueType<sizeof(operator<<(meta::declval<Stream>(), meta::declval<const T>())) != sizeof(No)> {};
 
             template<class Stream>
-            struct isStreamable<std::ios_base& PLOG_CDECL (std::ios_base&), Stream>
-            {
-                enum { value = true };
-            };
+            struct isStreamable<std::ios_base& PLOG_CDECL (std::ios_base&), Stream> : valueType<true> {};
 
             template<class Stream, size_t N>
-            struct isStreamable<wchar_t[N], Stream>
-            {
-                enum { value = false };
-            };
+            struct isStreamable<wchar_t[N], Stream> : valueType<false> {};
 
             template<class Stream, size_t N>
-            struct isStreamable<const wchar_t[N], Stream>
-            {
-                enum { value = false };
-            };
+            struct isStreamable<const wchar_t[N], Stream> : valueType<false> {};
 
             // meta doesn't work well for deleted functions and C++20 has `operator<<(std::ostream&, const wchar_t*) = delete` so exlicitly define it
             template<>
-            struct isStreamable<const wchar_t*, std::ostream>
-            {
-                enum { value = false };
-            };
+            struct isStreamable<const wchar_t*, std::ostream> : valueType<false> {};
+
+#   ifdef __cpp_char8_t
+            // meta doesn't work well for deleted functions and C++20 has `operator<<(std::ostream&, const char8_t*) = delete` so exlicitly define it
+            template<class Stream, size_t N>
+            struct isStreamable<char8_t[N], Stream> : valueType<false> {};
+
+            template<class Stream>
+            struct isStreamable<const char8_t*, Stream> : valueType<false> {};
+#   endif //__cpp_char8_t
         }
 
         template<class T>

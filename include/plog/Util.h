@@ -266,23 +266,23 @@ namespace plog
 #endif
 
 #ifdef _WIN32
-        inline std::wstring toWide(const char* str)
+        inline std::wstring toWide(const char* str, UINT cp = codePage::kChar)
         {
             size_t len = ::strlen(str);
             std::wstring wstr(len, 0);
 
             if (!wstr.empty())
             {
-                int wlen = MultiByteToWideChar(codePage::kChar, 0, str, static_cast<int>(len), &wstr[0], static_cast<int>(wstr.size()));
+                int wlen = MultiByteToWideChar(cp, 0, str, static_cast<int>(len), &wstr[0], static_cast<int>(wstr.size()));
                 wstr.resize(wlen);
             }
 
             return wstr;
         }
 
-        inline std::wstring toWide(const std::string& str)
+        inline std::wstring toWide(const std::string& str, UINT cp = codePage::kChar)
         {
-            return toWide(str.c_str());
+            return toWide(str.c_str(), cp);
         }
 
         inline const std::wstring& toWide(const std::wstring& str) // do nothing for already wide string

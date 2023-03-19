@@ -87,14 +87,19 @@ int main()
 
     // Plog handles unicode and std::string/wstring.
 #ifndef _WIN32 // On Windows the following code produces a warning C4566 if the codepage is not Cyrillic.
-    PLOG_DEBUG << "Cat - котэ";
+    PLOG_DEBUG << "test - тест";
     PLOG_DEBUG << std::string("test - тест");
 #endif
 
 #if PLOG_ENABLE_WCHAR_INPUT
-    PLOG_DEBUG << L"Cat - котэ";
+    PLOG_DEBUG << L"test - тест";
     PLOG_DEBUG << std::wstring(L"test - тест");
-    PLOG_DEBUG << L'ы';
+    PLOG_DEBUG << L'ж';
+#endif
+
+#ifdef __cpp_char8_t
+    PLOG_DEBUG << u8"Chinese: 中文";
+    PLOG_DEBUG << const_cast<const char8_t*>(u8"Cyrillic: тест");
 #endif
 
     // Multiline.
