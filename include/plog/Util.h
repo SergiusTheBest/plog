@@ -193,12 +193,16 @@ namespace plog
 #   define va_copy(d,s) ((d)=(s)) // there is no va_copy on Visual Studio 2010
 #endif
 
+#ifndef __STDC_SECURE_LIB__
+#   define vsnprintf_s(buf,cnt,max,fmt,ap) vsnprintf((buf),(cnt),(fmt),(ap));
+#endif
+
 #ifndef _GNU_SOURCE
     inline int vasprintf(char** strp, const char* format, va_list ap)
     {
         va_list ap_copy;
         va_copy(ap_copy, ap);
-        int charCount = vsnprintf(NULL, 0, format, ap_copy);
+        int charCount = vsnprintf_s(NULL, 0, static_cast<size_t>(-1), format, ap_copy);
         va_end(ap_copy);
         if (charCount < 0)
         {
@@ -213,7 +217,7 @@ namespace plog
             return -1;
         }
 
-        int retval = vsnprintf(str, bufferCharCount, format, ap);
+        int retval = vsnprintf_s(str, bufferCharCount, static_cast<size_t>(-1), format, ap);
         if (retval < 0)
         {
             free(str);
