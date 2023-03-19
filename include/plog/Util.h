@@ -189,6 +189,10 @@ namespace plog
 #endif
         }
 
+#if defined(_MSC_VER) && _MSC_VER <= 1600
+#   define va_copy(d,s) ((d)=(s)) // there is no va_copy on Visual Studio 2010
+#endif
+
 #ifndef _GNU_SOURCE
     inline int vasprintf(char** strp, const char* format, va_list ap)
     {
