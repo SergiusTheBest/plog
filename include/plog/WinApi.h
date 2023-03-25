@@ -61,6 +61,11 @@ namespace plog
     {
         const UINT kActive = 0;
         const UINT kUTF8 = 65001;
+#if PLOG_CHAR_IS_UTF8
+        const UINT kChar = kUTF8;
+#else
+        const UINT kChar = kActive;
+#endif
     }
 
     namespace eventLog

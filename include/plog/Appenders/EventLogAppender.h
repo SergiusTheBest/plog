@@ -8,7 +8,7 @@ namespace plog
     class PLOG_LINKAGE_HIDDEN EventLogAppender : public IAppender
     {
     public:
-        EventLogAppender(const wchar_t* sourceName) : m_eventSource(RegisterEventSourceW(NULL, sourceName))
+        EventLogAppender(const util::nchar* sourceName) : m_eventSource(RegisterEventSourceW(NULL, util::toWide(sourceName).c_str()))
         {
         }
 
@@ -19,13 +19,19 @@ namespace plog
 
         virtual void write(const Record& record) PLOG_OVERRIDE
         {
-            std::wstring str = Formatter::format(record);
-            const wchar_t* logMessagePtr[] = { str.c_str() };
+            util::nstring str = Formatter::format(record);
 
-            ReportEventW(m_eventSource, logSeverityToType(record.getSeverity()), static_cast<WORD>(record.getSeverity()), 0, NULL, 1, 0, logMessagePtr, NULL);
+            write(record.getSeverity(), util::toWide(str).c_str());
         }
 
     private:
+        void write(Severity severity, const wchar_t* str)
+        {
+            const wchar_t* logMessagePtr[] = { str };
+
+            ReportEventW(m_eventSource, logSeverityToType(severity), static_cast<WORD>(severity), 0, NULL, 1, 0, logMessagePtr, NULL);
+        }
+
         static WORD logSeverityToType(plog::Severity severity)
         {
             switch (severity)
@@ -52,7 +58,7 @@ namespace plog
     class EventLogAppenderRegistry
     {
     public:
-        static bool add(const wchar_t* sourceName, const wchar_t* logName = L"Application")
+        static bool add(const util::nchar* sourceName, const util::nchar* logName = PLOG_NSTR("Application"))
         {
             std::wstring logKeyName;
             std::wstring sourceKeyName;
@@ -74,7 +80,7 @@ namespace plog
             return true;
         }
 
-        static bool exists(const wchar_t* sourceName, const wchar_t* logName = L"Application")
+        static bool exists(const util::nchar* sourceName, const util::nchar* logName = PLOG_NSTR("Application"))
         {
             std::wstring logKeyName;
             std::wstring sourceKeyName;
@@ -90,7 +96,7 @@ namespace plog
             return true;
         }
 
-        static void remove(const wchar_t* sourceName, const wchar_t* logName = L"Application")
+        static void remove(const util::nchar* sourceName, const util::nchar* logName = PLOG_NSTR("Application"))
         {
             std::wstring logKeyName;
             std::wstring sourceKeyName;
@@ -101,11 +107,11 @@ namespace plog
         }
 
     private:
-        static void getKeyNames(const wchar_t* sourceName, const wchar_t* logName, std::wstring& sourceKeyName, std::wstring& logKeyName)
+        static void getKeyNames(const util::nchar* sourceName, const util::nchar* logName, std::wstring& sourceKeyName, std::wstring& logKeyName)
         {
             const std::wstring kPrefix = L"SYSTEM\\CurrentControlSet\\Services\\EventLog\\";
-            logKeyName = kPrefix + logName;
-            sourceKeyName = logKeyName + L"\\" + sourceName;
+            logKeyName = kPrefix + util::toWide(logName);
+            sourceKeyName = logKeyName + L"\\" + util::toWide(sourceName);
         }
     };
 }
