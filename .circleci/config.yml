@@ -8,7 +8,7 @@ jobs:
       - run: cmake -H. -Bbuild -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE && cd build && make -j
   platformio:
     docker:
-      - image: sergiusthebest/platformio-ci:latest
+      - image: ghcr.io/sergiusthebest/platformio-ci:latest
     steps:
       - checkout
       - run: pio run -d samples/Arduino
