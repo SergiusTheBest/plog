@@ -454,7 +454,7 @@ namespace plog
 #elif defined(_WIN32) && !defined(WINCE)
                 ::_wsopen_s(&m_file, toWide(fileName).c_str(), _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif defined(_WIN32) && defined(WINCE)
-                m_file = ::CreateFileW(fileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+                m_file = ::CreateFileW(fileName.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 #elif defined(O_CLOEXEC)
                 m_file = ::open(fileName.c_str(), O_CREAT | O_APPEND | O_WRONLY | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #else
@@ -519,7 +519,7 @@ namespace plog
 #if defined(_WIN32) && !defined(WINCE)
                 return ::_wunlink(toWide(fileName).c_str());
 #elif defined(_WIN32) && defined(WINCE)
-                return ::DeleteFileW(fileName) ? 0 : -1;
+                return ::DeleteFileW(fileName.c_str()) ? 0 : -1;
 #else
                 return ::unlink(fileName.c_str());
 #endif
