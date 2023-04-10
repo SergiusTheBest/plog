@@ -220,18 +220,25 @@ namespace plog
 #endif
         }
 
-#ifdef _WIN32
+#ifndef _GNU_SOURCE
     inline int vasprintf(char** strp, const char* format, va_list ap)
     {
-#if defined(__BORLANDC__)
-        int charCount = 0x1000; // there is no _vscprintf on Borland/Embarcadero
+        va_list ap_copy;
+#if defined(_MSC_VER) && _MSC_VER <= 1600
+        ap_copy = ap; // there is no va_copy on Visual Studio 2010
 #else
-        int charCount = _vscprintf(format, ap);
+        va_copy(ap_copy, ap);        
+#endif
+#ifndef __STDC_SECURE_LIB__
+        int charCount = vsnprintf(NULL, 0, format, ap_copy);
+#else
+        int charCount = vsnprintf_s(NULL, 0, static_cast<size_t>(-1), format, ap_copy);
+#endif
+        va_end(ap_copy);
         if (charCount < 0)
         {
             return -1;
         }
-#endif
 
         size_t bufferCharCount = static_cast<size_t>(charCount) + 1;
 
@@ -241,12 +248,10 @@ namespace plog
             return -1;
         }
 
-#if defined(__BORLANDC__)
-        int retval = vsnprintf_s(str, bufferCharCount, format, ap);
-#elif defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
-        int retval = _vsnprintf(str, bufferCharCount, format, ap);
+#ifndef __STDC_SECURE_LIB__
+        int retval = vsnprintf(str, bufferCharCount, format, ap);
 #else
-        int retval = _vsnprintf_s(str, bufferCharCount, charCount, format, ap);
+        int retval = vsnprintf_s(str, bufferCharCount, static_cast<size_t>(-1), format, ap);
 #endif
         if (retval < 0)
         {
@@ -257,7 +262,9 @@ namespace plog
         *strp = str;
         return retval;
     }
+#endif
 
+#ifdef _WIN32
     inline int vaswprintf(wchar_t** strp, const wchar_t* format, va_list ap)
     {
 #if defined(__BORLANDC__)
