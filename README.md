@@ -593,6 +593,7 @@ public:
 - source file name
 - function name
 - message
+- instance id
 
 > **Note** Source file name isn't captured by default. To enable it define PLOG_CAPTURE_FILE.
 
@@ -602,7 +603,7 @@ Also [Record](#record) has a number of overloaded stream output operators to con
 class Record
 {
 public:
-    Record(Severity severity, const char* func, size_t line, const char* file, const void* object);
+    Record(Severity severity, const char* func, size_t line, const char* file, const void* object, int instanceId);
 
     //////////////////////////////////////////////////////////////////////////
     // Stream output operators
