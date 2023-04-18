@@ -7,6 +7,7 @@
 #include <plog/Formatters/TxtFormatter.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <vector>
+#include <map>
 
 struct data
 {
@@ -52,6 +53,12 @@ void logContainer()
 
     // like always you can also combine this with other strings or elements
     PLOGN << "Prepend to this " << vdata << " Add to this";
+
+    std::map<const std::string, data> map{
+        {"FirstKey", data1},
+        {"SecondKey", data2}};
+
+    PLOGN << map;
 }
 
 int main()
