@@ -157,14 +157,6 @@ namespace plog
         }
 #endif //__cpp_char8_t
 
-        // Print `std::pair`
-        template<class T1, class T2>
-        inline void operator<<(util::nostringstream& stream, const std::pair<T1, T2>& data)
-        {
-            stream << data.first;
-            stream << ":";
-            stream << data.second;
-        }
 
 #if defined(__clang__) || !defined(__GNUC__) || (__GNUC__ * 100 + __GNUC_MINOR__) >= 405 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
 #if !defined(_MSC_VER) || _MSC_VER > 1400 // MSVC 2005 doesn't understand `enableIf`, so drop all `meta`
@@ -336,6 +328,16 @@ namespace plog
 
             *this << "]";
 
+            return *this;
+        }
+
+        // Print `std::pair`
+        template <class T1, class T2>
+        inline Record& operator<<(const std::pair<T1, T2> &data)
+        {
+            *this << data.first;
+            *this << ":";
+            *this << data.second;
             return *this;
         }
 
