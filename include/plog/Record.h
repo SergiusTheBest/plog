@@ -175,29 +175,6 @@ namespace plog
             plog::detail::operator<<(stream, static_cast<util::nstring>(data));
         }
 
-        // Print std containers
-        template<class T>
-        inline typename meta::enableIf<meta::isContainer<T>::value &&
-            !meta::isConvertibleToNString<T>::value &&
-            !meta::isConvertibleToString<T>::value &&
-            !meta::isFilesystemPath<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)
-        {
-            stream << "[";
-
-            for (typename T::const_iterator it = data.begin(); it != data.end();)
-            {
-                stream << *it;
-
-                if (++it == data.end())
-                {
-                    break;
-                }
-
-                stream << ", ";
-            }
-
-            stream << "]";
-        }
 #endif
 #endif
 
@@ -316,12 +293,49 @@ namespace plog
 #   endif
 #endif
 
-        template<typename T>
-        Record& operator<<(const T& data)
+        template <typename T>
+        inline typename detail::meta::enableIf<!detail::meta::isContainer<T>::value ||
+            detail::meta::isConvertibleToNString<T>::value ||
+            detail::meta::isConvertibleToString<T>::value, Record &>::type operator<<(const T &data)
         {
             using namespace plog::detail;
 
             m_message << data;
+            return *this;
+        }
+
+        Record &operator<<(const std::string &data)
+        {
+            m_message << data.c_str();
+            return *this;
+        }
+
+        template <typename T>
+        inline typename detail::meta::enableIf<detail::meta::isContainer<T>::value &&
+            !detail::meta::isConvertibleToNString<T>::value &&
+            !detail::meta::isConvertibleToString<T>::value &&
+            !detail::meta::isFilesystemPath<T>::value,
+            Record &>::type
+        operator<<(const T &data)
+        {
+            using namespace plog::detail;
+
+            *this << "[";
+
+            for (typename T::const_iterator it = data.begin(); it != data.end();)
+            {
+                *this << *it;
+
+                if (++it == data.end())
+                {
+                    break;
+                }
+
+                *this << ", ";
+            }
+
+            *this << "]";
+
             return *this;
         }
 
