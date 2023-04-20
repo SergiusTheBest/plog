@@ -131,7 +131,7 @@ int main()
     MyClass::staticMethod();
 
     // Log in a template class.
-    MyTemplateClass(1, 2).inlineMethod();
+    MyTemplateClass<int, int>(1, 2).inlineMethod();
 
     // Implicit cast to string.
     PLOG_INFO << obj;
