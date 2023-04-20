@@ -18,3 +18,22 @@ public:
 
     operator std::string() const;
 };
+
+template <typename T, typename U>
+class MyTemplateClass
+{
+public:
+    MyTemplateClass(T t1, U t2)
+        : m_t1(t1)
+        , m_t2(t2)
+    {
+    }
+
+    inline void inlineMethod()
+    {
+        PLOGD;
+    }
+private:
+    T m_t1;
+    U m_t2;
+};

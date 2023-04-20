@@ -340,6 +340,7 @@ namespace plog
 #else
             const char* funcBegin = func;
             const char* funcEnd = ::strchr(funcBegin, '(');
+            int foundTemplate = 0;
 
             if (!funcEnd)
             {
@@ -348,7 +349,13 @@ namespace plog
 
             for (const char* i = funcEnd - 1; i >= funcBegin; --i) // search backwards for the first space char
             {
-                if (*i == ' ')
+                if (*i == '>') {
+                    foundTemplate++;
+                }
+                if (*i == '<') {
+                    foundTemplate--;
+                }
+                if (*i == ' ' && foundTemplate == 0)
                 {
                     funcBegin = i + 1;
                     break;
