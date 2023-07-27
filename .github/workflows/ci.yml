@@ -81,5 +81,8 @@ jobs:
 
     - name: build
       run: |
-        cmake -Bbuild -DCMAKE_BUILD_TYPE=Release .
+        cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DPLOG_BUILD_TESTS=1 .
         cmake --build build --parallel
+
+    - name: test
+      run: cd build && ctest -V

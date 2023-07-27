@@ -2,11 +2,13 @@ task:
     name: FreeBSD
     freebsd_instance:
         matrix:
-            image_family: freebsd-12-1
+            - image_family: freebsd-12-3
+            - image_family: freebsd-13-2
     matrix:
         env:
             BUILD_TYPE: Debug
         env:
             BUILD_TYPE: Release
     install_script: pkg install -y cmake
-    compile_script: cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=$BUILD_TYPE && cmake --build build -- -j4
+    compile_script: cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLOG_BUILD_TESTS=1 && cmake --build build -- -j4
+    test_script: cd build && ctest -V

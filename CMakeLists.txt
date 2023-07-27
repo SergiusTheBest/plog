@@ -12,6 +12,7 @@ endif()
 # options
 option(PLOG_BUILD_SAMPLES "Build ${PROJECT_NAME} samples" ${IS_TOPLEVEL_PROJECT})
 option(PLOG_INSTALL "Generate ${PROJECT_NAME} install target" ${IS_TOPLEVEL_PROJECT})
+option(PLOG_BUILD_TESTS "Build tests" OFF)
 
 # make sure install paths work on all platforms
 include(GNUInstallDirs)
@@ -37,6 +38,11 @@ if(PLOG_BUILD_SAMPLES)
 
     # add samples
     add_subdirectory(samples)
+endif()
+
+if(PLOG_BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(test)
 endif()
 
 if(PLOG_INSTALL)
