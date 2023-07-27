@@ -201,7 +201,7 @@ namespace plog
 #ifndef __STDC_SECURE_LIB__
         int charCount = vsnprintf(NULL, 0, format, ap_copy);
 #else
-        int charCount = vsnprintf_s(NULL, 0, static_cast<size_t>(-1), format, ap_copy);
+        int charCount = _vscprintf(format, ap_copy);
 #endif
         va_end(ap_copy);
         if (charCount < 0)
