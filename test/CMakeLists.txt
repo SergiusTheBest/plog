@@ -4,6 +4,7 @@ project(PlogTest CXX)
 
 add_executable(${PROJECT_NAME}
     doctest.h
+    Conditional.cpp
     TestAppender.h
     Main.cpp
     Printf.cpp
