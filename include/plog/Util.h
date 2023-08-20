@@ -227,12 +227,12 @@ namespace plog
 #if defined(_MSC_VER) && _MSC_VER <= 1600
         ap_copy = ap; // there is no va_copy on Visual Studio 2010
 #else
-        va_copy(ap_copy, ap);        
+        va_copy(ap_copy, ap);
 #endif
 #ifndef __STDC_SECURE_LIB__
         int charCount = vsnprintf(NULL, 0, format, ap_copy);
 #else
-        int charCount = vsnprintf_s(NULL, 0, static_cast<size_t>(-1), format, ap_copy);
+        int charCount = _vscprintf(format, ap_copy);
 #endif
         va_end(ap_copy);
         if (charCount < 0)
@@ -371,6 +371,7 @@ namespace plog
 #else
             const char* funcBegin = func;
             const char* funcEnd = ::strchr(funcBegin, '(');
+            int foundTemplate = 0;
 
             if (!funcEnd)
             {
@@ -379,7 +380,15 @@ namespace plog
 
             for (const char* i = funcEnd - 1; i >= funcBegin; --i) // search backwards for the first space char
             {
-                if (*i == ' ')
+                if (*i == '>')
+                {
+                    foundTemplate++;
+                }
+                else if (*i == '<')
+                {
+                    foundTemplate--;
+                }
+                else if (*i == ' ' && foundTemplate == 0)
                 {
                     funcBegin = i + 1;
                     break;
