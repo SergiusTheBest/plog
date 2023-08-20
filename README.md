@@ -1092,7 +1092,7 @@ This version of plog is licensed under the [MIT license](https://choosealicense.
 - New: Add support for UTF-8 char encoding on Windows (#76, #69, #238, #239)\
  *This allows to use [Utf8Everywhere](http://utf8everywhere.org) approach*
 - New: Add ArduinoAppender
-- New: Publish on [PlatformIO Registry](https://registry.platformio.org) for embedded development
+- New: Publish on [PlatformIO Registry](https://registry.platformio.org) for embedded development (#244)
 - New: Add support for `char8_t` strings
 - New: Add tests
 - Enh: Add rudimentary support of VS2005 (#232)

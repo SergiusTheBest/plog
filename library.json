@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
     "name": "plog",
-    "version": "1.1.9",
+    "version": "1.1.10",
     "description": "Portable, simple and extensible C++ logging library",
     "keywords": [
         "plog",
@@ -15,15 +15,38 @@
     },
     "authors": {
         "name": "Sergey Podobry",
-        "email": "author@example.com",
-        "url": "https://example.com"
+        "email": "sergey.podobry@gmail.com",
+        "maintainer": true
     },
     "license": "MIT",
     "frameworks": "*",
     "platforms": "*",
+    "headers": [
+        "plog/Log.h",
+        "plog/Init.h",
+        "plog/Appenders/ArduinoAppender.h",
+        "plog/Formatters/CsvFormatter.h",
+        "plog/Formatters/FuncMessageFormatter.h",
+        "plog/Formatters/MessageOnlyFormatter.h",
+        "plog/Formatters/TxtFormatter.h"
+    ],
+    "examples": [
+        {
+            "name": "Arduino",
+            "base": "samples/Arduino",
+            "files": [
+                "platformio.ini",
+                "src/main.cpp"
+            ]
+        }
+    ],
     "export": {
-        "exclude": [
-            "samples"
+        "include": [
+            "doc",
+            "include",
+            "samples/Arduino",
+            "LICENSE",
+            "README.md"
         ]
     },
     "build": {
