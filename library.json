@@ -1,0 +1,32 @@
+{
+    "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
+    "name": "plog",
+    "version": "1.1.9",
+    "description": "Portable, simple and extensible C++ logging library",
+    "keywords": [
+        "plog",
+        "log",
+        "logger",
+        "logging"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/SergiusTheBest/plog.git"
+    },
+    "authors": {
+        "name": "Sergey Podobry",
+        "email": "author@example.com",
+        "url": "https://example.com"
+    },
+    "license": "MIT",
+    "frameworks": "*",
+    "platforms": "*",
+    "export": {
+        "exclude": [
+            "samples"
+        ]
+    },
+    "build": {
+        "includeDir": "include"
+    }
+}
