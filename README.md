@@ -1088,6 +1088,19 @@ This version of plog is licensed under the [MIT license](https://choosealicense.
 
 # Version history
 
+## Version 1.1.10 (20 Aug 2023)
+- New: Add support for UTF-8 char encoding on Windows (#76, #69, #238, #239)\
+ *This allows to use [Utf8Everywhere](http://utf8everywhere.org) approach*
+- New: Add ArduinoAppender
+- New: Publish on [PlatformIO Registry](https://registry.platformio.org) for embedded development
+- New: Add support for `char8_t` strings
+- New: Add tests
+- Enh: Add rudimentary support of VS2005 (#232)
+- Enh: Implementation of `vasprintf` emulation (#243)
+- Fix: Parsing of templated classes (#251)
+- Fix: Compiling with MSVC using C++20 (#236)
+- Fix: No newline error with '-Wnewline-eof' build flag (#263)
+
 ## Version 1.1.9 (16 Dec 2022)
 - New: Add ability to truncate log file using `>` in shell (#155)
 - New: Add override specifier (to be able to build with `-Wsuggest-override`) (#231)
