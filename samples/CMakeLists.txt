@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 3.0)
+if(${CMAKE_VERSION} VERSION_LESS 3.27.0)
+    cmake_minimum_required(VERSION 3.0)
+else()
+    cmake_minimum_required(VERSION 3.6)
+endif()
 
 if(POLICY CMP0063) #Honor visibility properties for all target types
     cmake_policy(SET CMP0063 NEW)
