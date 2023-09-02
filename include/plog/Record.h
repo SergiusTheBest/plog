@@ -157,14 +157,6 @@ namespace plog
         }
 #endif //__cpp_char8_t
 
-        // Print `std::pair`
-        template<class T1, class T2>
-        inline void operator<<(util::nostringstream& stream, const std::pair<T1, T2>& data)
-        {
-            stream << data.first;
-            stream << ":";
-            stream << data.second;
-        }
 
 #if defined(__clang__) || !defined(__GNUC__) || (__GNUC__ * 100 + __GNUC_MINOR__) >= 405 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
 #if !defined(_MSC_VER) || _MSC_VER > 1400 // MSVC 2005 doesn't understand `enableIf`, so drop all `meta`
@@ -175,29 +167,6 @@ namespace plog
             plog::detail::operator<<(stream, static_cast<util::nstring>(data));
         }
 
-        // Print std containers
-        template<class T>
-        inline typename meta::enableIf<meta::isContainer<T>::value &&
-            !meta::isConvertibleToNString<T>::value &&
-            !meta::isConvertibleToString<T>::value &&
-            !meta::isFilesystemPath<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)
-        {
-            stream << "[";
-
-            for (typename T::const_iterator it = data.begin(); it != data.end();)
-            {
-                stream << *it;
-
-                if (++it == data.end())
-                {
-                    break;
-                }
-
-                stream << ", ";
-            }
-
-            stream << "]";
-        }
 #endif
 #endif
 
@@ -316,12 +285,59 @@ namespace plog
 #   endif
 #endif
 
-        template<typename T>
-        Record& operator<<(const T& data)
+        template <typename T>
+        inline typename detail::meta::enableIf<!detail::meta::isContainer<T>::value ||
+            detail::meta::isConvertibleToNString<T>::value ||
+            detail::meta::isConvertibleToString<T>::value, Record &>::type operator<<(const T &data)
         {
             using namespace plog::detail;
 
             m_message << data;
+            return *this;
+        }
+
+        Record &operator<<(const std::string &data)
+        {
+            m_message << data.c_str();
+            return *this;
+        }
+
+        template <typename T>
+        inline typename detail::meta::enableIf<detail::meta::isContainer<T>::value &&
+            !detail::meta::isConvertibleToNString<T>::value &&
+            !detail::meta::isConvertibleToString<T>::value &&
+            !detail::meta::isFilesystemPath<T>::value,
+            Record &>::type
+        operator<<(const T &data)
+        {
+            using namespace plog::detail;
+
+            *this << "[";
+
+            for (typename T::const_iterator it = data.begin(); it != data.end();)
+            {
+                *this << *it;
+
+                if (++it == data.end())
+                {
+                    break;
+                }
+
+                *this << ", ";
+            }
+
+            *this << "]";
+
+            return *this;
+        }
+
+        // Print `std::pair`
+        template <class T1, class T2>
+        inline Record& operator<<(const std::pair<T1, T2> &data)
+        {
+            *this << data.first;
+            *this << ":";
+            *this << data.second;
             return *this;
         }
 
