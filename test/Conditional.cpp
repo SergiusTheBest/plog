@@ -1,6 +1,4 @@
-#include "doctest.h"
-#include <plog/Log.h>
-#include "TestAppender.h"
+#include "Common.h"
 
 SCENARIO("conditional logging")
 {
@@ -47,7 +45,7 @@ SCENARIO("conditional logging")
                 CHECK_EQ(var, 5 + 1);
             }
         }
-        
+
         WHEN("log level check is false")
         {
             int var = 0;

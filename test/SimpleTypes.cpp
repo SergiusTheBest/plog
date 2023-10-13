@@ -1,6 +1,4 @@
-#include "doctest.h"
-#include <plog/Log.h>
-#include "TestAppender.h"
+#include "Common.h"
 
 SCENARIO("simple types")
 {
