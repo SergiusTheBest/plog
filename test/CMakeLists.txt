@@ -69,7 +69,7 @@ function(plog_add_test_wchar _target)
         target_compile_definitions(${_target} PRIVATE PLOG_ENABLE_WCHAR_INPUT=1)
 
         if(APPLE)
-            target_link_libraries(${_target}_wchar -liconv)
+            target_link_libraries(${_target} -liconv)
         endif()
     endif()
 endfunction()
