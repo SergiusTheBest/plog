@@ -41,20 +41,22 @@ jobs:
           #   cxx          : C++ compiler executable
           #   os           : GitHub Actions YAML workflow label.  See https://github.com/actions/virtual-environments#available-environments
 
-          # gcc
+          # linux: gcc
           { os: ubuntu-22.04,   cxx: g++-12,      pkgs: '' },
           { os: ubuntu-22.04,   cxx: g++-11,      pkgs: '' }, # (default on Jammy 22.04)
           { os: ubuntu-22.04,   cxx: g++-9,       pkgs: '' }, # (default on Focal 20.04)
           { os: ubuntu-20.04,   cxx: g++-7,       pkgs: 'g++-7' }, # (default on Bionic 18.04)
           { os: ubuntu-20.04,   cxx: g++-5,       pkgs: 'g++-5',   repo: 'xenial' }, # (default on Xenial 16.04)
           { os: ubuntu-20.04,   cxx: g++-4.8,     pkgs: 'g++-4.8', repo: 'trusty' }, # (default on Trusty 14.04)
-          # clang
+          # linux: clang
           { os: ubuntu-22.04,   cxx: clang++-14,  pkgs: '' },
           { os: ubuntu-20.04,   cxx: clang++-10,  pkgs: '' },
           { os: ubuntu-20.04,   cxx: clang++-6.0, pkgs: 'clang-6.0' },
-          # msvc
+          # windows: msvc
           { os: windows-2019,   cxx: 'vs2019' },
-          { os: windows-2022,   cxx: 'vs2022' }
+          { os: windows-2022,   cxx: 'vs2022' },
+          # macos: clang
+          { os: macos-12,       cxx: 'clang++' }
         ]
 
     runs-on: ${{ matrix.os }}
