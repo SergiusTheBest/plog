@@ -46,10 +46,12 @@ namespace plog
             };
 
             template <class T>
-            struct isConvertibleToNString : isConvertible<T, util::nstring> {};
-
-            template <class T>
             struct isConvertibleToString : isConvertible<T, std::string> {};
+
+#if PLOG_ENABLE_WCHAR_INPUT
+            template <class T>
+            struct isConvertibleToWString : isConvertible<T, std::wstring> {};
+#endif
 
             template <class T>
             struct isContainer
@@ -168,18 +170,29 @@ namespace plog
 
 #if defined(__clang__) || !defined(__GNUC__) || (__GNUC__ * 100 + __GNUC_MINOR__) >= 405 // skip for GCC < 4.5 due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38600
 #if !defined(_MSC_VER) || _MSC_VER > 1400 // MSVC 2005 doesn't understand `enableIf`, so drop all `meta`
-        // Print data that can be casted to `std::basic_string`.
+        // Print data that can be casted to `std::string`
         template<class T>
-        inline typename meta::enableIf<meta::isConvertibleToNString<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)
+        inline typename meta::enableIf<meta::isConvertibleToString<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)
         {
-            plog::detail::operator<<(stream, static_cast<util::nstring>(data));
+            plog::detail::operator<<(stream, static_cast<std::string>(data));
         }
+
+#if PLOG_ENABLE_WCHAR_INPUT
+        // Print data that can be casted to `std::wstring`
+        template<class T>
+        inline typename meta::enableIf<meta::isConvertibleToWString<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)
+        {
+            plog::detail::operator<<(stream, static_cast<std::wstring>(data));
+        }
+#endif
 
         // Print std containers
         template<class T>
         inline typename meta::enableIf<meta::isContainer<T>::value &&
-            !meta::isConvertibleToNString<T>::value &&
             !meta::isConvertibleToString<T>::value &&
+#if PLOG_ENABLE_WCHAR_INPUT
+            !meta::isConvertibleToWString<T>::value &&
+#endif
             !meta::isFilesystemPath<T>::value, void>::type operator<<(util::nostringstream& stream, const T& data)
         {
             stream << "[";
@@ -202,6 +215,7 @@ namespace plog
 #endif
 
 #ifdef __cplusplus_cli
+        // Print managed C++ `System::String^`
         inline void operator<<(util::nostringstream& stream, System::String^ data)
         {
             cli::pin_ptr<const System::Char> ptr = PtrToStringChars(data);
@@ -209,7 +223,7 @@ namespace plog
         }
 #endif
 
-#if defined(_WIN32) && (!defined(_MSC_VER) || _MSC_VER > 1400) // MSVC 2005 doesn't understand `enableIf`, so drop all `meta`
+#if PLOG_ENABLE_WCHAR_INPUT && (!defined(_MSC_VER) || _MSC_VER > 1400) // MSVC 2005 doesn't understand `enableIf`, so drop all `meta`
         namespace meta
         {
             template<bool Value>
@@ -244,13 +258,29 @@ namespace plog
 #   endif //__cpp_char8_t
         }
 
+#   if PLOG_CHAR_IS_UTF8
+        // Print types that can be streamed into `std::owstringstream` but not into `std::ostringstream` when we use UTF-8 on Windows
         template<class T>
-        inline typename meta::enableIf<meta::isStreamable<T, std::ostream>::value && !meta::isStreamable<T, std::wostream>::value, void>::type operator<<(std::wostringstream& stream, const T& data)
+        inline typename meta::enableIf<meta::isStreamable<T, std::wostream>::value &&
+            !meta::isStreamable<T, std::ostream>::value &&
+            !meta::isConvertibleToWString<T>::value, void>::type operator<<(std::ostringstream& stream, const T& data)
+        {
+            std::wostringstream ss;
+            ss << data;
+            stream << ss.str();
+        }
+#   else
+        // Print types that can be streamed into `std::ostringstream` but not into `std::owstringstream` when we use `wchar_t` on Windows
+        template<class T>
+        inline typename meta::enableIf<meta::isStreamable<T, std::ostream>::value &&
+            !meta::isStreamable<T, std::wostream>::value &&
+            !meta::isConvertibleToString<T>::value, void>::type operator<<(std::wostringstream& stream, const T& data)
         {
             std::ostringstream ss;
             ss << data;
             stream << ss.str();
         }
+#   endif
 #endif
     }
 
