@@ -244,12 +244,12 @@ namespace plog
             template<class Stream, size_t N>
             struct isStreamable<const wchar_t[N], Stream> : valueType<false> {};
 
-            // meta doesn't work well for deleted functions and C++20 has `operator<<(std::ostream&, const wchar_t*) = delete` so exlicitly define it
+            // meta doesn't work well for deleted functions and C++20 has `operator<<(std::ostream&, const wchar_t*) = delete` so explicitly define it
             template<>
             struct isStreamable<const wchar_t*, std::ostream> : valueType<false> {};
 
 #   ifdef __cpp_char8_t
-            // meta doesn't work well for deleted functions and C++20 has `operator<<(std::ostream&, const char8_t*) = delete` so exlicitly define it
+            // meta doesn't work well for deleted functions and C++20 has `operator<<(std::ostream&, const char8_t*) = delete` so explicitly define it
             template<class Stream, size_t N>
             struct isStreamable<char8_t[N], Stream> : valueType<false> {};
 
