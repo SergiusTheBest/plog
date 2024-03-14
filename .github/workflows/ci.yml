@@ -71,7 +71,7 @@ jobs:
         fetch-depth: 0
 
     # workaround for broken clang on ubuntu runner until https://github.com/actions/runner-images/issues/8659 get fixed
-    - uses: mjp41/workaround8649@7929373c0fe5caf844d8115adccef39e3b5362e7
+    - uses: mjp41/workaround8649@c8550b715ccdc17f89c8d5c28d7a48eeff9c94a8
       with:
         os: ${{ matrix.os }}
 
