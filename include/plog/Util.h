@@ -76,6 +76,10 @@
 #   if defined(_POSIX_THREADS)
 #       include <pthread.h>
 #   endif
+#   if defined(ESP_PLATFORM)
+#       include <freertos/FreeRTOS.h>
+#       include <freertos/task.h>
+#   endif
 #   if PLOG_ENABLE_WCHAR_INPUT
 #       include <iconv.h>
 #   endif
@@ -184,6 +188,12 @@ namespace plog
             uint64_t tid64;
             pthread_threadid_np(NULL, &tid64);
             return static_cast<unsigned int>(tid64);
+#elif defined(ESP_PLATFORM) && (configUSE_TRACE_FACILITY == 1)
+            TaskHandle_t xHandle;
+            TaskStatus_t xTaskDetails;
+            xHandle = xTaskGetCurrentTaskHandle();
+            vTaskGetInfo(xHandle, &xTaskDetails, pdFALSE, eInvalid);
+            return static_cast<unsigned int>(xTaskDetails.xTaskNumber);
 #else
             return 0;
 #endif
