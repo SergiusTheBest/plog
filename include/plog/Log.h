@@ -47,7 +47,14 @@
 //////////////////////////////////////////////////////////////////////////
 // Main logging macros
 
-#define PLOG_(instanceId, severity)      IF_PLOG_(instanceId, severity) (*plog::get<instanceId>()) += plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_FILE(), PLOG_GET_THIS(), instanceId).ref()
+#ifdef PLOG_USE_MESSAGE_PREFIX
+#   define PLOG__PRINT_MESSAGE_PREFIX    << PLOG_MESSAGE_PREFIX
+#else
+#   define PLOG__PRINT_MESSAGE_PREFIX
+#endif
+
+#define PLOG_(instanceId, severity)      IF_PLOG_(instanceId, severity) (*plog::get<instanceId>()) += \
+    plog::Record(severity, PLOG_GET_FUNC(), __LINE__, PLOG_GET_FILE(), PLOG_GET_THIS(), instanceId).ref() PLOG__PRINT_MESSAGE_PREFIX
 #define PLOG(severity)                   PLOG_(PLOG_DEFAULT_INSTANCE_ID, severity)
 
 #define PLOG_VERBOSE                     PLOG(plog::verbose)

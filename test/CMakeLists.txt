@@ -16,6 +16,7 @@ set(SOURCES
     Conditional.cpp
     TestAppender.h
     Main.cpp
+    MessagePrefix.cpp
     NullCharPointer.cpp
     Path.cpp
     Printf.cpp
