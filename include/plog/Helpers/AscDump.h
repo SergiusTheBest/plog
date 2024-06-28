@@ -13,6 +13,13 @@ namespace plog
         {
         }
 
+        util::nstring str() const
+        {
+            util::nostringstream ss;
+            ss << *this;
+            return ss.str();
+        }
+
         friend util::nostringstream& operator<<(util::nostringstream& stream, const AscDump& ascDump);
 
     private:
