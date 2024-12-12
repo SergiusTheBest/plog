@@ -56,7 +56,7 @@ jobs:
           { os: windows-2019,   cxx: 'vs2019' },
           { os: windows-2022,   cxx: 'vs2022' },
           # macos: clang
-          { os: macos-12,       cxx: 'clang++' }
+          { os: macos-13,       cxx: 'clang++' }
         ]
 
     runs-on: ${{ matrix.os }}
