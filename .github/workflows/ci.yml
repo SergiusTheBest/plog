@@ -42,7 +42,7 @@ jobs:
           #   os           : GitHub Actions YAML workflow label.  See https://github.com/actions/virtual-environments#available-environments
 
           # linux: gcc
-          { os: ubuntu-22.04,   cxx: g++-12,      pkgs: '' },
+          { os: ubuntu-24.04,   cxx: g++-14,      pkgs: '' }, # (default on Noble 24.04)
           { os: ubuntu-22.04,   cxx: g++-11,      pkgs: '' }, # (default on Jammy 22.04)
           { os: ubuntu-22.04,   cxx: g++-9,       pkgs: '' }, # (default on Focal 20.04)
           { os: ubuntu-20.04,   cxx: g++-7,       pkgs: 'g++-7' }, # (default on Bionic 18.04)
