@@ -65,11 +65,6 @@
 #   include <sys/timeb.h>
 #   include <io.h>
 #   include <share.h>
-#   ifdef __FREERTOS__
-#      include <FreeRTOS.h>
-#      include <semphr.h>
-#      include <task.h>
-#   endif
 #else
 #   include <unistd.h>
 #   include <sys/time.h>
@@ -81,14 +76,15 @@
 #   if defined(_POSIX_THREADS)
 #       include <pthread.h>
 #   endif
-#   ifdef __FREERTOS__
-#      include <FreeRTOS.h>
-#      include <semphr.h>
-#      include <task.h>
-#   endif
 #   if PLOG_ENABLE_WCHAR_INPUT
 #       include <iconv.h>
 #   endif
+#endif
+
+#ifdef __FREERTOS__ // There is no standard way to know if the code is compiled for FreeRTOS. We expect __FREERTOS__ macro to be defined in such case.
+#   include <FreeRTOS.h>
+#   include <semphr.h>
+#   include <task.h>
 #endif
 
 #if PLOG_CHAR_IS_UTF8
@@ -181,7 +177,7 @@ namespace plog
         inline unsigned int gettid()
         {
 #if defined(__FREERTOS__) && defined(INCLUDE_xTaskGetCurrentTaskHandle)
-                return static_cast<unsigned int>(reinterpret_cast<uintptr_t>(xTaskGetCurrentTaskHandle()));
+            return static_cast<unsigned int>(reinterpret_cast<uintptr_t>(xTaskGetCurrentTaskHandle()));
 #elif defined(_WIN32)
             return GetCurrentThreadId();
 #elif defined(__linux__)
