@@ -5,7 +5,7 @@
 
 namespace plog
 {
-    template<bool useUtcTime>
+    template<bool useUtcTime, bool characterReturn>
     class TxtFormatterImpl
     {
     public:
@@ -25,12 +25,12 @@ namespace plog
             ss << std::setfill(PLOG_NSTR(' ')) << std::setw(5) << std::left << severityToString(record.getSeverity()) << PLOG_NSTR(" ");
             ss << PLOG_NSTR("[") << record.getTid() << PLOG_NSTR("] ");
             ss << PLOG_NSTR("[") << record.getFunc() << PLOG_NSTR("@") << record.getLine() << PLOG_NSTR("] ");
-            ss << record.getMessage() << PLOG_NSTR("\n");
+            ss << record.getMessage() << (characterReturn ? PLOG_NSTR("\r\n") : PLOG_NSTR("\n"));
 
             return ss.str();
         }
     };
 
-    class TxtFormatter : public TxtFormatterImpl<false> {};
-    class TxtFormatterUtcTime : public TxtFormatterImpl<true> {};
+    class TxtFormatter : public TxtFormatterImpl<false, false> {};
+    class TxtFormatterUtcTime : public TxtFormatterImpl<true, false> {};
 }
