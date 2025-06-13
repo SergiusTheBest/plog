@@ -4,64 +4,56 @@ Pretty powerful logging library in about 1000 lines of code [![CI](https://githu
 ![image](doc/color-console.png)
 
 - [Introduction](#introduction)
-  - [Hello log!](#hello-log)
-  - [Features](#features)
+    - [Hello log!](#hello-log)
+    - [Features](#features)
+- [Integration](#integration)
+    - [Copy the source](#copy-the-source)
+    - [Git submodule](#git-submodule)
+    - [CMake integration](#cmake-integration)
+        - [`add_subdirectory`](#add_subdirectory)
+        - [`FetchContent`](#fetchcontent)
+    - [Package managers](#package-managers)
 - [Usage](#usage)
-  - [Step 1: Adding includes](#step-1-adding-includes)
-  - [Step 2: Initialization](#step-2-initialization)
-  - [Step 3: Logging](#step-3-logging)
-    - [Basic logging macros](#basic-logging-macros)
-    - [Conditional logging macros](#conditional-logging-macros)
-    - [Logger severity checker](#logger-severity-checker)
+    - [Step 1: Adding includes](#step-1-adding-includes)
+    - [Step 2: Initialization](#step-2-initialization)
+    - [Step 3: Logging](#step-3-logging)
+        - [Basic logging macros](#basic-logging-macros)
+        - [Conditional logging macros](#conditional-logging-macros)
+        - [Logger severity checker](#logger-severity-checker)
 - [Advanced usage](#advanced-usage)
-  - [Changing severity at runtime](#changing-severity-at-runtime)
-  - [Custom initialization](#custom-initialization)
-  - [Multiple appenders](#multiple-appenders)
-  - [Multiple loggers](#multiple-loggers)
-  - [Share log instances across modules (exe, dll, so, dylib)](#share-log-instances-across-modules-exe-dll-so-dylib)
-  - [Chained loggers](#chained-loggers)
+    - [Changing severity at runtime](#changing-severity-at-runtime)
+    - [Custom initialization](#custom-initialization)
+    - [Multiple appenders](#multiple-appenders)
+    - [Multiple loggers](#multiple-loggers)
+    - [Share log instances across modules (exe, dll, so, dylib)](#share-log-instances-across-modules-exe-dll-so-dylib)
+    - [Chained loggers](#chained-loggers)
 - [Architecture](#architecture)
-  - [Overview](#overview)
-  - [Logger](#logger)
-  - [Record](#record)
-  - [Formatter](#formatter)
-    - [TxtFormatter](#txtformatter)
-    - [TxtFormatterUtcTime](#txtformatterutctime)
-    - [CsvFormatter](#csvformatter)
-    - [CsvFormatterUtcTime](#csvformatterutctime)
-    - [FuncMessageFormatter](#funcmessageformatter)
-    - [MessageOnlyFormatter](#messageonlyformatter)
-  - [Converter](#converter)
-    - [UTF8Converter](#utf8converter)
-    - [NativeEOLConverter](#nativeeolconverter)
-  - [Appender](#appender)
-    - [RollingFileAppender](#rollingfileappender)
-    - [ConsoleAppender](#consoleappender)
-    - [ColorConsoleAppender](#colorconsoleappender)
-    - [AndroidAppender](#androidappender)
-    - [EventLogAppender](#eventlogappender)
-    - [DebugOutputAppender](#debugoutputappender)
-    - [DynamicAppender](#dynamicappender)
+    - [Overview](#overview)
+    - [Logger](#logger)
+    - [Record](#record)
+    - [Formatter](#formatter)
+    - [Converter](#converter)
+    - [Appender](#appender)
 - [Miscellaneous notes](#miscellaneous-notes)
-  - [Lazy stream evaluation](#lazy-stream-evaluation)
-  - [Stream improvements over std::ostream](#stream-improvements-over-stdostream)
-  - [Automatic 'this' pointer capture](#automatic-this-pointer-capture)
-  - [Headers to include](#headers-to-include)
-  - [Unicode](#unicode)
-  - [Wide string support](#wide-string-support)
-  - [Performance](#performance)
-  - [Printf style formatting](#printf-style-formatting)
-  - [LOG_XXX macro name clashes](#log_xxx-macro-name-clashes)
-  - [Disable logging to reduce binary size](#disable-logging-to-reduce-binary-size)
+    - [Lazy stream evaluation](#lazy-stream-evaluation)
+    - [Stream improvements over std::ostream](#stream-improvements-over-stdostream)
+    - [Automatic 'this' pointer capture](#automatic-this-pointer-capture)
+    - [Headers to include](#headers-to-include)
+    - [Unicode](#unicode)
+    - [Wide string support](#wide-string-support)
+    - [Performance](#performance)
+    - [Printf style formatting](#printf-style-formatting)
+    - [LOG_XXX macro name clashes](#log_xxx-macro-name-clashes)
+    - [Disable logging to reduce binary size](#disable-logging-to-reduce-binary-size)
 - [Extending](#extending)
-  - [Custom data type](#custom-data-type)
-  - [Custom appender](#custom-appender)
-  - [Custom formatter](#custom-formatter)
-  - [Custom converter](#custom-converter)
+    - [Custom data type](#custom-data-type)
+    - [Custom appender](#custom-appender)
+    - [Custom formatter](#custom-formatter)
+    - [Custom converter](#custom-converter)
 - [Samples](#samples)
 - [References](#references)
-  - [Competing C++ log libraries](#competing-c-log-libraries)
-  - [Tools and useful info](#tools-and-useful-info)
+    - [Competing C++ log libraries](#competing-c-log-libraries)
+    - [Tools and useful info](#tools-and-useful-info)
 - [License](#license)
 - [Version history](#version-history)
 
@@ -123,6 +115,92 @@ And its output:
 - Can print buffers in HEX or ASCII
 - Can print `std` containers
 - Uses modern CMake
+
+# Integration
+
+Plog is a header-only C++ library, making it extremely easy to integrate into any project. You do not need to build or link any binaries — just add the headers to your include path. Here are several recommended ways to add Plog to your project:
+
+## Copy the source
+
+Simply copy the `plog` directory into your source tree. For example:
+
+```
+.                           <-- root of your solution
+├── README.md
+└── src
+    ├── 3rd-party           <-- directory for all 3rd-party dependencies
+    │   └── plog            <-- plog is copied there
+    │       ├── include     <-- add this to your include search path
+    │       │   └── plog
+    │       ├── LICENSE
+    │       └── README.md
+    ├── proj1
+    └── proj2
+```
+
+Then, add `src/3rd-party/plog/include` to your project's include directories.
+
+## Git submodule
+
+Add Plog as a git submodule to keep it up to date and track its version:
+
+```bash
+git submodule add https://github.com/SergiusTheBest/plog.git src/3rd-party/plog
+git commit -m "Add plog as a submodule"
+```
+
+This approach allows you to easily update Plog and manage its version. Remember to add `src/3rd-party/plog/include` to your include path.
+
+## CMake integration
+
+### `add_subdirectory`
+
+If you use CMake, you can add Plog directly to your build:
+
+```cmake
+add_subdirectory(3rd-party/plog) # Adds plog to your CMake project
+
+add_executable(myproj main.cpp)
+target_link_libraries(myproj plog::plog) # Links and sets include path
+```
+
+### `FetchContent`
+
+Alternatively, use CMake's FetchContent to automatically download Plog at configure time:
+
+```cmake
+include(FetchContent)
+
+FetchContent_Declare(
+    plog
+    GIT_REPOSITORY https://github.com/SergiusTheBest/plog
+    GIT_TAG        1.1.10
+    GIT_SHALLOW    true
+)
+FetchContent_MakeAvailable(plog) # Downloads and adds plog to your CMake project
+
+add_executable(myproj main.cpp)
+target_link_libraries(myproj plog::plog) # Links and sets include path
+```
+
+## Package managers
+
+Plog is also available via popular C++ package managers:
+
+- **[vcpkg](https://github.com/microsoft/vcpkg)**  
+    ```
+    vcpkg install plog
+    ```
+- **[Conan](https://conan.io/)**  
+    ```
+    conan install plog
+    ```
+- **[NuGet](https://www.nuget.org/packages/plog/)**  
+    ```
+    nuget install plog
+    ```
+
+Refer to each package manager's documentation for the latest installation instructions and version details.
 
 # Usage
 To start using plog you need to make 3 simple steps.
