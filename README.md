@@ -51,9 +51,6 @@ Pretty powerful logging library in about 1000 lines of code [![CI](https://githu
     - [Custom formatter](#custom-formatter)
     - [Custom converter](#custom-converter)
 - [Samples](#samples)
-- [References](#references)
-    - [Competing C++ log libraries](#competing-c-log-libraries)
-    - [Tools and useful info](#tools-and-useful-info)
 - [License](#license)
 - [Version history](#version-history)
 
@@ -101,7 +98,7 @@ And its output:
 - Easy to use
 - Headers only
 - No 3rd-party dependencies
-- Cross-platform: Windows, Linux, FreeBSD, macOS, Android, RTEMS (gcc, clang, msvc, mingw, mingw-w64, icc, c++builder)
+- Cross-platform: Windows, Linux, FreeBSD, macOS, Android, RTEMS, FreeRTOS (gcc, clang, msvc, mingw, mingw-w64, icc, c++builder)
 - Thread and type safe
 - Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter), [MessageOnly](#messageonlyformatter)
 - Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender), [EventLog](#eventlogappender), [DebugOutput](#debugoutputappender), [DynamicAppender](#dynamicappender)
@@ -900,6 +897,20 @@ Registry operations are system-wide and require administrator rights. Also they 
 DebugOutputAppender<Formatter>::DebugOutputAppender();
 ```
 
+### ArduinoAppender
+This appender outputs log data to an Arduino device, typically over a serial connection. As a template parameter, it accepts a [Formatter](#formatter).
+
+```cpp
+ArduinoAppender<Formatter>::ArduinoAppender(Stream& stream);
+```
+
+- `stream` - the Arduino `Stream` object (such as `Serial`) used for output.
+
+This appender is useful for embedded systems or IoT projects where you want to monitor logs directly from an Arduino board.
+
+*Refer to [Arduino sample](samples/Arduino) for a complete sample.*
+
+
 ### DynamicAppender
 [DynamicAppender](#dynamicappender) is a wrapper that can add/remove appenders dynamically (at any point of time) in a thread-safe manner.
 
@@ -1101,7 +1112,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |Sample|Description|
 |------|-----------|
 |[Android](samples/Android)|Shows how to use [AndroidAppender](#androidappender).|
-|[Arduino](samples/Arduino)|Arduino sample - not finished yet!|
+|[Arduino](samples/Arduino)|Arduino sample - shows how to use [ArduinoAppender](#arduinoappender)|
 |[AscDump](samples/AscDump)|Shows how to use `plog::ascdump` to dump binary buffers into ASCII.|
 |[Chained](samples/Chained)|Shows how to chain a logger in a shared library with the main logger (route messages).|
 |[ColorConsole](samples/ColorConsole)|Shows how to use [ColorConsoleAppender](#colorconsoleappender).|
@@ -1132,34 +1143,6 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[SkipNativeEOL](samples/SkipNativeEOL)|Shows how to skip [NativeEOLConverter](#nativeeolconverter).|
 |[UtcTime](samples/UtcTime)|Shows how to use UTC time instead of local time.|
 |[Utf8Everywhere](samples/Utf8Everywhere)|Demonstrates how to use http://utf8everywhere.org on Windows.|
-
-# References
-
-## Competing C++ log libraries
-
-- [Boost::Log](http://www.boost.org/doc/libs/release/libs/log/)
-- [EasyLogging++](https://github.com/easylogging/easyloggingpp)
-- [g2log](http://www.codeproject.com/Articles/288827/g-log-An-efficient-asynchronous-logger-using-Cplus)
-- [g3log](https://github.com/KjellKod/g3log)
-- [glog](https://code.google.com/p/google-glog/)
-- [Log4cplus](http://sourceforge.net/projects/log4cplus/)
-- [Log4cpp](http://log4cpp.sourceforge.net/)
-- [Log4cxx](http://logging.apache.org/log4cxx/)
-- [Pantheios](http://pantheios.sourceforge.net/)
-- [spdlog](https://github.com/gabime/spdlog/)
-- [reckless](https://github.com/mattiasflodin/reckless)
-- [loguru](https://github.com/emilk/loguru)
-- [blackhole](https://github.com/3Hren/blackhole)
-
-## Tools and useful info
-
-- [__if_exists Statement](https://msdn.microsoft.com/en-us/library/x7wy9xh3.aspx)
-- [Controlling Symbol Visibility](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html)
-- [Mermaid](https://mermaid-js.github.io/mermaid/)
-- [DocToc](https://github.com/thlorenz/doctoc)
-- [CMake](http://www.cmake.org)
-- [Compiler support for C++11](https://en.cppreference.com/w/cpp/compiler_support/11)
-- [Guide to predefined macros in C++ compilers (gcc, clang, msvc etc.)](https://blog.kowalczyk.info/article/j/guide-to-predefined-macros-in-c-compilers-gcc-clang-msvc-etc..html)
 
 # License
 This version of plog is licensed under the [MIT license](https://choosealicense.com/licenses/mit). You can freely use it in your commercial or opensource software.
