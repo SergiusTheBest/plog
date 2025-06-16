@@ -45,6 +45,7 @@ Pretty powerful logging library in about 1000 lines of code [![CI](https://githu
     - [Printf style formatting](#printf-style-formatting)
     - [LOG_XXX macro name clashes](#log_xxx-macro-name-clashes)
     - [Disable logging to reduce binary size](#disable-logging-to-reduce-binary-size)
+    - [PLOG_MESSAGE_PREFIX](#plog_message_prefix)
 - [Extending](#extending)
     - [Custom data type](#custom-data-type)
     - [Custom appender](#custom-appender)
@@ -1029,6 +1030,29 @@ PLOGI.printf(L"%d %S", 42, "test"); // wchar_t version
 ## Disable logging to reduce binary size
 Logging code makes binary files larger. If you use it for debugging you can remove all logging code from release builds by defining the macro `PLOG_DISABLE_LOGGING`.
 
+## PLOG_MESSAGE_PREFIX
+
+You can customize the prefix that appears before every log message by defining the `PLOG_MESSAGE_PREFIX` macro before including plog headers. This is useful for distinguishing log output from different modules or for adding custom tags to every log line.
+
+Example:
+
+```cpp
+#define PLOG_MESSAGE_PREFIX "[MyApp] "
+#include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
+
+int main() 
+{
+    plog::init(plog::debug, "log.txt");
+    PLOGD << "This is a debug message.";
+    return 0;
+}
+```
+
+This will produce log lines prefixed with `[MyApp] `.
+
+> **Note**: The macro must be defined before including any plog headers to take effect.
+
 # Extending
 Plog can be easily extended to support new:
 
@@ -1131,6 +1155,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[Hello](samples/Hello)|A minimal introduction sample, shows the basic 3 steps to start using plog.|
 |[HexDump](samples/HexDump)|Shows how to use `plog::hexdump` to dump binary buffers into hex.|
 |[Library](samples/Library)|Shows plog usage in static libraries.|
+|[MessagePrefix](samples/MessagePrefix)|Demonstrates usage of the `PLOG_MESSAGE_PREFIX` macro to add a custom prefix to every log message.|
 |[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
 |[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
 |[NotShared](samples/NotShared)|Shows how to make logger instances local across binary modules (this is the default behavior on Windows but not on other platforms, so be careful).|
