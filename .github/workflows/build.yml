@@ -1,0 +1,47 @@
+name: Reusable build workflow (hack to be able to skip container image)
+
+on:
+  workflow_call:
+    inputs:
+      image:
+        description: Image to use for the job. If image is 'null' it will execute directly on the runner.
+        type: string
+        required: false
+        default: null
+      os:
+        description: OS to use for the job.
+        type: string
+        required: false
+        default: ubuntu--latest
+      cxx:
+        description: CXX to use for the job.
+        type: string
+        required: false
+        default: null
+      generator:
+        description: Cmake generator to use for the job.
+        type: string
+        required: false
+        default: null
+jobs:
+  build:
+    runs-on: ${{ inputs.os }}
+    container:
+      image: ${{ inputs.image }}
+      options: --user root
+    env:
+      CXX: ${{ inputs.cxx }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1 # https://github.com/actions/checkout/issues/1590
+      with:
+        fetch-depth: 0
+
+    - name: Build
+      run: |
+        cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DPLOG_BUILD_TESTS=ON ${{ inputs.generator }} .
+        cmake --build build --parallel
+
+    - name: Test
+      run: cd build && ctest -V
