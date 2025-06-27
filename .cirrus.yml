@@ -2,8 +2,8 @@ task:
     name: FreeBSD
     freebsd_instance:
         matrix:
-            - image_family: freebsd-13-3
-            - image_family: freebsd-14-0
+            - image_family: freebsd-13-5
+            - image_family: freebsd-14-3
             - image_family: freebsd-15-0-snap
     matrix:
         - BUILD_TYPE: Release
