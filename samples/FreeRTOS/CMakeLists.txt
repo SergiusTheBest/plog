@@ -1,4 +1,13 @@
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    if(POLICY CMP0135) # Controls timestamps of the extracted contents (DOWNLOAD_EXTRACT_TIMESTAMP)
+        cmake_policy(SET CMP0135 NEW)
+    endif()
+
+    # This sample requires GCC 6.0 or later
+    if(NOT CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
+        return()
+    endif()
+
     include(FetchContent)
 
     # Select FreeRTOS port
@@ -15,7 +24,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         freertos_kernel
         URL                        https://github.com/FreeRTOS/FreeRTOS-Kernel/archive/refs/tags/V11.1.0.tar.gz
         URL_HASH                   SHA256=0e21928b3bcc4f9bcaf7333fb1c8c0299d97e2ec9e13e3faa2c5a7ac8a3bc573
-        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
 
     FetchContent_MakeAvailable(freertos_kernel)
