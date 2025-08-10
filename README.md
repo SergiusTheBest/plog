@@ -16,6 +16,9 @@ Pretty powerful logging library in about 1000 lines of code [![CI](https://githu
 - [Usage](#usage)
     - [Step 1: Adding includes](#step-1-adding-includes)
     - [Step 2: Initialization](#step-2-initialization)
+        - [RollingFileInitializer](#rollingfileinitializer)
+        - [ConsoleInitializer](#consoleinitializer)
+        - [Manual initialization (Init.h)](#manual-initialization-inith)
     - [Step 3: Logging](#step-3-logging)
         - [Basic logging macros](#basic-logging-macros)
         - [Conditional logging macros](#conditional-logging-macros)
@@ -32,8 +35,24 @@ Pretty powerful logging library in about 1000 lines of code [![CI](https://githu
     - [Logger](#logger)
     - [Record](#record)
     - [Formatter](#formatter)
+        - [TxtFormatter](#txtformatter)
+        - [TxtFormatterUtcTime](#txtformatterutctime)
+        - [CsvFormatter](#csvformatter)
+        - [CsvFormatterUtcTime](#csvformatterutctime)
+        - [FuncMessageFormatter](#funcmessageformatter)
+        - [MessageOnlyFormatter](#messageonlyformatter)
     - [Converter](#converter)
+        - [UTF8Converter](#utf8converter)
+        - [NativeEOLConverter](#nativeeolconverter)
     - [Appender](#appender)
+        - [RollingFileAppender](#rollingfileappender)
+        - [ConsoleAppender](#consoleappender)
+        - [ColorConsoleAppender](#colorconsoleappender)
+        - [AndroidAppender](#androidappender)
+        - [EventLogAppender](#eventlogappender)
+        - [DebugOutputAppender](#debugoutputappender)
+        - [ArduinoAppender](#arduinoappender)
+        - [DynamicAppender](#dynamicappender)
 - [Miscellaneous notes](#miscellaneous-notes)
     - [Lazy stream evaluation](#lazy-stream-evaluation)
     - [Stream improvements over std::ostream](#stream-improvements-over-stdostream)
@@ -210,13 +229,15 @@ At first your project needs to know about plog. For that you have to:
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
 ## Step 2: Initialization
-The next step is to initialize the [Logger](#logger). This is done by the following `plog::init` function:
+To use plog, you must initialize the logger by including the appropriate header and calling the corresponding `plog::init` overload: 
 
 ```cpp
-Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0);
+Logger& init(Severity maxSeverity, ...
 ```
 
-`maxSeverity` is the logger severity upper limit. All log messages have its own severity and if it is higher than the limit those messages are dropped. Plog defines the following severity levels:
+`maxSeverity` is the logger severity upper limit. Log messages with a severity value higher (less severe) than the limit are dropped.
+
+Plog defines the following severity levels:
 
 ```cpp
 enum Severity
@@ -233,25 +254,69 @@ enum Severity
 
 > **Note** Messages with severity level `none` will always be printed.
 
-The log format is determined automatically by `fileName` file extension:
+Plog provides several convenient initializer functions to simplify logger setup for common use cases. These initializers configure the logger with typical appenders and formatters, so you can get started quickly without manually specifying all template parameters.
 
-- .csv => [CSV format](#csvformatter)
-- anything else => [TXT format](#txtformatter)
-
-The rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters:
-
-- `maxFileSize` - the maximum log file size in bytes
-- `maxFiles` - a number of log files to keep
-
-If one of them is zero then log rolling is disabled.
-
-Sample:
+### RollingFileInitializer
+Use this when you want to log to a file with automatic rolling (rotation) based on size and count. Add `#include <plog/Initializers/RollingFileInitializer.h>` and call `init`:
 
 ```cpp
+Logger& init(Severity maxSeverity, const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0);
+```
+
+- The log format is determined by the file extension:
+    - `.csv` → [CSV format](#csvformatter)
+    - anything else → [TXT format](#txtformatter)
+- You can override the format by specifying a formatter as a template parameter, e.g. `plog::init<plog::CsvFormatter>(...)`.
+- Rolling is controlled by `maxFileSize` (bytes) and `maxFiles` (number of files to keep). If either is zero, rolling is disabled.
+
+Example:
+
+```cpp
+#include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
+
 plog::init(plog::warning, "c:\\logs\\log.csv", 1000000, 5);
 ```
 
 Here the logger is initialized to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1'000'000 bytes and 5 log files are kept.
+
+### ConsoleInitializer
+Use this to log to the console (stdout or stderr) with color output. Add `#include <plog/Initializers/ConsoleInitializer.h>` and call `init`:
+
+```cpp
+Logger& init(Severity maxSeverity, OutputStream outputStream)
+```
+
+- By default it uses [TXT format](#txtformatter) but it can be overriden by specifying a formatter as a template parameter, e.g. `plog::init<plog::CsvFormatter>(...)`.
+- `outputStream` chooses the output stream: `plog::streamStdOut` or `plog::streamStdErr`.
+
+Example:
+
+```cpp
+#include <plog/Log.h>
+#include <plog/Initializers/ConsoleInitializer.h>
+
+plog::init<plog::TxtFormatter>(plog::error, plog::streamStdErr); // logs error and above to stderr
+```
+
+### Manual initialization (Init.h)
+For advanced or custom setups add `#include <plog/Init.h>` and call `init`:
+
+```cpp
+Logger& init(Severity maxSeverity = none, IAppender* appender = NULL);
+```
+
+You must construct and manage the appender yourself.
+
+Example:
+
+```cpp
+#include <plog/Log.h>
+#include <plog/Init.h>
+
+static plog::ConsoleAppender<plog::TxtFormatter> appender;
+plog::init(plog::info, &appender); // logs info and above to the specified appender
+```
 
 > **Note** See [Custom initialization](#custom-initialization) for advanced usage.
 
