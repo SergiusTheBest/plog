@@ -1,10 +1,8 @@
 if(NOT CMAKE_VERSION VERSION_LESS 3.3.0)
     if(${CMAKE_VERSION} VERSION_LESS 3.27.0)
         cmake_minimum_required(VERSION 3.3)
-    elseif(${CMAKE_VERSION} VERSION_LESS 3.31.0)
-        cmake_minimum_required(VERSION 3.6)
     else()
-        cmake_minimum_required(VERSION 3.10)
+        cmake_minimum_required(VERSION 3.27)
     endif()
 
     # Unfortunately cxx_std_17 in CMAKE_CXX_COMPILE_FEATURES is not reliable, so check include files

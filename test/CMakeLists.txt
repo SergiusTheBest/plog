@@ -1,9 +1,7 @@
 if(${CMAKE_VERSION} VERSION_LESS 3.27.0)
     cmake_minimum_required(VERSION 3.1)
-elseif(${CMAKE_VERSION} VERSION_LESS 3.31.0)
-    cmake_minimum_required(VERSION 3.6)
 else()
-    cmake_minimum_required(VERSION 3.10)
+    cmake_minimum_required(VERSION 3.27)
 endif()
 
 project(PlogTest CXX)
@@ -103,12 +101,8 @@ plog_add_test_wchar(${PROJECT_NAME}_wchar)
 
 if(CMAKE_VERSION VERSION_LESS 3.8.0)
     return()
-endif()
-
-if(${CMAKE_VERSION} VERSION_LESS 3.31.0)
+elseif(${CMAKE_VERSION} VERSION_LESS 3.27.0)
     cmake_policy(VERSION 3.8)
-else()
-    cmake_policy(VERSION 3.10)
 endif()
 
 set(PLOG_CXX_STANDARDS_LIST LIST cxx_std_11 cxx_std_14 cxx_std_17 cxx_std_20 cxx_std_23)
