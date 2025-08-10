@@ -1239,6 +1239,15 @@ This version of plog is licensed under the [MIT license](https://choosealicense.
 
 # Version history
 
+## Version 1.1.11 (11 Aug 2025)
+
+- New: Add support for FreeRTOS (#298)
+- New: Add PLOG_MESSAGE_PREFIX (#288)
+- Enh: Add more documentation (#287)
+- Fix: Minimum required cmake version as of cmake 3.31 and 4.0 (#296, #268, #300)
+- Fix: `std::filesystem::path` issue on MSVC, add more tests (#273)
+- Fix: ASAN warning in HexDump sample (#305, #303)
+
 ## Version 1.1.10 (20 Aug 2023)
 - New: Add support for UTF-8 char encoding on Windows (#76, #69, #238, #239)\
  *This allows to use [Utf8Everywhere](http://utf8everywhere.org) approach*
