@@ -1,10 +1,10 @@
 if(${CMAKE_VERSION} VERSION_LESS 3.27.0)
     cmake_minimum_required(VERSION 3.0)
 else()
-    cmake_minimum_required(VERSION 3.6)
+    cmake_minimum_required(VERSION 3.27)
 endif()
 
-project(plog VERSION 1.1.10 LANGUAGES CXX)
+project(plog VERSION 1.1.11 LANGUAGES CXX)
 
 # check if building as a stand-alone project
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

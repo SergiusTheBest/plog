@@ -39,6 +39,6 @@ int main()
 
     void* p = malloc(100);
     PLOGI << "p: " << plog::hexdump(p, 100);
-
+    free(p);
     return 0;
 }

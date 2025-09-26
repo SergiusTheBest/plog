@@ -4,64 +4,73 @@ Pretty powerful logging library in about 1000 lines of code [![CI](https://githu
 ![image](doc/color-console.png)
 
 - [Introduction](#introduction)
-  - [Hello log!](#hello-log)
-  - [Features](#features)
+    - [Hello log!](#hello-log)
+    - [Features](#features)
+- [Integration](#integration)
+    - [Copy the source](#copy-the-source)
+    - [Git submodule](#git-submodule)
+    - [CMake integration](#cmake-integration)
+        - [`add_subdirectory`](#add_subdirectory)
+        - [`FetchContent`](#fetchcontent)
+    - [Package managers](#package-managers)
 - [Usage](#usage)
-  - [Step 1: Adding includes](#step-1-adding-includes)
-  - [Step 2: Initialization](#step-2-initialization)
-  - [Step 3: Logging](#step-3-logging)
-    - [Basic logging macros](#basic-logging-macros)
-    - [Conditional logging macros](#conditional-logging-macros)
-    - [Logger severity checker](#logger-severity-checker)
+    - [Step 1: Adding includes](#step-1-adding-includes)
+    - [Step 2: Initialization](#step-2-initialization)
+        - [RollingFileInitializer](#rollingfileinitializer)
+        - [ConsoleInitializer](#consoleinitializer)
+        - [Manual initialization (Init.h)](#manual-initialization-inith)
+    - [Step 3: Logging](#step-3-logging)
+        - [Basic logging macros](#basic-logging-macros)
+        - [Conditional logging macros](#conditional-logging-macros)
+        - [Logger severity checker](#logger-severity-checker)
 - [Advanced usage](#advanced-usage)
-  - [Changing severity at runtime](#changing-severity-at-runtime)
-  - [Custom initialization](#custom-initialization)
-  - [Multiple appenders](#multiple-appenders)
-  - [Multiple loggers](#multiple-loggers)
-  - [Share log instances across modules (exe, dll, so, dylib)](#share-log-instances-across-modules-exe-dll-so-dylib)
-  - [Chained loggers](#chained-loggers)
+    - [Changing severity at runtime](#changing-severity-at-runtime)
+    - [Custom initialization](#custom-initialization)
+    - [Multiple appenders](#multiple-appenders)
+    - [Multiple loggers](#multiple-loggers)
+    - [Share log instances across modules (exe, dll, so, dylib)](#share-log-instances-across-modules-exe-dll-so-dylib)
+    - [Chained loggers](#chained-loggers)
 - [Architecture](#architecture)
-  - [Overview](#overview)
-  - [Logger](#logger)
-  - [Record](#record)
-  - [Formatter](#formatter)
-    - [TxtFormatter](#txtformatter)
-    - [TxtFormatterUtcTime](#txtformatterutctime)
-    - [CsvFormatter](#csvformatter)
-    - [CsvFormatterUtcTime](#csvformatterutctime)
-    - [FuncMessageFormatter](#funcmessageformatter)
-    - [MessageOnlyFormatter](#messageonlyformatter)
-  - [Converter](#converter)
-    - [UTF8Converter](#utf8converter)
-    - [NativeEOLConverter](#nativeeolconverter)
-  - [Appender](#appender)
-    - [RollingFileAppender](#rollingfileappender)
-    - [ConsoleAppender](#consoleappender)
-    - [ColorConsoleAppender](#colorconsoleappender)
-    - [AndroidAppender](#androidappender)
-    - [EventLogAppender](#eventlogappender)
-    - [DebugOutputAppender](#debugoutputappender)
-    - [DynamicAppender](#dynamicappender)
+    - [Overview](#overview)
+    - [Logger](#logger)
+    - [Record](#record)
+    - [Formatter](#formatter)
+        - [TxtFormatter](#txtformatter)
+        - [TxtFormatterUtcTime](#txtformatterutctime)
+        - [CsvFormatter](#csvformatter)
+        - [CsvFormatterUtcTime](#csvformatterutctime)
+        - [FuncMessageFormatter](#funcmessageformatter)
+        - [MessageOnlyFormatter](#messageonlyformatter)
+    - [Converter](#converter)
+        - [UTF8Converter](#utf8converter)
+        - [NativeEOLConverter](#nativeeolconverter)
+    - [Appender](#appender)
+        - [RollingFileAppender](#rollingfileappender)
+        - [ConsoleAppender](#consoleappender)
+        - [ColorConsoleAppender](#colorconsoleappender)
+        - [AndroidAppender](#androidappender)
+        - [EventLogAppender](#eventlogappender)
+        - [DebugOutputAppender](#debugoutputappender)
+        - [ArduinoAppender](#arduinoappender)
+        - [DynamicAppender](#dynamicappender)
 - [Miscellaneous notes](#miscellaneous-notes)
-  - [Lazy stream evaluation](#lazy-stream-evaluation)
-  - [Stream improvements over std::ostream](#stream-improvements-over-stdostream)
-  - [Automatic 'this' pointer capture](#automatic-this-pointer-capture)
-  - [Headers to include](#headers-to-include)
-  - [Unicode](#unicode)
-  - [Wide string support](#wide-string-support)
-  - [Performance](#performance)
-  - [Printf style formatting](#printf-style-formatting)
-  - [LOG_XXX macro name clashes](#log_xxx-macro-name-clashes)
-  - [Disable logging to reduce binary size](#disable-logging-to-reduce-binary-size)
+    - [Lazy stream evaluation](#lazy-stream-evaluation)
+    - [Stream improvements over std::ostream](#stream-improvements-over-stdostream)
+    - [Automatic 'this' pointer capture](#automatic-this-pointer-capture)
+    - [Headers to include](#headers-to-include)
+    - [Unicode](#unicode)
+    - [Wide string support](#wide-string-support)
+    - [Performance](#performance)
+    - [Printf style formatting](#printf-style-formatting)
+    - [LOG_XXX macro name clashes](#log_xxx-macro-name-clashes)
+    - [Disable logging to reduce binary size](#disable-logging-to-reduce-binary-size)
+    - [PLOG_MESSAGE_PREFIX](#plog_message_prefix)
 - [Extending](#extending)
-  - [Custom data type](#custom-data-type)
-  - [Custom appender](#custom-appender)
-  - [Custom formatter](#custom-formatter)
-  - [Custom converter](#custom-converter)
+    - [Custom data type](#custom-data-type)
+    - [Custom appender](#custom-appender)
+    - [Custom formatter](#custom-formatter)
+    - [Custom converter](#custom-converter)
 - [Samples](#samples)
-- [References](#references)
-  - [Competing C++ log libraries](#competing-c-log-libraries)
-  - [Tools and useful info](#tools-and-useful-info)
 - [License](#license)
 - [Version history](#version-history)
 
@@ -109,7 +118,7 @@ And its output:
 - Easy to use
 - Headers only
 - No 3rd-party dependencies
-- Cross-platform: Windows, Linux, FreeBSD, macOS, Android, RTEMS (gcc, clang, msvc, mingw, mingw-w64, icc, c++builder)
+- Cross-platform: Windows, Linux, FreeBSD, macOS, Android, RTEMS, FreeRTOS (gcc, clang, msvc, mingw, mingw-w64, icc, c++builder)
 - Thread and type safe
 - Formatters: [TXT](#txtformatter), [CSV](#csvformatter), [FuncMessage](#funcmessageformatter), [MessageOnly](#messageonlyformatter)
 - Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender), [EventLog](#eventlogappender), [DebugOutput](#debugoutputappender), [DynamicAppender](#dynamicappender)
@@ -124,6 +133,92 @@ And its output:
 - Can print `std` containers
 - Uses modern CMake
 
+# Integration
+
+Plog is a header-only C++ library, making it extremely easy to integrate into any project. You do not need to build or link any binaries — just add the headers to your include path. Here are several recommended ways to add Plog to your project:
+
+## Copy the source
+
+Simply copy the `plog` directory into your source tree. For example:
+
+```
+.                           <-- root of your solution
+├── README.md
+└── src
+    ├── 3rd-party           <-- directory for all 3rd-party dependencies
+    │   └── plog            <-- plog is copied there
+    │       ├── include     <-- add this to your include search path
+    │       │   └── plog
+    │       ├── LICENSE
+    │       └── README.md
+    ├── proj1
+    └── proj2
+```
+
+Then, add `src/3rd-party/plog/include` to your project's include directories.
+
+## Git submodule
+
+Add Plog as a git submodule to keep it up to date and track its version:
+
+```bash
+git submodule add https://github.com/SergiusTheBest/plog.git src/3rd-party/plog
+git commit -m "Add plog as a submodule"
+```
+
+This approach allows you to easily update Plog and manage its version. Remember to add `src/3rd-party/plog/include` to your include path.
+
+## CMake integration
+
+### `add_subdirectory`
+
+If you use CMake, you can add Plog directly to your build:
+
+```cmake
+add_subdirectory(3rd-party/plog) # Adds plog to your CMake project
+
+add_executable(myproj main.cpp)
+target_link_libraries(myproj plog::plog) # Links and sets include path
+```
+
+### `FetchContent`
+
+Alternatively, use CMake's FetchContent to automatically download Plog at configure time:
+
+```cmake
+include(FetchContent)
+
+FetchContent_Declare(
+    plog
+    GIT_REPOSITORY https://github.com/SergiusTheBest/plog
+    GIT_TAG        1.1.10
+    GIT_SHALLOW    true
+)
+FetchContent_MakeAvailable(plog) # Downloads and adds plog to your CMake project
+
+add_executable(myproj main.cpp)
+target_link_libraries(myproj plog::plog) # Links and sets include path
+```
+
+## Package managers
+
+Plog is also available via popular C++ package managers:
+
+- **[vcpkg](https://github.com/microsoft/vcpkg)**  
+    ```
+    vcpkg install plog
+    ```
+- **[Conan](https://conan.io/)**  
+    ```
+    conan install plog
+    ```
+- **[NuGet](https://www.nuget.org/packages/plog/)**  
+    ```
+    nuget install plog
+    ```
+
+Refer to each package manager's documentation for the latest installation instructions and version details.
+
 # Usage
 To start using plog you need to make 3 simple steps.
 
@@ -134,13 +229,15 @@ At first your project needs to know about plog. For that you have to:
 2. Add `#include <plog/Log.h>` into your cpp/h files (if you have precompiled headers it is a good place to add this include there)
 
 ## Step 2: Initialization
-The next step is to initialize the [Logger](#logger). This is done by the following `plog::init` function:
+To use plog, you must initialize the logger by including the appropriate header and calling the corresponding `plog::init` overload: 
 
 ```cpp
-Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0);
+Logger& init(Severity maxSeverity, ...
 ```
 
-`maxSeverity` is the logger severity upper limit. All log messages have its own severity and if it is higher than the limit those messages are dropped. Plog defines the following severity levels:
+`maxSeverity` is the logger severity upper limit. Log messages with a severity value higher (less severe) than the limit are dropped.
+
+Plog defines the following severity levels:
 
 ```cpp
 enum Severity
@@ -157,25 +254,69 @@ enum Severity
 
 > **Note** Messages with severity level `none` will always be printed.
 
-The log format is determined automatically by `fileName` file extension:
+Plog provides several convenient initializer functions to simplify logger setup for common use cases. These initializers configure the logger with typical appenders and formatters, so you can get started quickly without manually specifying all template parameters.
 
-- .csv => [CSV format](#csvformatter)
-- anything else => [TXT format](#txtformatter)
-
-The rolling behavior is controlled by `maxFileSize` and `maxFiles` parameters:
-
-- `maxFileSize` - the maximum log file size in bytes
-- `maxFiles` - a number of log files to keep
-
-If one of them is zero then log rolling is disabled.
-
-Sample:
+### RollingFileInitializer
+Use this when you want to log to a file with automatic rolling (rotation) based on size and count. Add `#include <plog/Initializers/RollingFileInitializer.h>` and call `init`:
 
 ```cpp
+Logger& init(Severity maxSeverity, const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0);
+```
+
+- The log format is determined by the file extension:
+    - `.csv` → [CSV format](#csvformatter)
+    - anything else → [TXT format](#txtformatter)
+- You can override the format by specifying a formatter as a template parameter, e.g. `plog::init<plog::CsvFormatter>(...)`.
+- Rolling is controlled by `maxFileSize` (bytes) and `maxFiles` (number of files to keep). If either is zero, rolling is disabled.
+
+Example:
+
+```cpp
+#include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
+
 plog::init(plog::warning, "c:\\logs\\log.csv", 1000000, 5);
 ```
 
 Here the logger is initialized to write all messages with up to warning severity to a file in csv format. Maximum log file size is set to 1'000'000 bytes and 5 log files are kept.
+
+### ConsoleInitializer
+Use this to log to the console (stdout or stderr) with color output. Add `#include <plog/Initializers/ConsoleInitializer.h>` and call `init`:
+
+```cpp
+Logger& init(Severity maxSeverity, OutputStream outputStream)
+```
+
+- By default it uses [TXT format](#txtformatter) but it can be overriden by specifying a formatter as a template parameter, e.g. `plog::init<plog::CsvFormatter>(...)`.
+- `outputStream` chooses the output stream: `plog::streamStdOut` or `plog::streamStdErr`.
+
+Example:
+
+```cpp
+#include <plog/Log.h>
+#include <plog/Initializers/ConsoleInitializer.h>
+
+plog::init<plog::TxtFormatter>(plog::error, plog::streamStdErr); // logs error and above to stderr
+```
+
+### Manual initialization (Init.h)
+For advanced or custom setups add `#include <plog/Init.h>` and call `init`:
+
+```cpp
+Logger& init(Severity maxSeverity = none, IAppender* appender = NULL);
+```
+
+You must construct and manage the appender yourself.
+
+Example:
+
+```cpp
+#include <plog/Log.h>
+#include <plog/Init.h>
+
+static plog::ConsoleAppender<plog::TxtFormatter> appender;
+plog::init(plog::info, &appender); // logs info and above to the specified appender
+```
 
 > **Note** See [Custom initialization](#custom-initialization) for advanced usage.
 
@@ -822,6 +963,20 @@ Registry operations are system-wide and require administrator rights. Also they 
 DebugOutputAppender<Formatter>::DebugOutputAppender();
 ```
 
+### ArduinoAppender
+This appender outputs log data to an Arduino device, typically over a serial connection. As a template parameter, it accepts a [Formatter](#formatter).
+
+```cpp
+ArduinoAppender<Formatter>::ArduinoAppender(Stream& stream);
+```
+
+- `stream` - the Arduino `Stream` object (such as `Serial`) used for output.
+
+This appender is useful for embedded systems or IoT projects where you want to monitor logs directly from an Arduino board.
+
+*Refer to [Arduino sample](samples/Arduino) for a complete sample.*
+
+
 ### DynamicAppender
 [DynamicAppender](#dynamicappender) is a wrapper that can add/remove appenders dynamically (at any point of time) in a thread-safe manner.
 
@@ -940,6 +1095,29 @@ PLOGI.printf(L"%d %S", 42, "test"); // wchar_t version
 ## Disable logging to reduce binary size
 Logging code makes binary files larger. If you use it for debugging you can remove all logging code from release builds by defining the macro `PLOG_DISABLE_LOGGING`.
 
+## PLOG_MESSAGE_PREFIX
+
+You can customize the prefix that appears before every log message by defining the `PLOG_MESSAGE_PREFIX` macro before including plog headers. This is useful for distinguishing log output from different modules or for adding custom tags to every log line.
+
+Example:
+
+```cpp
+#define PLOG_MESSAGE_PREFIX "[MyApp] "
+#include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
+
+int main() 
+{
+    plog::init(plog::debug, "log.txt");
+    PLOGD << "This is a debug message.";
+    return 0;
+}
+```
+
+This will produce log lines prefixed with `[MyApp] `.
+
+> **Note**: The macro must be defined before including any plog headers to take effect.
+
 # Extending
 Plog can be easily extended to support new:
 
@@ -1023,7 +1201,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |Sample|Description|
 |------|-----------|
 |[Android](samples/Android)|Shows how to use [AndroidAppender](#androidappender).|
-|[Arduino](samples/Arduino)|Arduino sample - not finished yet!|
+|[Arduino](samples/Arduino)|Arduino sample - shows how to use [ArduinoAppender](#arduinoappender)|
 |[AscDump](samples/AscDump)|Shows how to use `plog::ascdump` to dump binary buffers into ASCII.|
 |[Chained](samples/Chained)|Shows how to chain a logger in a shared library with the main logger (route messages).|
 |[ColorConsole](samples/ColorConsole)|Shows how to use [ColorConsoleAppender](#colorconsoleappender).|
@@ -1042,6 +1220,7 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[Hello](samples/Hello)|A minimal introduction sample, shows the basic 3 steps to start using plog.|
 |[HexDump](samples/HexDump)|Shows how to use `plog::hexdump` to dump binary buffers into hex.|
 |[Library](samples/Library)|Shows plog usage in static libraries.|
+|[MessagePrefix](samples/MessagePrefix)|Demonstrates usage of the `PLOG_MESSAGE_PREFIX` macro to add a custom prefix to every log message.|
 |[MultiAppender](samples/MultiAppender)|Shows how to use multiple appenders with the same logger.|
 |[MultiInstance](samples/MultiInstance)|Shows how to use multiple logger instances, each instance has its own independent configuration.|
 |[NotShared](samples/NotShared)|Shows how to make logger instances local across binary modules (this is the default behavior on Windows but not on other platforms, so be careful).|
@@ -1055,38 +1234,19 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[UtcTime](samples/UtcTime)|Shows how to use UTC time instead of local time.|
 |[Utf8Everywhere](samples/Utf8Everywhere)|Demonstrates how to use http://utf8everywhere.org on Windows.|
 
-# References
-
-## Competing C++ log libraries
-
-- [Boost::Log](http://www.boost.org/doc/libs/release/libs/log/)
-- [EasyLogging++](https://github.com/easylogging/easyloggingpp)
-- [g2log](http://www.codeproject.com/Articles/288827/g-log-An-efficient-asynchronous-logger-using-Cplus)
-- [g3log](https://github.com/KjellKod/g3log)
-- [glog](https://code.google.com/p/google-glog/)
-- [Log4cplus](http://sourceforge.net/projects/log4cplus/)
-- [Log4cpp](http://log4cpp.sourceforge.net/)
-- [Log4cxx](http://logging.apache.org/log4cxx/)
-- [Pantheios](http://pantheios.sourceforge.net/)
-- [spdlog](https://github.com/gabime/spdlog/)
-- [reckless](https://github.com/mattiasflodin/reckless)
-- [loguru](https://github.com/emilk/loguru)
-- [blackhole](https://github.com/3Hren/blackhole)
-
-## Tools and useful info
-
-- [__if_exists Statement](https://msdn.microsoft.com/en-us/library/x7wy9xh3.aspx)
-- [Controlling Symbol Visibility](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html)
-- [Mermaid](https://mermaid-js.github.io/mermaid/)
-- [DocToc](https://github.com/thlorenz/doctoc)
-- [CMake](http://www.cmake.org)
-- [Compiler support for C++11](https://en.cppreference.com/w/cpp/compiler_support/11)
-- [Guide to predefined macros in C++ compilers (gcc, clang, msvc etc.)](https://blog.kowalczyk.info/article/j/guide-to-predefined-macros-in-c-compilers-gcc-clang-msvc-etc..html)
-
 # License
 This version of plog is licensed under the [MIT license](https://choosealicense.com/licenses/mit). You can freely use it in your commercial or opensource software.
 
 # Version history
+
+## Version 1.1.11 (11 Aug 2025)
+
+- New: Add support for FreeRTOS (#298)
+- New: Add PLOG_MESSAGE_PREFIX (#288)
+- Enh: Add more documentation (#287)
+- Fix: Minimum required cmake version as of cmake 3.31 and 4.0 (#296, #268, #300)
+- Fix: `std::filesystem::path` issue on MSVC, add more tests (#273)
+- Fix: ASAN warning in HexDump sample (#305, #303)
 
 ## Version 1.1.10 (20 Aug 2023)
 - New: Add support for UTF-8 char encoding on Windows (#76, #69, #238, #239)\

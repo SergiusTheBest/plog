@@ -1,7 +1,7 @@
 if(${CMAKE_VERSION} VERSION_LESS 3.27.0)
     cmake_minimum_required(VERSION 3.1)
 else()
-    cmake_minimum_required(VERSION 3.6)
+    cmake_minimum_required(VERSION 3.27)
 endif()
 
 project(PlogTest CXX)
@@ -16,6 +16,7 @@ set(SOURCES
     Conditional.cpp
     TestAppender.h
     Main.cpp
+    MessagePrefix.cpp
     NullCharPointer.cpp
     Path.cpp
     Printf.cpp
@@ -100,9 +101,9 @@ plog_add_test_wchar(${PROJECT_NAME}_wchar)
 
 if(CMAKE_VERSION VERSION_LESS 3.8.0)
     return()
+elseif(${CMAKE_VERSION} VERSION_LESS 3.27.0)
+    cmake_policy(VERSION 3.8)
 endif()
-
-cmake_policy(VERSION 3.8)
 
 set(PLOG_CXX_STANDARDS_LIST LIST cxx_std_11 cxx_std_14 cxx_std_17 cxx_std_20 cxx_std_23)
 

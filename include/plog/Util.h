@@ -85,6 +85,12 @@
 #   endif
 #endif
 
+#ifdef __FREERTOS__ // There is no standard way to know if the code is compiled for FreeRTOS. We expect __FREERTOS__ macro to be defined in such case.
+#   include <FreeRTOS.h>
+#   include <semphr.h>
+#   include <task.h>
+#endif
+
 #if PLOG_CHAR_IS_UTF8
 #   define PLOG_NSTR(x)    x
 #else
@@ -199,7 +205,9 @@ namespace plog
 
         inline unsigned int gettid()
         {
-#if defined(_WIN32) && !defined(WINCE)
+#if defined(__FREERTOS__) && defined(INCLUDE_xTaskGetCurrentTaskHandle)
+            return static_cast<unsigned int>(reinterpret_cast<uintptr_t>(xTaskGetCurrentTaskHandle()));
+#elif defined(_WIN32) && !defined(WINCE)
             return GetCurrentThreadId();
 #elif defined(_WIN32) && defined(WINCE)
             return ::GetCurrentThreadId();
@@ -559,7 +567,10 @@ namespace plog
         public:
             Mutex()
             {
-#ifdef _WIN32
+#ifdef __FREERTOS__
+                m_sync = xSemaphoreCreateBinary();
+                xSemaphoreGive(m_sync);
+#elif defined(_WIN32)
                 InitializeCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_create(0, 1,
@@ -573,7 +584,9 @@ namespace plog
 
             ~Mutex()
             {
-#ifdef _WIN32
+#ifdef __FREERTOS__
+                vSemaphoreDelete(m_sync);
+#elif defined(_WIN32)
                 DeleteCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_delete(m_sync);
@@ -587,7 +600,9 @@ namespace plog
         private:
             void lock()
             {
-#ifdef _WIN32
+#ifdef __FREERTOS__
+                xSemaphoreTake(m_sync, portMAX_DELAY);
+#elif defined(_WIN32)
                 EnterCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_obtain(m_sync, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
@@ -598,7 +613,9 @@ namespace plog
 
             void unlock()
             {
-#ifdef _WIN32
+#ifdef __FREERTOS__
+                xSemaphoreGive(m_sync);
+#elif defined(_WIN32)
                 LeaveCriticalSection(&m_sync);
 #elif defined(__rtems__)
                 rtems_semaphore_release(m_sync);
@@ -608,7 +625,9 @@ namespace plog
             }
 
         private:
-#ifdef _WIN32
+#ifdef __FREERTOS__
+            SemaphoreHandle_t m_sync;
+#elif defined(_WIN32)
             CRITICAL_SECTION m_sync;
 #elif defined(__rtems__)
             rtems_id m_sync;
