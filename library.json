@@ -50,6 +50,7 @@
         ]
     },
     "build": {
+        "srcDir": "include",
         "includeDir": "include"
     }
 }
