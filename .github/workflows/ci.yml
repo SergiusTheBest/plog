@@ -38,8 +38,8 @@ jobs:
           # linux: gcc
           { os: ubuntu-24.04,   cxx: g++-14 }, # (default on Noble 24.04)
           { os: ubuntu-22.04,   cxx: g++-11 }, # (default on Jammy 22.04)
-          { os: ubuntu-22.04,   cxx: g++-9  }, # (default on Focal 20.04)
-          { os: ubuntu-latest,  cxx: g++-7,       image: conanio/gcc7 }, # (default on Focal 20.04)
+          { os: ubuntu-latest,  cxx: g++-9,       image: conanio/gcc9 }, # (default on Focal 20.04)
+          { os: ubuntu-latest,  cxx: g++-7,       image: conanio/gcc7 }, # (default on Bionic 18.04)
           { os: ubuntu-latest,  cxx: g++-5,       image: conanio/gcc5 }, # (default on Xenial 16.04)
           { os: ubuntu-latest,  cxx: g++-4.8,     image: conanio/gcc48 }, # (default on Trusty 14.04)
           # linux: clang
