@@ -15,7 +15,9 @@
 #   define PLOG_GET_THIS()      reinterpret_cast<void*>(0)
 #endif
 
-#ifdef _MSC_VER
+#ifdef PLOG_NO_CAPTURE_FUNCTION_NAME
+#   define PLOG_GET_FUNC()      ""
+#elif defined(_MSC_VER)
 #   define PLOG_GET_FUNC()      __FUNCTION__
 #elif defined(__BORLANDC__)
 #   define PLOG_GET_FUNC()      __FUNC__

@@ -14,6 +14,8 @@ set(SOURCES
     CastToString.cpp
     Common.h
     Conditional.cpp
+    FunctionNameEnabled.cpp
+    FunctionNameDisabled.cpp
     TestAppender.h
     Main.cpp
     MessagePrefix.cpp
