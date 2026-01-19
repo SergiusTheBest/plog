@@ -4,7 +4,7 @@ task:
         matrix:
             - image_family: freebsd-13-5
             - image_family: freebsd-14-3
-            - image_family: freebsd-15-0-snap
+            - image_family: freebsd-15-0-amd64-ufs
     matrix:
         - BUILD_TYPE: Release
     install_script: pkg install -y cmake
