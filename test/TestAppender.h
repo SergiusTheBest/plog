@@ -17,13 +17,13 @@ namespace plog
             return m_message;
         }
 
-        const util::nstring& getFunc() const
+        const std::string& getFunc() const
         {
             return m_func;
         }
 
     private:
         util::nstring m_message;
-        util::nstring m_func;
+        std::string m_func;
     };
 }

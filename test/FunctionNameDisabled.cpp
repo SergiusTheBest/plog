@@ -18,7 +18,7 @@ SCENARIO("disabling function name output")
 
             THEN("the function entry is empty")
             {
-                CHECK_EQ(testAppender.getFunc(), PLOG_NSTR(""));
+                CHECK_EQ(testAppender.getFunc(), "");
             }
         }
     }
