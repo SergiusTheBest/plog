@@ -50,7 +50,7 @@ jobs:
           { os: windows-2022,   cxx: vs2022-x86,  generator: '-G "Visual Studio 17 2022" -A Win32' },
           { os: windows-2022,   cxx: vs2022-x64,  generator: '-G "Visual Studio 17 2022" -A x64' },
           # macos: clang
-          { os: macos-13,       cxx: 'clang++' }
+          { os: macos-15,       cxx: 'clang++' }
         ]
 
     uses: ./.github/workflows/build.yml
