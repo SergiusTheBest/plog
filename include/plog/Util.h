@@ -284,7 +284,7 @@ namespace plog
         inline std::wstring toWide(const char* str, UINT cp = codePage::kChar)
         {
             size_t len = ::strlen(str);
-            std::wstring wstr(len, 0);
+            std::wstring wstr(len * 2, 0); // UTF-8 can expand into 2 wchars per byte
 
             if (!wstr.empty())
             {
