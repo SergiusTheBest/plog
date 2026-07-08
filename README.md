@@ -1,5 +1,5 @@
 # Plog - portable, simple and extensible C++ logging library
-Pretty powerful logging library in about 1000 lines of code [![CI](https://github.com/SergiusTheBest/plog/actions/workflows/ci.yml/badge.svg)](https://github.com/SergiusTheBest/plog/actions/workflows/ci.yml) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master) [![CircleCI](https://circleci.com/gh/SergiusTheBest/plog.svg?style=svg)](https://circleci.com/gh/SergiusTheBest/plog) [![Build Status](https://api.cirrus-ci.com/github/SergiusTheBest/plog.svg)](https://cirrus-ci.com/github/SergiusTheBest/plog)
+Pretty powerful logging library in about 1000 lines of code [![CI](https://github.com/SergiusTheBest/plog/actions/workflows/ci.yml/badge.svg)](https://github.com/SergiusTheBest/plog/actions/workflows/ci.yml) [![Build status](https://ci.appveyor.com/api/projects/status/rna5gwhqjb13wovr/branch/master?svg=true)](https://ci.appveyor.com/project/SergiusTheBest/plog/branch/master) [![CircleCI](https://circleci.com/gh/SergiusTheBest/plog.svg?style=svg)](https://circleci.com/gh/SergiusTheBest/plog)
 
 ![image](doc/color-console.png)
 
