@@ -23,7 +23,6 @@ skip_commits:
     - .github/
     - .editorconfig
     - .gitignore
-    - .cirrus.yml
     - LICENSE
     - plog.nuspec
     - plog.targets
