@@ -1,0 +1,7 @@
+if(UNIX)
+    add_executable(Syslog Main.cpp)
+    target_link_libraries(Syslog plog)
+    target_compile_options(Syslog PRIVATE -pthread)
+    target_link_options(Syslog PRIVATE -pthread)
+    set_target_properties(Syslog PROPERTIES FOLDER Samples)
+endif()
