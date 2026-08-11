@@ -4,8 +4,10 @@
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
-#include <fcntl.h>
-#include <sys/stat.h>
+#ifndef WINCE
+#  include <fcntl.h>
+#  include <sys/stat.h>
+#endif
 
 #ifndef PLOG_ENABLE_WCHAR_INPUT
 #   ifdef _WIN32
@@ -62,9 +64,11 @@
 #ifdef _WIN32
 #   include <plog/WinApi.h>
 #   include <time.h>
-#   include <sys/timeb.h>
-#   include <io.h>
-#   include <share.h>
+#   ifndef WINCE
+#     include <sys/timeb.h>
+#     include <io.h>
+#     include <share.h>
+#   endif
 #else
 #   include <unistd.h>
 #   include <sys/time.h>
@@ -130,8 +134,10 @@ namespace plog
             ::localtime_s(time, t);
 #elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
             *t = *::localtime(time);
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(WINCE)
             ::localtime_s(t, time);
+#elif defined(_WIN32) && defined(WINCE)
+            ::_localtime64_s(t, time);
 #else
             ::localtime_r(time, t);
 #endif
@@ -143,20 +149,43 @@ namespace plog
             ::gmtime_s(time, t);
 #elif defined(_WIN32) && defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
             *t = *::gmtime(time);
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(WINCE)
             ::gmtime_s(t, time);
+#elif defined(_WIN32) && defined(WINCE)
+            ::_gmtime64_s(t, time);
 #else
             ::gmtime_r(time, t);
 #endif
         }
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(WINCE)
         typedef timeb Time;
 
         inline void ftime(Time* t)
         {
             ::ftime(t);
         }
+#elif defined(_WIN32) && defined(WINCE)
+    struct Time
+    {
+        time_t time;                     
+        unsigned short millitm;       
+    };
+
+    inline void ftime(Time* t)
+    {
+        FILETIME ft;
+        memset(&ft, 0x00, sizeof(ft));
+        SYSTEMTIME st;
+        memset(&st, 0x00, sizeof(st));
+        GetSystemTime(&st);
+        SystemTimeToFileTime(&st, &ft);
+        ULARGE_INTEGER ui;
+        ui.LowPart = ft.dwLowDateTime;
+        ui.HighPart = ft.dwHighDateTime;
+        t->time = ui.QuadPart / 10000000ULL - 11644473600ULL;
+        t->millitm = st.wMilliseconds;
+    }
 #else
         struct Time
         {
@@ -178,8 +207,10 @@ namespace plog
         {
 #if defined(__FREERTOS__) && defined(INCLUDE_xTaskGetCurrentTaskHandle)
             return static_cast<unsigned int>(reinterpret_cast<uintptr_t>(xTaskGetCurrentTaskHandle()));
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(WINCE)
             return GetCurrentThreadId();
+#elif defined(_WIN32) && defined(WINCE)
+            return ::GetCurrentThreadId();
 #elif defined(__linux__)
             return static_cast<unsigned int>(::syscall(__NR_gettid));
 #elif defined(__FreeBSD__)
@@ -415,8 +446,23 @@ namespace plog
 
         class PLOG_LINKAGE_HIDDEN File : NonCopyable
         {
+#ifndef WINCE
+            typedef int file_t;
+#else
+            typedef HANDLE file_t;
+#endif
+
+            static file_t invalid_file()
+            {
+#ifndef WINCE
+                return -1;
+#else
+                return INVALID_HANDLE_VALUE;
+#endif
+            }
+
         public:
-            File() : m_file(-1)
+            File() : m_file(invalid_file())
             {
             }
 
@@ -429,8 +475,10 @@ namespace plog
             {
 #if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
                 m_file = ::_wsopen(toWide(fileName).c_str(), _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, SH_DENYWR, _S_IREAD | _S_IWRITE);
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(WINCE)
                 ::_wsopen_s(&m_file, toWide(fileName).c_str(), _O_CREAT | _O_WRONLY | _O_BINARY | _O_NOINHERIT, _SH_DENYWR, _S_IREAD | _S_IWRITE);
+#elif defined(_WIN32) && defined(WINCE)
+                m_file = ::CreateFileW(fileName.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 #elif defined(O_CLOEXEC)
                 m_file = ::open(fileName.c_str(), O_CREAT | O_APPEND | O_WRONLY | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #else
@@ -441,9 +489,13 @@ namespace plog
 
             size_t write(const void* buf, size_t count)
             {
-                return m_file != -1 ? static_cast<size_t>(
-#ifdef _WIN32
+                unsigned long written = 0;
+                (void)written;
+                return m_file != invalid_file() ? static_cast<size_t>(
+#if defined(_WIN32) && !defined(WINCE)
                     ::_write(m_file, buf, static_cast<unsigned int>(count))
+#elif defined(_WIN32) && defined(WINCE)
+                    ::WriteFile(m_file, buf, static_cast<unsigned int>(count), &written, NULL)
 #else
                     ::write(m_file, buf, count)
 #endif
@@ -458,11 +510,13 @@ namespace plog
 
             size_t seek(size_t offset, int whence)
             {
-                return m_file != -1 ? static_cast<size_t>(
+                return m_file != invalid_file() ? static_cast<size_t>(
 #if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
                     ::_lseek(m_file, static_cast<off_t>(offset), whence)
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(WINCE)
                     ::_lseeki64(m_file, static_cast<off_t>(offset), whence)
+#elif defined(_WIN32) && defined(WINCE)
+                    ::SetFilePointer(m_file, static_cast<__int64>(offset), NULL, whence)
 #else
                     ::lseek(m_file, static_cast<off_t>(offset), whence)
 #endif
@@ -471,21 +525,25 @@ namespace plog
 
             void close()
             {
-                if (m_file != -1)
+                if (m_file != invalid_file())
                 {
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(WINCE)
                     ::_close(m_file);
+#elif defined(_WIN32) && defined(WINCE)
+                    ::CloseHandle(m_file);
 #else
                     ::close(m_file);
 #endif
-                    m_file = -1;
+                    m_file = invalid_file();
                 }
             }
 
             static int unlink(const nstring& fileName)
             {
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(WINCE)
                 return ::_wunlink(toWide(fileName).c_str());
+#elif defined(_WIN32) && defined(WINCE)
+                return ::DeleteFileW(fileName.c_str()) ? 0 : -1;
 #else
                 return ::unlink(fileName.c_str());
 #endif
@@ -501,7 +559,7 @@ namespace plog
             }
 
         private:
-            int m_file;
+            file_t m_file;
         };
 
         class PLOG_LINKAGE_HIDDEN Mutex : NonCopyable
