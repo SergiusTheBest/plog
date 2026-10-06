@@ -36,12 +36,12 @@
 
 #ifdef PLOG_DISABLE_LOGGING
 #   ifdef _MSC_VER
-#       define IF_PLOG_(instanceId, severity)  __pragma(warning(push)) __pragma(warning(disable:4127)) if (true) {;} else __pragma(warning(pop)) // conditional expression is constant
+#       define IF_PLOG_(instanceId, severity)  __pragma(warning(push)) __pragma(warning(disable:4127)) if (true) ; else __pragma(warning(pop)) // conditional expression is constant
 #   else
-#       define IF_PLOG_(instanceId, severity)   if (true) {;} else
+#       define IF_PLOG_(instanceId, severity)   if (true) ; else
 #   endif
 #else
-#   define IF_PLOG_(instanceId, severity)   if (!plog::get<instanceId>() || !plog::get<instanceId>()->checkSeverity(severity)) {;} else
+#   define IF_PLOG_(instanceId, severity)   if (!plog::get<instanceId>() || !plog::get<instanceId>()->checkSeverity(severity)) ; else
 #endif
 
 #define IF_PLOG(severity)                IF_PLOG_(PLOG_DEFAULT_INSTANCE_ID, severity)
@@ -94,7 +94,7 @@
 //////////////////////////////////////////////////////////////////////////
 // Conditional logging macros
 
-#define PLOG_IF_(instanceId, severity, condition)  if (!(condition)) {;} else PLOG_(instanceId, severity)
+#define PLOG_IF_(instanceId, severity, condition)  if (!(condition)) ; else PLOG_(instanceId, severity)
 #define PLOG_IF(severity, condition)               PLOG_IF_(PLOG_DEFAULT_INSTANCE_ID, severity, condition)
 
 #define PLOG_VERBOSE_IF(condition)               PLOG_IF(plog::verbose, condition)
