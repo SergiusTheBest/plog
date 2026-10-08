@@ -30,6 +30,10 @@
 #   endif
 #endif
 
+#if !PLOG_CHAR_IS_UTF8 && !defined(_WIN32)
+#   error "PLOG_CHAR_IS_UTF8=0 is supported only on Windows. On other systems native character type must be char (UTF-8)."
+#endif
+
 #ifdef _WIN32
 #   if defined(PLOG_EXPORT)
 #       define PLOG_LINKAGE __declspec(dllexport)
@@ -467,6 +471,18 @@ namespace plog
                     ::lseek(m_file, static_cast<off_t>(offset), whence)
 #endif
                     ) : static_cast<size_t>(-1);
+            }
+
+            void flush()
+            {
+                if (m_file != -1)
+                {
+#ifdef _WIN32
+                    ::_commit(m_file);
+#else
+                    ::fsync(m_file);
+#endif
+                }
             }
 
             void close()
