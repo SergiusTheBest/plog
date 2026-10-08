@@ -469,6 +469,18 @@ namespace plog
                     ) : static_cast<size_t>(-1);
             }
 
+            void flush()
+            {
+                if (m_file != -1)
+                {
+#ifdef _WIN32
+                    ::_commit(m_file);
+#else
+                    ::fsync(m_file);
+#endif
+                }
+            }
+
             void close()
             {
                 if (m_file != -1)
