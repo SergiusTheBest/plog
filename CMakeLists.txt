@@ -57,7 +57,7 @@ if(PLOG_INSTALL)
 
     install(
         EXPORT ${PROJECT_NAME}Config
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+        DESTINATION share/cmake/${PROJECT_NAME}
         NAMESPACE ${PROJECT_NAME}::
     )
 
@@ -77,10 +77,11 @@ if(PLOG_INSTALL)
     write_basic_package_version_file(
         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
         COMPATIBILITY AnyNewerVersion
+        ARCH_INDEPENDENT
     )
 
     install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+        DESTINATION share/cmake/${PROJECT_NAME}
     )
 endif()
