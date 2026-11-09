@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include <cstring>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
@@ -85,6 +86,10 @@
 #   include <FreeRTOS.h>
 #   include <semphr.h>
 #   include <task.h>
+#endif
+
+#ifdef __APPLE__
+#   include <AvailabilityMacros.h>
 #endif
 
 #if PLOG_CHAR_IS_UTF8
@@ -190,7 +195,11 @@ namespace plog
             return rtems_task_self();
 #elif defined(__APPLE__)
             uint64_t tid64;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1060 && !defined(__ppc__)
             pthread_threadid_np(NULL, &tid64);
+#else
+            tid64 = pthread_mach_thread_np(pthread_self());
+#endif
             return static_cast<unsigned int>(tid64);
 #else
             return 0;
