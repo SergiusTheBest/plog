@@ -1,7 +1,9 @@
 #pragma once
 #include <cassert>
 #include <cstring>
-#include <cstdint>
+#ifdef __APPLE__
+#   include <stdint.h>
+#endif
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
