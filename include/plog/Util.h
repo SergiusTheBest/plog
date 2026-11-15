@@ -1,9 +1,6 @@
 #pragma once
 #include <cassert>
 #include <cstring>
-#ifdef __APPLE__
-#   include <stdint.h>
-#endif
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
@@ -196,13 +193,13 @@ namespace plog
 #elif defined(__rtems__)
             return rtems_task_self();
 #elif defined(__APPLE__)
+#   if MAC_OS_X_VERSION_MIN_REQUIRED >= 1060 && !defined(__ppc__)
             uint64_t tid64;
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1060 && !defined(__ppc__)
             pthread_threadid_np(NULL, &tid64);
-#else
-            tid64 = pthread_mach_thread_np(pthread_self());
-#endif
             return static_cast<unsigned int>(tid64);
+#   else
+            return pthread_mach_thread_np(pthread_self());
+#   endif
 #else
             return 0;
 #endif
