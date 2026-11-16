@@ -101,6 +101,12 @@ namespace plog
             m_firstWrite = false;
         }
 
+        void flush()
+        {
+            util::MutexLock lock(m_mutex);
+            m_file.flush();
+        }
+
     private:
         void openLogFile()
         {

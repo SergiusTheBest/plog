@@ -915,6 +915,8 @@ The sample file names produced by this appender:
 
 A file name can be changed at an arbitrary moment by calling `setFileName` as well as `maxFiles` and `maxFileSize` can be changed by calling `setMaxFiles` and `setMaxFileSize`.
 
+Call `flush()` to force the OS to write any buffered log data to disk without rolling or closing the file (useful before an external backup or when another process needs to read the latest bytes).
+
 > **Note** The lowest `maxFileSize` is 1000 bytes.
 
 > **Note** A log file is created on the first log message.
