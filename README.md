@@ -915,6 +915,8 @@ The sample file names produced by this appender:
 
 A file name can be changed at an arbitrary moment by calling `setFileName` as well as `maxFiles` and `maxFileSize` can be changed by calling `setMaxFiles` and `setMaxFileSize`.
 
+Call `flush()` to force the OS to write any buffered log data to disk without rolling or closing the file (useful before an external backup or when another process needs to read the latest bytes).
+
 > **Note** The lowest `maxFileSize` is 1000 bytes.
 
 > **Note** A log file is created on the first log message.
@@ -1027,7 +1029,7 @@ Plog is unicode aware and wide string friendly. All messages are converted to a 
   - `wchar_t` - by default 
   - `char` - if compiling with `/utf-8` switch or set `PLOG_CHAR_IS_UTF8` to 1
 - all other systems
-  - `char`
+  - `char` (UTF-8); `PLOG_CHAR_IS_UTF8` must be `1` (the default). Setting it to `0` is unsupported and fails at compile time.
 
 Also `char` is treated as:
 
@@ -1060,6 +1062,8 @@ By default all log files are stored in UTF-8 with BOM thanks to [UTF8Converter](
 ## Wide string support
 
 Whether `wchar_t`, `wchar_t*`, `std::wstring` can be streamed to log messages or not is controlled by the `PLOG_ENABLE_WCHAR_INPUT` macro. Set it to a non-zero value to enable wide string support. By default wide string support is enabled for Windows and disabled for all non-Windows systems.
+
+> **Note** `PLOG_ENABLE_WCHAR_INPUT` only controls whether wide strings can be *logged*. It does not change the native `nchar`/`nstring` type used for file paths and formatters. On non-Windows systems that type remains `char`/`std::string` (`PLOG_CHAR_IS_UTF8=1`).
 
 > **Note** Wide string support requires linking to `iconv` on macOS.
 
